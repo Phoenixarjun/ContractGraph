@@ -1,0 +1,56 @@
+{
+  "roleId": "backend-engineer",
+  "displayName": "Backend Engineer",
+  "aliases": [
+    "Backend Developer",
+    "Platform Backend Engineer",
+    "Server-side Engineer"
+  ],
+  "levels": [
+    "entry",
+    "mid",
+    "senior"
+  ],
+  "mission": "Build reliable APIs, data systems, asynchronous workflows, and production services with clear consistency and operational boundaries.",
+  "requiredDomains": [
+    "Java or equivalent",
+    "databases",
+    "distributed systems",
+    "APIs",
+    "messaging",
+    "testing"
+  ],
+  "preferredDomains": [
+    "Kubernetes",
+    "observability",
+    "caching",
+    "security"
+  ],
+  "interviewEmphasis": [
+    "DSA",
+    "CS fundamentals",
+    "Java",
+    "LLD",
+    "HLD",
+    "project deep dive",
+    "incidents"
+  ],
+  "evaluationWeights": {
+    "backendFundamentals": 0.25,
+    "distributedSystems": 0.25,
+    "productionEvidence": 0.2,
+    "design": 0.2,
+    "communication": 0.1
+  },
+  "minimumEvidence": [
+    "API or service implementation",
+    "database decisions",
+    "failure handling",
+    "testing"
+  ],
+  "truthRisks": [
+    "claiming exactly once",
+    "claiming enterprise scale from local tests",
+    "listing tools without decisions"
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "roleId": "ml-engineer",
+  "displayName": "Machine Learning Engineer",
+  "aliases": [
+    "ML Engineer",
+    "Applied ML Engineer",
+    "ML Platform Engineer"
+  ],
+  "levels": [
+    "entry",
+    "mid",
+    "senior"
+  ],
+  "mission": "Build reproducible, evaluated, deployable ML systems with strong data, experimentation, serving, monitoring, and business-decision boundaries.",
+  "requiredDomains": [
+    "statistics",
+    "ML algorithms",
+    "evaluation",
+    "data pipelines",
+    "serving",
+    "monitoring"
+  ],
+  "preferredDomains": [
+    "feature stores",
+    "distributed training",
+    "MLOps",
+    "cloud"
+  ],
+  "interviewEmphasis": [
+    "coding",
+    "statistics",
+    "ML fundamentals",
+    "model deep dive",
+    "ML system design",
+    "deployment",
+    "behavioral"
+  ],
+  "evaluationWeights": {
+    "mlFundamentals": 0.25,
+    "evaluation": 0.2,
+    "engineering": 0.2,
+    "productionEvidence": 0.2,
+    "communication": 0.15
+  },
+  "minimumEvidence": [
+    "baseline comparison",
+    "validation evidence",
+    "error analysis",
+    "deployment or serving design"
+  ],
+  "truthRisks": [
+    "reporting training metrics as deployment readiness",
+    "ignoring leakage or shift",
+    "claiming production impact before deployment"
+  ]
+}

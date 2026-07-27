@@ -1,0 +1,123 @@
+version: "1.0.0"
+bundle: contract.bundle.json
+generated: true
+sourceOfTruth: node-contracts
+runtime: claude-code
+
+layers:
+  - id: foundation
+    parallel:
+      - company-intelligence
+      - role-intelligence
+
+  - id: company-and-process
+    parallel:
+      - company-initiatives
+      - interview-process
+      - compensation-location
+
+  - id: preparation-and-alignment
+    parallel:
+      - dsa
+      - cs-fundamentals
+      - domain-knowledge
+      - hld
+      - lld
+      - behavioral
+      - profile-alignment
+
+  - id: candidate-evidence
+    parallel:
+      - project-deep-dive
+      - networking-referral
+
+  - id: resume-map
+    map:
+      node: resume-analysis
+      over: configuredRoles
+
+  - id: strategy
+    parallel:
+      - application-strategy
+      - resources
+
+  - id: completion
+    sequence:
+      - deterministic-merge
+      - main-schema-validation
+      - global-verification
+
+dependencies:
+  role-intelligence:
+    - company-intelligence
+  company-initiatives:
+    - company-intelligence
+    - role-intelligence
+  interview-process:
+    - company-intelligence
+    - role-intelligence
+  compensation-location:
+    - company-intelligence
+    - role-intelligence
+  dsa:
+    - role-intelligence
+    - interview-process
+  cs-fundamentals:
+    - role-intelligence
+    - interview-process
+  domain-knowledge:
+    - company-intelligence
+    - company-initiatives
+    - role-intelligence
+  hld:
+    - company-intelligence
+    - company-initiatives
+    - role-intelligence
+    - interview-process
+  lld:
+    - company-intelligence
+    - company-initiatives
+    - role-intelligence
+    - interview-process
+  behavioral:
+    - company-intelligence
+    - role-intelligence
+    - interview-process
+  profile-alignment:
+    - company-intelligence
+    - company-initiatives
+    - role-intelligence
+    - domain-knowledge
+  project-deep-dive:
+    - company-initiatives
+    - role-intelligence
+    - profile-alignment
+  networking-referral:
+    - company-intelligence
+    - role-intelligence
+    - profile-alignment
+  resume-analysis:
+    - role-intelligence
+    - profile-alignment
+    - project-deep-dive
+  application-strategy:
+    - profile-alignment
+    - resume-analysis
+    - interview-process
+    - compensation-location
+  resources:
+    - company-intelligence
+    - company-initiatives
+    - dsa
+    - cs-fundamentals
+    - domain-knowledge
+    - hld
+    - lld
+    - behavioral
+
+acceptance:
+  structuralValidation: required
+  semanticVerification: required
+  evidenceVerification: required_when_research
+  freshnessVerification: required_when_time_sensitive
+  globalVerificationModel: opus

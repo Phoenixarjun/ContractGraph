@@ -1,0 +1,622 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contractgraph.dev/contracts/company-research/nodes/company-intelligence.contract.json",
+  "title": "Company Intelligence Contract",
+  "description": "Produces the authoritative company facts, engineering culture, technology strategy, target roles, risks, hiring signals, products, scale signals, and official links.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "nodeId",
+    "contractVersion",
+    "status",
+    "data",
+    "sources",
+    "contextEvidence",
+    "verification"
+  ],
+  "properties": {
+    "nodeId": {
+      "const": "company-intelligence"
+    },
+    "contractVersion": {
+      "const": "1.0.0"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "complete",
+        "partial"
+      ]
+    },
+    "data": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "companyId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "legalName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "business": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "summary": {
+              "type": "string",
+              "minLength": 1
+            },
+            "companyType": {
+              "type": "string",
+              "minLength": 1
+            },
+            "headquarters": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "founded": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 1800
+            },
+            "stockSymbol": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "fundingStage": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "domains": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "uniqueItems": true
+            },
+            "products": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "category": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "summary": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "technologies": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "uniqueItems": true
+                  },
+                  "roleApplicability": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "../common/common.schema.json#/$defs/RoleApplicability"
+                    },
+                    "minItems": 1
+                  },
+                  "evidenceRefs": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "minItems": 1,
+                    "uniqueItems": true
+                  }
+                },
+                "required": [
+                  "name",
+                  "category",
+                  "summary",
+                  "technologies",
+                  "roleApplicability",
+                  "evidenceRefs"
+                ]
+              },
+              "minItems": 1
+            },
+            "financialAndScaleSignals": {
+              "type": "array",
+              "items": {
+                "$ref": "../common/common.schema.json#/$defs/Metric"
+              }
+            },
+            "businessRisks": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "risk": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "severity": {
+                    "type": "string",
+                    "enum": [
+                      "high",
+                      "medium",
+                      "low"
+                    ]
+                  },
+                  "detail": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "candidateAction": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "evidenceRefs": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "uniqueItems": true
+                  }
+                },
+                "required": [
+                  "risk",
+                  "severity",
+                  "detail",
+                  "candidateAction",
+                  "evidenceRefs"
+                ]
+              }
+            }
+          },
+          "required": [
+            "summary",
+            "companyType",
+            "headquarters",
+            "founded",
+            "stockSymbol",
+            "fundingStage",
+            "domains",
+            "products",
+            "financialAndScaleSignals",
+            "businessRisks"
+          ]
+        },
+        "engineeringCulture": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "signal": {
+                "type": "string",
+                "minLength": 1
+              },
+              "engineeringImplication": {
+                "type": "string",
+                "minLength": 1
+              },
+              "interviewImplication": {
+                "type": "string",
+                "minLength": 1
+              },
+              "roleApplicability": {
+                "type": "array",
+                "items": {
+                  "$ref": "../common/common.schema.json#/$defs/RoleApplicability"
+                },
+                "minItems": 1
+              },
+              "evidenceRefs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1,
+                "uniqueItems": true
+              }
+            },
+            "required": [
+              "signal",
+              "engineeringImplication",
+              "interviewImplication",
+              "roleApplicability",
+              "evidenceRefs"
+            ]
+          },
+          "minItems": 1
+        },
+        "technologyStrategy": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "theme": {
+                "type": "string",
+                "minLength": 1
+              },
+              "description": {
+                "type": "string",
+                "minLength": 1
+              },
+              "strategicImportance": {
+                "type": "string",
+                "minLength": 1
+              },
+              "technologies": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "uniqueItems": true
+              },
+              "timeHorizon": {
+                "type": "string",
+                "enum": [
+                  "current",
+                  "near_term",
+                  "long_term",
+                  "unknown"
+                ]
+              },
+              "roleApplicability": {
+                "type": "array",
+                "items": {
+                  "$ref": "../common/common.schema.json#/$defs/RoleApplicability"
+                },
+                "minItems": 1
+              },
+              "evidenceRefs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1,
+                "uniqueItems": true
+              }
+            },
+            "required": [
+              "theme",
+              "description",
+              "strategicImportance",
+              "technologies",
+              "timeHorizon",
+              "roleApplicability",
+              "evidenceRefs"
+            ]
+          },
+          "minItems": 1
+        },
+        "engineeringFootprint": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "locations": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true
+            },
+            "engineeringDomains": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true
+            },
+            "knownTechnologyStack": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "languages": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "uniqueItems": true
+                },
+                "frameworks": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "uniqueItems": true
+                },
+                "datastores": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "uniqueItems": true
+                },
+                "infrastructure": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "uniqueItems": true
+                },
+                "aiMl": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "languages",
+                "frameworks",
+                "datastores",
+                "infrastructure",
+                "aiMl"
+              ]
+            },
+            "qualification": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "locations",
+            "engineeringDomains",
+            "knownTechnologyStack",
+            "qualification"
+          ]
+        },
+        "targetRoles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "roleId": {
+                "$ref": "../common/common.schema.json#/$defs/RoleId"
+              },
+              "roleTitles": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1,
+                "uniqueItems": true
+              },
+              "likelyTeams": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "uniqueItems": true
+              },
+              "locations": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "uniqueItems": true
+              },
+              "levelSignals": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "uniqueItems": true
+              },
+              "hiringStatus": {
+                "type": "string",
+                "enum": [
+                  "active",
+                  "intermittent",
+                  "not_found",
+                  "unknown"
+                ]
+              },
+              "evidenceRefs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "uniqueItems": true
+              }
+            },
+            "required": [
+              "roleId",
+              "roleTitles",
+              "likelyTeams",
+              "locations",
+              "levelSignals",
+              "hiringStatus",
+              "evidenceRefs"
+            ]
+          },
+          "minItems": 1
+        },
+        "interviewProcessSummary": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "detailsNodeRef": {
+              "const": "interview-process"
+            },
+            "summary": {
+              "type": "string",
+              "minLength": 1
+            },
+            "variabilityWarning": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "detailsNodeRef",
+            "summary",
+            "variabilityWarning"
+          ]
+        },
+        "risks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "risk": {
+                "type": "string",
+                "minLength": 1
+              },
+              "severity": {
+                "type": "string",
+                "enum": [
+                  "high",
+                  "medium",
+                  "low"
+                ]
+              },
+              "detail": {
+                "type": "string",
+                "minLength": 1
+              },
+              "candidateAction": {
+                "type": "string",
+                "minLength": 1
+              },
+              "evidenceRefs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "uniqueItems": true
+              }
+            },
+            "required": [
+              "risk",
+              "severity",
+              "detail",
+              "candidateAction",
+              "evidenceRefs"
+            ]
+          }
+        },
+        "hiringSignals": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "signal": {
+                "type": "string",
+                "minLength": 1
+              },
+              "interpretation": {
+                "type": "string",
+                "minLength": 1
+              },
+              "roleApplicability": {
+                "type": "array",
+                "items": {
+                  "$ref": "../common/common.schema.json#/$defs/RoleApplicability"
+                },
+                "minItems": 1
+              },
+              "evidenceRefs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1,
+                "uniqueItems": true
+              }
+            },
+            "required": [
+              "signal",
+              "interpretation",
+              "roleApplicability",
+              "evidenceRefs"
+            ]
+          }
+        },
+        "officialLinks": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "format": "uri"
+          }
+        },
+        "metadata": {
+          "$ref": "../common/common.schema.json#/$defs/ResearchMetadata"
+        }
+      },
+      "required": [
+        "companyId",
+        "name",
+        "legalName",
+        "business",
+        "engineeringCulture",
+        "technologyStrategy",
+        "engineeringFootprint",
+        "targetRoles",
+        "interviewProcessSummary",
+        "risks",
+        "hiringSignals",
+        "officialLinks",
+        "metadata"
+      ]
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "../common/common.schema.json#/$defs/EvidenceSource"
+      },
+      "minItems": 1
+    },
+    "contextEvidence": {
+      "type": "array",
+      "items": {
+        "$ref": "../common/common.schema.json#/$defs/ContextEvidence"
+      }
+    },
+    "verification": {
+      "$ref": "../common/common.schema.json#/$defs/NodeVerification"
+    }
+  },
+  "x-contractgraph": {
+    "purpose": "Produces the authoritative company facts, engineering culture, technology strategy, target roles, risks, hiring signals, products, scale signals, and official links.",
+    "aggregationPath": "companyIntelligence",
+    "dependsOn": [],
+    "parallelizableWhenReady": true,
+    "multiplicity": "single",
+    "completionRules": [
+      "The output must validate against this schema.",
+      "status must be complete before the node can be accepted.",
+      "Every material research claim must resolve to at least one evidence source.",
+      "Every candidate-specific claim must resolve to canonical context evidence.",
+      "The producing subagent cannot approve its own output.",
+      "Semantic verification must pass before aggregation."
+    ]
+  }
+}

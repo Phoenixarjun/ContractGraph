@@ -1,0 +1,224 @@
+{
+  "bundleId": "company-research",
+  "bundleVersion": "1.0.0",
+  "documentType": "ContractGraphContractBundle",
+  "mainContract": "contract.schema.json",
+  "commonSchema": "common/common.schema.json",
+  "runtimeInputs": {
+    "required": [
+      "companyName"
+    ],
+    "optional": [
+      "targetRoles",
+      "targetLocations",
+      "jobPostingUrls",
+      "resumeRefs",
+      "researchAsOf"
+    ],
+    "defaults": {
+      "targetRoles": [
+        "ai-engineer",
+        "forward-deployed-engineer",
+        "backend-engineer",
+        "software-engineer",
+        "ml-engineer"
+      ]
+    }
+  },
+  "canonicalContextRequirements": [
+    "profile or resume",
+    "career goals",
+    "skills",
+    "experience",
+    "projects",
+    "truth boundaries",
+    "location and timing preferences when application strategy is requested"
+  ],
+  "roles": [
+    {
+      "roleId": "ai-engineer",
+      "path": "roles/ai-engineer.role.json"
+    },
+    {
+      "roleId": "forward-deployed-engineer",
+      "path": "roles/forward-deployed-engineer.role.json"
+    },
+    {
+      "roleId": "backend-engineer",
+      "path": "roles/backend-engineer.role.json"
+    },
+    {
+      "roleId": "software-engineer",
+      "path": "roles/software-engineer.role.json"
+    },
+    {
+      "roleId": "ml-engineer",
+      "path": "roles/ml-engineer.role.json"
+    }
+  ],
+  "nodes": [
+    {
+      "nodeId": "company-intelligence",
+      "contract": "node-contracts/company-intelligence.contract.json",
+      "required": true,
+      "aggregationPath": "companyIntelligence"
+    },
+    {
+      "nodeId": "role-intelligence",
+      "contract": "node-contracts/role-intelligence.contract.json",
+      "required": true,
+      "aggregationPath": "roleIntelligence"
+    },
+    {
+      "nodeId": "company-initiatives",
+      "contract": "node-contracts/company-initiatives.contract.json",
+      "required": true,
+      "aggregationPath": "companyInitiatives"
+    },
+    {
+      "nodeId": "interview-process",
+      "contract": "node-contracts/interview-process.contract.json",
+      "required": true,
+      "aggregationPath": "interviewProcess"
+    },
+    {
+      "nodeId": "dsa",
+      "contract": "node-contracts/dsa.contract.json",
+      "required": true,
+      "aggregationPath": "dsa"
+    },
+    {
+      "nodeId": "cs-fundamentals",
+      "contract": "node-contracts/cs-fundamentals.contract.json",
+      "required": true,
+      "aggregationPath": "csFundamentals"
+    },
+    {
+      "nodeId": "domain-knowledge",
+      "contract": "node-contracts/domain-knowledge.contract.json",
+      "required": true,
+      "aggregationPath": "domainKnowledge"
+    },
+    {
+      "nodeId": "hld",
+      "contract": "node-contracts/hld.contract.json",
+      "required": true,
+      "aggregationPath": "hld"
+    },
+    {
+      "nodeId": "lld",
+      "contract": "node-contracts/lld.contract.json",
+      "required": true,
+      "aggregationPath": "lld"
+    },
+    {
+      "nodeId": "behavioral",
+      "contract": "node-contracts/behavioral.contract.json",
+      "required": true,
+      "aggregationPath": "behavioral"
+    },
+    {
+      "nodeId": "profile-alignment",
+      "contract": "node-contracts/profile-alignment.contract.json",
+      "required": true,
+      "aggregationPath": "profileAlignment"
+    },
+    {
+      "nodeId": "project-deep-dive",
+      "contract": "node-contracts/project-deep-dive.contract.json",
+      "required": true,
+      "aggregationPath": "projectDeepDive"
+    },
+    {
+      "nodeId": "resume-analysis",
+      "contract": "node-contracts/resume-analysis.contract.json",
+      "required": true,
+      "aggregationPath": "resumeAnalysis"
+    },
+    {
+      "nodeId": "compensation-location",
+      "contract": "node-contracts/compensation-location.contract.json",
+      "required": true,
+      "aggregationPath": "compensationAndLocation"
+    },
+    {
+      "nodeId": "networking-referral",
+      "contract": "node-contracts/networking-referral.contract.json",
+      "required": true,
+      "aggregationPath": "networkingAndReferral"
+    },
+    {
+      "nodeId": "application-strategy",
+      "contract": "node-contracts/application-strategy.contract.json",
+      "required": true,
+      "aggregationPath": "applicationStrategy"
+    },
+    {
+      "nodeId": "resources",
+      "contract": "node-contracts/resources.contract.json",
+      "required": true,
+      "aggregationPath": "resources"
+    }
+  ],
+  "stateOwnership": {
+    "researchOwnedFields": [
+      "titles",
+      "patterns",
+      "difficulty",
+      "resource links",
+      "source evidence",
+      "thought processes",
+      "answer outlines",
+      "follow-up questions",
+      "company intelligence",
+      "role intelligence"
+    ],
+    "userOwnedFields": [
+      "globalProblemId",
+      "globalTopicId",
+      "confidence",
+      "masteryStatus",
+      "lastPracticedDate",
+      "nextReviewDate",
+      "attemptCount",
+      "userNotes",
+      "bookmarked",
+      "preparedStarStory",
+      "recordingUrl"
+    ],
+    "rule": "Research refresh must never overwrite non-empty user-owned state."
+  },
+  "aggregation": {
+    "mode": "deterministic",
+    "acceptOnlyVerifiedNodes": true,
+    "deduplicateSourcesBy": [
+      "canonicalUrl",
+      "sourceRef"
+    ],
+    "preserveCanonicalKeys": true,
+    "rejectDuplicateOwnership": true,
+    "buildGlobalSourceRegistry": true
+  },
+  "globalValidation": [
+    "Every required node must be accepted.",
+    "Every evidenceRef must resolve to the global source registry.",
+    "Every contextRef must resolve to the canonical context manifest.",
+    "Every roleId must resolve to a configured role file.",
+    "Every ranked recommendation must cite its scoring rationale.",
+    "No candidate experience may be invented.",
+    "No research claim may be represented as canonical user truth.",
+    "No stale source may support a current hiring, job, compensation, or organization-health claim.",
+    "DSA practice items require a reachable problem URL.",
+    "HLD and LLD items require at least one learning resource.",
+    "Company-specific project and role claims require evidence.",
+    "Final output must validate against contract.schema.json."
+  ],
+  "refreshPolicy": {
+    "upsertByCanonicalKey": true,
+    "preserveUserState": true,
+    "deduplicateResourceUrls": true,
+    "archiveRemovedResearchItems": true,
+    "doNotDeletePracticeHistory": true,
+    "retryOnlyFailedNodes": true
+  }
+}

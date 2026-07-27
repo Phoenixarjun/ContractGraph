@@ -1,0 +1,14 @@
+# Private canonical context — never commit its contents
+context/private/*
+!context/private/README.md
+
+# Runtime artifacts — generated per run
+runtime/runs/
+runtime/outputs/
+runtime/cache/
+runtime/sections/
+runtime/traces/
+
+# Python
+__pycache__/
+*.pyc

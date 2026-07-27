@@ -1,0 +1,583 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contractgraph.dev/contracts/company-research/common/common.schema.json",
+  "title": "Company Research Common Definitions",
+  "$defs": {
+    "RoleId": {
+      "type": "string",
+      "enum": [
+        "ai-engineer",
+        "forward-deployed-engineer",
+        "backend-engineer",
+        "software-engineer",
+        "ml-engineer"
+      ]
+    },
+    "Confidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "level": {
+          "type": "string",
+          "enum": [
+            "high",
+            "medium",
+            "low",
+            "unknown"
+          ]
+        },
+        "score": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "level",
+        "score",
+        "rationale"
+      ]
+    },
+    "ResearchMetadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "confidence": {
+          "$ref": "#/$defs/Confidence"
+        },
+        "lastVerifiedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "freshnessStatus": {
+          "type": "string",
+          "enum": [
+            "current",
+            "aging",
+            "stale",
+            "unknown"
+          ]
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "confidence",
+        "lastVerifiedAt",
+        "freshnessStatus",
+        "limitations"
+      ]
+    },
+    "EvidenceSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sourceRef": {
+          "type": "string",
+          "pattern": "^SRC_[A-Z0-9_]+$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "publisher": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sourceType": {
+          "type": "string",
+          "enum": [
+            "official",
+            "official_regulatory",
+            "official_documentation",
+            "official_engineering",
+            "official_project",
+            "job_posting",
+            "candidate_report",
+            "aggregated_candidate_reports",
+            "reputable_news",
+            "research_paper",
+            "community",
+            "practice_platform",
+            "book",
+            "course",
+            "video",
+            "other"
+          ]
+        },
+        "publishedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        },
+        "accessedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "claims": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "verificationStatus": {
+          "type": "string",
+          "enum": [
+            "verified_primary",
+            "verified_secondary",
+            "reachable_unverified",
+            "unreachable",
+            "conflicting"
+          ]
+        },
+        "confidence": {
+          "$ref": "#/$defs/Confidence"
+        }
+      },
+      "required": [
+        "sourceRef",
+        "title",
+        "url",
+        "publisher",
+        "sourceType",
+        "publishedAt",
+        "accessedAt",
+        "claims",
+        "verificationStatus",
+        "confidence"
+      ]
+    },
+    "ContextEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "contextRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sourcePath": {
+          "type": "string",
+          "minLength": 1
+        },
+        "claim": {
+          "type": "string",
+          "minLength": 1
+        },
+        "contentHash": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "privacy": {
+          "type": "string",
+          "enum": [
+            "private",
+            "internal",
+            "public"
+          ]
+        }
+      },
+      "required": [
+        "contextRef",
+        "sourcePath",
+        "claim",
+        "contentHash",
+        "privacy"
+      ]
+    },
+    "RoleApplicability": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "roleId": {
+          "$ref": "#/$defs/RoleId"
+        },
+        "levels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "relevance": {
+          "type": "string",
+          "enum": [
+            "critical",
+            "high",
+            "medium",
+            "low",
+            "not_applicable"
+          ]
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "roleId",
+        "levels",
+        "relevance",
+        "rationale"
+      ]
+    },
+    "ResourceLink": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "official",
+            "documentation",
+            "practice",
+            "editorial",
+            "article",
+            "github",
+            "course",
+            "book",
+            "paper",
+            "video",
+            "evidence",
+            "job_posting",
+            "other"
+          ]
+        },
+        "purpose": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "title",
+        "url",
+        "type",
+        "purpose",
+        "evidenceRefs"
+      ]
+    },
+    "CanonicalMatching": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "normalizedTitle": {
+          "type": "string",
+          "minLength": 1
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "platformIds": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "fuzzyMatchThreshold": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      },
+      "required": [
+        "normalizedTitle",
+        "aliases",
+        "platformIds",
+        "fuzzyMatchThreshold"
+      ]
+    },
+    "LocalTracking": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "globalProblemId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "globalTopicId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "masteryStatus": {
+          "type": "string",
+          "enum": [
+            "not_started",
+            "learning",
+            "practicing",
+            "interview_ready",
+            "mastered"
+          ]
+        },
+        "lastPracticedDate": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        },
+        "nextReviewDate": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        },
+        "attemptCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "solvedWithoutHelp": {
+          "type": "boolean"
+        },
+        "userNotes": {
+          "type": "string"
+        },
+        "companySpecificNotes": {
+          "type": "string"
+        },
+        "bookmarked": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "globalProblemId",
+        "globalTopicId",
+        "confidence",
+        "masteryStatus",
+        "lastPracticedDate",
+        "nextReviewDate",
+        "attemptCount",
+        "solvedWithoutHelp",
+        "userNotes",
+        "companySpecificNotes",
+        "bookmarked"
+      ]
+    },
+    "NodeVerification": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "structuralValidation": {
+          "type": "string",
+          "enum": [
+            "passed",
+            "failed"
+          ]
+        },
+        "semanticValidation": {
+          "type": "string",
+          "enum": [
+            "passed",
+            "failed",
+            "pending"
+          ]
+        },
+        "evidenceValidation": {
+          "type": "string",
+          "enum": [
+            "passed",
+            "failed",
+            "not_applicable"
+          ]
+        },
+        "freshnessValidation": {
+          "type": "string",
+          "enum": [
+            "passed",
+            "failed",
+            "not_applicable"
+          ]
+        },
+        "verifiedBy": {
+          "type": "string",
+          "minLength": 1
+        },
+        "verifiedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "issues": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "repairInstructions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "structuralValidation",
+        "semanticValidation",
+        "evidenceValidation",
+        "freshnessValidation",
+        "verifiedBy",
+        "verifiedAt",
+        "issues",
+        "repairInstructions"
+      ]
+    },
+    "Metric": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "value": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "unit": {
+          "type": "string"
+        },
+        "asOf": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "name",
+        "value",
+        "unit",
+        "asOf",
+        "evidenceRefs"
+      ]
+    },
+    "CandidateEvidenceMapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "claim": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "verified",
+            "partial",
+            "missing",
+            "conflicting"
+          ]
+        },
+        "contextRefs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "truthBoundary": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "claim",
+        "status",
+        "contextRefs",
+        "truthBoundary"
+      ]
+    },
+    "EvaluationDimension": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "dimension": {
+          "type": "string",
+          "minLength": 1
+        },
+        "weightPercent": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "score": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 100
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "dimension",
+        "weightPercent",
+        "score",
+        "rationale"
+      ]
+    }
+  }
+}

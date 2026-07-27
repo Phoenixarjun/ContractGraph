@@ -1,0 +1,340 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contractgraph.dev/contracts/company-research/nodes/company-initiatives.contract.json",
+  "title": "Company Initiatives Contract",
+  "description": "Discovers, verifies, explains, and ranks the company's public products, projects, open-source work, research, infrastructure programs, and recent technical bets against target roles and candidate evidence.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "nodeId",
+    "contractVersion",
+    "status",
+    "data",
+    "sources",
+    "contextEvidence",
+    "verification"
+  ],
+  "properties": {
+    "nodeId": {
+      "const": "company-initiatives"
+    },
+    "contractVersion": {
+      "const": "1.0.0"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "complete",
+        "partial"
+      ]
+    },
+    "data": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "initiatives": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "initiativeId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "product",
+                  "developer_platform",
+                  "open_source",
+                  "research_program",
+                  "infrastructure",
+                  "cloud_service",
+                  "ai_initiative",
+                  "engineering_program",
+                  "acquisition",
+                  "other"
+                ]
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "active",
+                  "beta",
+                  "announced",
+                  "maintenance",
+                  "inactive",
+                  "unknown"
+                ]
+              },
+              "visibility": {
+                "type": "string",
+                "enum": [
+                  "public",
+                  "partially_public",
+                  "inferred"
+                ]
+              },
+              "description": {
+                "type": "string",
+                "minLength": 1
+              },
+              "problemSolved": {
+                "type": "string",
+                "minLength": 1
+              },
+              "strategicImportance": {
+                "type": "string",
+                "minLength": 1
+              },
+              "technologies": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "uniqueItems": true
+              },
+              "likelyTeams": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "uniqueItems": true
+              },
+              "relevantRoles": {
+                "type": "array",
+                "items": {
+                  "$ref": "../common/common.schema.json#/$defs/RoleApplicability"
+                },
+                "minItems": 1
+              },
+              "hiringSignal": {
+                "type": "string",
+                "minLength": 1
+              },
+              "candidateAlignment": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "score": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
+                  },
+                  "matchingSkills": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "../common/common.schema.json#/$defs/CandidateEvidenceMapping"
+                    }
+                  },
+                  "matchingExperience": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "../common/common.schema.json#/$defs/CandidateEvidenceMapping"
+                    }
+                  },
+                  "matchingProjects": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "../common/common.schema.json#/$defs/CandidateEvidenceMapping"
+                    }
+                  },
+                  "missingSkills": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "uniqueItems": true
+                  },
+                  "whyItFits": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "preparationActions": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "minItems": 1
+                  }
+                },
+                "required": [
+                  "score",
+                  "matchingSkills",
+                  "matchingExperience",
+                  "matchingProjects",
+                  "missingSkills",
+                  "whyItFits",
+                  "preparationActions"
+                ]
+              },
+              "evidenceRefs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1,
+                "uniqueItems": true
+              },
+              "metadata": {
+                "$ref": "../common/common.schema.json#/$defs/ResearchMetadata"
+              }
+            },
+            "required": [
+              "initiativeId",
+              "name",
+              "type",
+              "status",
+              "visibility",
+              "description",
+              "problemSolved",
+              "strategicImportance",
+              "technologies",
+              "likelyTeams",
+              "relevantRoles",
+              "hiringSignal",
+              "candidateAlignment",
+              "evidenceRefs",
+              "metadata"
+            ]
+          },
+          "minItems": 1
+        },
+        "rankedRecommendations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "rank": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "initiativeId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "roleId": {
+                "$ref": "../common/common.schema.json#/$defs/RoleId"
+              },
+              "alignmentScore": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 100
+              },
+              "whyRecommended": {
+                "type": "string",
+                "minLength": 1
+              },
+              "bestCandidateProjectRefs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "uniqueItems": true
+              },
+              "preparationPriority": {
+                "type": "string",
+                "enum": [
+                  "critical",
+                  "high",
+                  "medium",
+                  "low"
+                ]
+              }
+            },
+            "required": [
+              "rank",
+              "initiativeId",
+              "roleId",
+              "alignmentScore",
+              "whyRecommended",
+              "bestCandidateProjectRefs",
+              "preparationPriority"
+            ]
+          },
+          "minItems": 1
+        },
+        "coverage": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "searchedCategories": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "uniqueItems": true
+            },
+            "gaps": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "staleOrUncertainItems": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "searchedCategories",
+            "gaps",
+            "staleOrUncertainItems"
+          ]
+        },
+        "metadata": {
+          "$ref": "../common/common.schema.json#/$defs/ResearchMetadata"
+        }
+      },
+      "required": [
+        "initiatives",
+        "rankedRecommendations",
+        "coverage",
+        "metadata"
+      ]
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "../common/common.schema.json#/$defs/EvidenceSource"
+      },
+      "minItems": 1
+    },
+    "contextEvidence": {
+      "type": "array",
+      "items": {
+        "$ref": "../common/common.schema.json#/$defs/ContextEvidence"
+      }
+    },
+    "verification": {
+      "$ref": "../common/common.schema.json#/$defs/NodeVerification"
+    }
+  },
+  "x-contractgraph": {
+    "purpose": "Discovers, verifies, explains, and ranks the company's public products, projects, open-source work, research, infrastructure programs, and recent technical bets against target roles and candidate evidence.",
+    "aggregationPath": "companyInitiatives",
+    "dependsOn": [
+      "company-intelligence",
+      "role-intelligence"
+    ],
+    "parallelizableWhenReady": true,
+    "multiplicity": "single",
+    "completionRules": [
+      "The output must validate against this schema.",
+      "status must be complete before the node can be accepted.",
+      "Every material research claim must resolve to at least one evidence source.",
+      "Every candidate-specific claim must resolve to canonical context evidence.",
+      "The producing subagent cannot approve its own output.",
+      "Semantic verification must pass before aggregation."
+    ]
+  }
+}

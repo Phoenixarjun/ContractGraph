@@ -1,0 +1,234 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contractgraph.dev/contracts/company-research/nodes/compensation-location.contract.json",
+  "title": "Compensation and Location Contract",
+  "description": "Provides role- and location-specific compensation evidence, sample-quality warnings, cost signals, relocation factors, negotiation guidance, and mandatory refresh rules.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "nodeId",
+    "contractVersion",
+    "status",
+    "data",
+    "sources",
+    "contextEvidence",
+    "verification"
+  ],
+  "properties": {
+    "nodeId": {
+      "const": "compensation-location"
+    },
+    "contractVersion": {
+      "const": "1.0.0"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "complete",
+        "partial"
+      ]
+    },
+    "data": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "currency": {
+          "type": "string",
+          "minLength": 1
+        },
+        "dataFreshness": {
+          "type": "string",
+          "format": "date"
+        },
+        "roleCompensation": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "roleId": {
+                "$ref": "../common/common.schema.json#/$defs/RoleId"
+              },
+              "level": {
+                "type": "string",
+                "minLength": 1
+              },
+              "location": {
+                "type": "string",
+                "minLength": 1
+              },
+              "baseRange": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "minimum": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "maximum": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  }
+                },
+                "required": [
+                  "minimum",
+                  "maximum"
+                ]
+              },
+              "totalCompensationRange": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "minimum": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "maximum": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  }
+                },
+                "required": [
+                  "minimum",
+                  "maximum"
+                ]
+              },
+              "components": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "sampleQuality": {
+                "type": "string",
+                "enum": [
+                  "strong",
+                  "medium",
+                  "weak",
+                  "unavailable"
+                ]
+              },
+              "evidenceRefs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "uniqueItems": true
+              }
+            },
+            "required": [
+              "roleId",
+              "level",
+              "location",
+              "baseRange",
+              "totalCompensationRange",
+              "components",
+              "sampleQuality",
+              "evidenceRefs"
+            ]
+          },
+          "minItems": 1
+        },
+        "locationComparison": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "location": {
+                "type": "string",
+                "minLength": 1
+              },
+              "costSignals": {
+                "type": "array",
+                "items": {
+                  "$ref": "../common/common.schema.json#/$defs/Metric"
+                }
+              },
+              "relocationFactors": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "qualification": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "location",
+              "costSignals",
+              "relocationFactors",
+              "qualification"
+            ]
+          }
+        },
+        "negotiationGuidance": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "refreshRequiredAtApplication": {
+          "type": "boolean"
+        },
+        "metadata": {
+          "$ref": "../common/common.schema.json#/$defs/ResearchMetadata"
+        }
+      },
+      "required": [
+        "currency",
+        "dataFreshness",
+        "roleCompensation",
+        "locationComparison",
+        "negotiationGuidance",
+        "refreshRequiredAtApplication",
+        "metadata"
+      ]
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "../common/common.schema.json#/$defs/EvidenceSource"
+      },
+      "minItems": 1
+    },
+    "contextEvidence": {
+      "type": "array",
+      "items": {
+        "$ref": "../common/common.schema.json#/$defs/ContextEvidence"
+      }
+    },
+    "verification": {
+      "$ref": "../common/common.schema.json#/$defs/NodeVerification"
+    }
+  },
+  "x-contractgraph": {
+    "purpose": "Provides role- and location-specific compensation evidence, sample-quality warnings, cost signals, relocation factors, negotiation guidance, and mandatory refresh rules.",
+    "aggregationPath": "compensationAndLocation",
+    "dependsOn": [
+      "company-intelligence",
+      "role-intelligence"
+    ],
+    "parallelizableWhenReady": true,
+    "multiplicity": "single",
+    "completionRules": [
+      "The output must validate against this schema.",
+      "status must be complete before the node can be accepted.",
+      "Every material research claim must resolve to at least one evidence source.",
+      "Every candidate-specific claim must resolve to canonical context evidence.",
+      "The producing subagent cannot approve its own output.",
+      "Semantic verification must pass before aggregation."
+    ]
+  }
+}

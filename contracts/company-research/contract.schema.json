@@ -1,0 +1,284 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contractgraph.dev/contracts/company-research/contract.schema.json",
+  "title": "CareerOS Company Research Final Contract",
+  "description": "The final deterministic aggregation contract for company research, interview preparation, candidate alignment, project deep dives, and role-specific resume analysis.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "documentType",
+    "run",
+    "candidateContextSnapshot",
+    "companyIntelligence",
+    "roleIntelligence",
+    "companyInitiatives",
+    "interviewProcess",
+    "dsa",
+    "csFundamentals",
+    "domainKnowledge",
+    "hld",
+    "lld",
+    "behavioral",
+    "profileAlignment",
+    "projectDeepDive",
+    "resumeAnalysis",
+    "compensationAndLocation",
+    "networkingAndReferral",
+    "applicationStrategy",
+    "resources",
+    "sourceRegistry",
+    "meta"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "3.0.0"
+    },
+    "documentType": {
+      "const": "CareerOSCompanyResearch"
+    },
+    "run": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "runId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "companyName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "researchAsOf": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "contractBundleVersion": {
+          "const": "1.0.0"
+        },
+        "contextManifestHash": {
+          "type": "string",
+          "minLength": 1
+        },
+        "configuredRoles": {
+          "type": "array",
+          "items": {
+            "$ref": "common/common.schema.json#/$defs/RoleId"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "runId",
+        "companyName",
+        "researchAsOf",
+        "contractBundleVersion",
+        "contextManifestHash",
+        "configuredRoles"
+      ]
+    },
+    "candidateContextSnapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "contextRefs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "targetRoles": {
+          "type": "array",
+          "items": {
+            "$ref": "common/common.schema.json#/$defs/RoleId"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "preparationLanguages": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "applicationWindow": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "locationPreferences": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "truthBoundaries": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "contextRefs",
+        "targetRoles",
+        "preparationLanguages",
+        "applicationWindow",
+        "locationPreferences",
+        "truthBoundaries"
+      ]
+    },
+    "companyIntelligence": {
+      "$ref": "node-contracts/company-intelligence.contract.json#/properties/data"
+    },
+    "roleIntelligence": {
+      "$ref": "node-contracts/role-intelligence.contract.json#/properties/data"
+    },
+    "companyInitiatives": {
+      "$ref": "node-contracts/company-initiatives.contract.json#/properties/data"
+    },
+    "interviewProcess": {
+      "$ref": "node-contracts/interview-process.contract.json#/properties/data"
+    },
+    "dsa": {
+      "$ref": "node-contracts/dsa.contract.json#/properties/data"
+    },
+    "csFundamentals": {
+      "$ref": "node-contracts/cs-fundamentals.contract.json#/properties/data"
+    },
+    "domainKnowledge": {
+      "$ref": "node-contracts/domain-knowledge.contract.json#/properties/data"
+    },
+    "hld": {
+      "$ref": "node-contracts/hld.contract.json#/properties/data"
+    },
+    "lld": {
+      "$ref": "node-contracts/lld.contract.json#/properties/data"
+    },
+    "behavioral": {
+      "$ref": "node-contracts/behavioral.contract.json#/properties/data"
+    },
+    "profileAlignment": {
+      "$ref": "node-contracts/profile-alignment.contract.json#/properties/data"
+    },
+    "projectDeepDive": {
+      "$ref": "node-contracts/project-deep-dive.contract.json#/properties/data"
+    },
+    "resumeAnalysis": {
+      "$ref": "node-contracts/resume-analysis.contract.json#/properties/data"
+    },
+    "compensationAndLocation": {
+      "$ref": "node-contracts/compensation-location.contract.json#/properties/data"
+    },
+    "networkingAndReferral": {
+      "$ref": "node-contracts/networking-referral.contract.json#/properties/data"
+    },
+    "applicationStrategy": {
+      "$ref": "node-contracts/application-strategy.contract.json#/properties/data"
+    },
+    "resources": {
+      "$ref": "node-contracts/resources.contract.json#/properties/data"
+    },
+    "sourceRegistry": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "common/common.schema.json#/$defs/EvidenceSource"
+      }
+    },
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "generatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "timezone": {
+          "type": "string",
+          "minLength": 1
+        },
+        "researchVersion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "freshnessReviewDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "confidenceSummary": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "common/common.schema.json#/$defs/Confidence"
+          }
+        },
+        "caveats": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "validation": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "jsonSyntax": {
+              "const": "passed"
+            },
+            "mainSchema": {
+              "const": "passed"
+            },
+            "requiredNodesAccepted": {
+              "type": "integer",
+              "minimum": 17
+            },
+            "unresolvedEvidenceRefs": {
+              "const": 0
+            },
+            "unresolvedContextRefs": {
+              "const": 0
+            },
+            "duplicateCanonicalKeys": {
+              "const": 0
+            },
+            "globalVerification": {
+              "const": "passed"
+            }
+          },
+          "required": [
+            "jsonSyntax",
+            "mainSchema",
+            "requiredNodesAccepted",
+            "unresolvedEvidenceRefs",
+            "unresolvedContextRefs",
+            "duplicateCanonicalKeys",
+            "globalVerification"
+          ]
+        }
+      },
+      "required": [
+        "generatedAt",
+        "timezone",
+        "researchVersion",
+        "freshnessReviewDate",
+        "confidenceSummary",
+        "caveats",
+        "validation"
+      ]
+    }
+  },
+  "x-contractgraph": {
+    "bundle": "contract.bundle.json",
+    "aggregation": "deterministic",
+    "globalVerifier": "opus",
+    "acceptanceRule": "All required nodes must be structurally valid, semantically verified, evidence-valid where applicable, freshness-valid where time-sensitive, and globally consistent."
+  }
+}
