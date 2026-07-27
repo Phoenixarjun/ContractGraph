@@ -12,3 +12,9 @@ runtime/traces/
 # Python
 __pycache__/
 *.pyc
+
+# Private canonical ground-truth (this user's real workflow data) — never commit.
+# The PUBLIC structural example lives under context/synthetic/.
+context/canonical/
+context/context-manifest.json
+context/derived/

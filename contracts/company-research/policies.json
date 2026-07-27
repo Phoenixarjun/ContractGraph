@@ -19,11 +19,17 @@
     }
   },
   "execution": {
-    "maxParallelNodes": 5,
+    "maxParallelNodes": 4,
     "maxRetriesPerNode": 2,
     "retryFailedNodesOnly": true,
     "deterministicAggregation": true,
-    "workerCannotSelfApprove": true
+    "workerCannotSelfApprove": true,
+    "concurrencyModes": {
+      "default": 4,
+      "timeBounded": 8,
+      "tokenEfficient": 2
+    },
+    "tokenEfficientBatching": true
   },
   "evidence": {
     "requireReachableUrls": true,

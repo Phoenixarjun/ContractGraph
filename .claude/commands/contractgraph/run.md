@@ -8,7 +8,9 @@ Requires a prior successful `/contractgraph:init`. If `runtime/compiled/graph.js
 
 Arguments from the user: $ARGUMENTS
 
-Parse: the bundle path (default `contracts/company-research`); `--input` (required runtime value — for company-research this is the company name); optional `--roles`, `--resume-refs`, `--job-urls`, `--as-of`, `--force-refresh`, `--dry-run`.
+Parse: the bundle path (default `contracts/company-research`); `--input` (required runtime value — for company-research this is the company name); optional `--roles`, `--resume-refs`, `--job-urls`, `--as-of`, `--force-refresh`, `--dry-run`, `--time-bounded`, `--token-efficient`.
+
+**Concurrency modes** (from `policies.json.execution.concurrencyModes`): default = `default` (4 active nodes). `--time-bounded` raises the cap to `timeBounded` (8) for lower wall-clock at higher token cost. `--token-efficient` lowers it to `tokenEfficient` (2) and reuses agents to process nodes in batches. Never exceed the mode's cap.
 
 ## Dry run
 If `--dry-run` is present, run `python scripts/dry_run.py --bundle <bundle> --compiled runtime/compiled --input <input.json>` and present its plan: selected graph + layer order, parallel groups, chosen models, loaded context references, selected skills, expected cache hits, estimated budget, and the files that would be written. **Write nothing else and stop.**
@@ -18,7 +20,7 @@ If `--dry-run` is present, run `python scripts/dry_run.py --bundle <bundle> --co
 2. **Create the run dir** `runtime/runs/<run-id>/` with subdirs `manifests/ node-state/ evidence/ sections/ verification/ logs/ final/`. Write `run.json` (runId, bundleId, startedAt, input summary) and `input.json`. Snapshot the compiled graph to `graph.snapshot.yaml` and copy the compiled manifests into `manifests/`.
 3. **Resolve runtime input** against `runtimeInputs`: required fields present (ask if missing); optional fall back to bundle defaults (e.g. `targetRoles`).
 4. **Compute a cache key per node** with `python scripts/cache_key.py --bundle <bundle> --node <id> --input <input.json>`. A node with a valid, fresh cache entry becomes `SKIPPED_CACHE` (unless `--force-refresh`). Never cache invalid/partial/unverified/stale outputs.
-5. **Walk the graph by layer.** A node is `READY` only when every `dependsOn` node is `ACCEPTED` or `SKIPPED_CACHE`. Run ready nodes in parallel, capped at `policies.execution.maxParallelNodes`. `resume-analysis` is a map node — run it once per configured role, writing `sections/resume-analysis/<roleId>.json`.
+5. **Walk the graph by layer.** A node is `READY` only when every `dependsOn` node is `ACCEPTED` or `SKIPPED_CACHE`. Run ready nodes in parallel, capped at the active concurrency mode (default 4). Isolate node responsibilities — never assign one agent per tiny field; a node agent owns its whole subcontract. Pass compact structured section outputs (or a compaction/handoff summary) between nodes, never full transcripts. `resume-analysis` is a map node — run it once per configured role, writing `sections/resume-analysis/<roleId>.json`.
 6. **Dispatch each node to its generated subagent** (`.claude/agents/generated/<id>`). Record state transitions in `node-state/<id>.json` (PENDING→READY→RUNNING→…). A worker may complete its own node only; it must never approve its own output or declare the whole workflow complete.
 7. **Structural validation** of each raw output: `python scripts/validate_node_output.py sections/<id>.json --bundle <bundle> --node <id>`. Invalid JSON/shape → `STRUCTURAL_FAILED` → one bounded structural-repair attempt (haiku) → re-validate.
 8. **Reference + URL checks:** `validate_references.py` (evidenceRefs/contextRefs/roleIds resolve) and, when policy requires reachable URLs, `validate_source_urls.py` (prefer Claude Code WebFetch for live reachability).
