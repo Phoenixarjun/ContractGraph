@@ -1,0 +1,37 @@
+{
+  "documentType": "ContractGraphContextManifest",
+  "version": "1.0.0",
+  "generatedBy": "build_context_manifest.py",
+  "contextDir": "context/synthetic/study-plan",
+  "note": "References canonical sources by path and hash. Originals are never modified. Private context is excluded.",
+  "entries": [
+    {
+      "path": "canonical/goals.md",
+      "sourcePath": "context/canonical/goals.md",
+      "sha256": "fc80ac50c4ddf292308c4af6c171e89d652d3a4b05b9af0577f3c0a0ae477ee8",
+      "bytes": 170,
+      "type": "text",
+      "status": "provided",
+      "needsSummary": false
+    },
+    {
+      "path": "canonical/knowledge.md",
+      "sourcePath": "context/canonical/knowledge.md",
+      "sha256": "81bd5255869c1c81ce7993967eca33caff3f7dc10eea69ef05d45ce6ae3c2d5a",
+      "bytes": 186,
+      "type": "text",
+      "status": "provided",
+      "needsSummary": false
+    },
+    {
+      "path": "canonical/preferences.md",
+      "sourcePath": "context/canonical/preferences.md",
+      "sha256": "9ee131c66d4040500e4b47ce6ccaebde318aa68af54e20663b97c747249a2bb0",
+      "bytes": 152,
+      "type": "text",
+      "status": "provided",
+      "needsSummary": false
+    }
+  ],
+  "contextManifestHash": "4ab3d6ff0ed3d0f5610e2fa9d3660b883387ea004be5374a280a73f51945c60d"
+}

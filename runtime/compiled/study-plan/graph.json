@@ -1,0 +1,114 @@
+{
+  "documentType": "ContractGraphCompiledGraph",
+  "version": "1.0.0",
+  "generatedBy": "build_contract_manifest.py",
+  "bundleId": "study-plan",
+  "compiledFrom": "node-contract x-contractgraph.dependsOn, verified against graph.yaml",
+  "nodes": [
+    {
+      "nodeId": "baseline-assessment",
+      "aggregationPath": "baselineAssessment",
+      "dependsOn": [],
+      "multiplicity": "single",
+      "required": true
+    },
+    {
+      "nodeId": "python",
+      "aggregationPath": "python",
+      "dependsOn": [
+        "baseline-assessment"
+      ],
+      "multiplicity": "single",
+      "required": true
+    },
+    {
+      "nodeId": "fastapi",
+      "aggregationPath": "fastapi",
+      "dependsOn": [
+        "baseline-assessment"
+      ],
+      "multiplicity": "single",
+      "required": true
+    },
+    {
+      "nodeId": "databases",
+      "aggregationPath": "databases",
+      "dependsOn": [
+        "baseline-assessment"
+      ],
+      "multiplicity": "single",
+      "required": true
+    },
+    {
+      "nodeId": "distributed-systems",
+      "aggregationPath": "distributedSystems",
+      "dependsOn": [
+        "baseline-assessment"
+      ],
+      "multiplicity": "single",
+      "required": true
+    },
+    {
+      "nodeId": "evaluation-plan",
+      "aggregationPath": "evaluationPlan",
+      "dependsOn": [
+        "python",
+        "fastapi",
+        "databases",
+        "distributed-systems"
+      ],
+      "multiplicity": "single",
+      "required": true
+    }
+  ],
+  "dependencies": {
+    "baseline-assessment": [],
+    "python": [
+      "baseline-assessment"
+    ],
+    "fastapi": [
+      "baseline-assessment"
+    ],
+    "databases": [
+      "baseline-assessment"
+    ],
+    "distributed-systems": [
+      "baseline-assessment"
+    ],
+    "evaluation-plan": [
+      "python",
+      "fastapi",
+      "databases",
+      "distributed-systems"
+    ]
+  },
+  "layers": [
+    {
+      "level": 0,
+      "nodes": [
+        "baseline-assessment"
+      ]
+    },
+    {
+      "level": 1,
+      "nodes": [
+        "databases",
+        "distributed-systems",
+        "fastapi",
+        "python"
+      ]
+    },
+    {
+      "level": 2,
+      "nodes": [
+        "evaluation-plan"
+      ]
+    }
+  ],
+  "mapNodes": [],
+  "sourceVerification": {
+    "graphYamlPresent": true,
+    "dependencyConflicts": [],
+    "danglingReferences": {}
+  }
+}
