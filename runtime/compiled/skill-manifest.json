@@ -1,6 +1,6 @@
 {
   "documentType": "ContractGraphSkillManifest",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "generatedBy": "/contractgraph:init (skill-registry-manager)",
   "generatedAt": "2026-07-27",
   "registry": {
@@ -13,7 +13,7 @@
         "tokenSizeEstimate": 1065,
         "privacyStatus": "clean",
         "creationSource": "bootstrap",
-        "lastEvaluationDate": null
+        "lastEvaluationDate": "2026-07-27"
       },
       {
         "skillId": "capability-detector",
@@ -23,7 +23,7 @@
         "tokenSizeEstimate": 1008,
         "privacyStatus": "clean",
         "creationSource": "bootstrap",
-        "lastEvaluationDate": null
+        "lastEvaluationDate": "2026-07-27"
       },
       {
         "skillId": "context-advisor",
@@ -49,11 +49,11 @@
         "skillId": "graph-plan-reviewer",
         "tier": "bootstrap",
         "path": ".claude/skills/bootstrap/graph-plan-reviewer/SKILL.md",
-        "contentHash": "fd78e3af737da42ffdf65ebdca7a58a696adde359d21a47c928220a058a7446c",
-        "tokenSizeEstimate": 1037,
+        "contentHash": "4e7a0f0005335edeabac13ad80c95fcce0394d9c37c96a165b402e502bf2d9db",
+        "tokenSizeEstimate": 1053,
         "privacyStatus": "clean",
         "creationSource": "bootstrap",
-        "lastEvaluationDate": null
+        "lastEvaluationDate": "2026-07-27"
       },
       {
         "skillId": "skill-registry-manager",
@@ -63,7 +63,7 @@
         "tokenSizeEstimate": 1079,
         "privacyStatus": "clean",
         "creationSource": "bootstrap",
-        "lastEvaluationDate": null
+        "lastEvaluationDate": "2026-07-27"
       },
       {
         "skillId": "workflow-compiler",
@@ -73,49 +73,233 @@
         "tokenSizeEstimate": 989,
         "privacyStatus": "clean",
         "creationSource": "bootstrap",
-        "lastEvaluationDate": null
+        "lastEvaluationDate": "2026-07-27"
       }
     ],
-    "reusable": [],
+    "reusable": [
+      {
+        "skillId": "contract-completeness-check",
+        "tier": "reusable",
+        "path": ".claude/skills/reusable/contract-completeness-check/SKILL.md",
+        "contentHash": "2110c5789eed101a7d2f50a88a8b2c2a8abf0281f8deb05e512d0f017df0990c",
+        "tokenSizeEstimate": 855,
+        "privacyStatus": "clean",
+        "creationSource": "reusable",
+        "lastEvaluationDate": "2026-07-27"
+      },
+      {
+        "skillId": "cross-section-contradiction-detection",
+        "tier": "reusable",
+        "path": ".claude/skills/reusable/cross-section-contradiction-detection/SKILL.md",
+        "contentHash": "f663a2f743eae708bd7ede48e0c6573eb9671d29f6e6274dadefca482f4bdd94",
+        "tokenSizeEstimate": 831,
+        "privacyStatus": "clean",
+        "creationSource": "reusable",
+        "lastEvaluationDate": "2026-07-27"
+      },
+      {
+        "skillId": "evidence-backed-web-research",
+        "tier": "reusable",
+        "path": ".claude/skills/reusable/evidence-backed-web-research/SKILL.md",
+        "contentHash": "1fbd18a31d37ce7f419c94483b52ec9e615696450e45b5a0876f0cb9ef22ae4a",
+        "tokenSizeEstimate": 896,
+        "privacyStatus": "clean",
+        "creationSource": "reusable",
+        "lastEvaluationDate": "2026-07-27"
+      },
+      {
+        "skillId": "evidence-support-check",
+        "tier": "reusable",
+        "path": ".claude/skills/reusable/evidence-support-check/SKILL.md",
+        "contentHash": "a9b5a7c529c74172b04916be16fe90ac68a50307110f5b0255de7db65f347d66",
+        "tokenSizeEstimate": 875,
+        "privacyStatus": "clean",
+        "creationSource": "reusable",
+        "lastEvaluationDate": "2026-07-27"
+      },
+      {
+        "skillId": "freshness-verification",
+        "tier": "reusable",
+        "path": ".claude/skills/reusable/freshness-verification/SKILL.md",
+        "contentHash": "459e8491e07e9e6544f59da9e3fcbc94d5570b08b15ba97383704d0780b2009b",
+        "tokenSizeEstimate": 801,
+        "privacyStatus": "clean",
+        "creationSource": "reusable",
+        "lastEvaluationDate": "2026-07-27"
+      },
+      {
+        "skillId": "profile-alignment",
+        "tier": "reusable",
+        "path": ".claude/skills/reusable/profile-alignment/SKILL.md",
+        "contentHash": "a74d3e9a9c75228ae4a40ae364372ada54b2a9cc6438c4a94718f249c77eb413",
+        "tokenSizeEstimate": 819,
+        "privacyStatus": "clean",
+        "creationSource": "reusable",
+        "lastEvaluationDate": "2026-07-27"
+      },
+      {
+        "skillId": "project-evidence-mapping-check",
+        "tier": "reusable",
+        "path": ".claude/skills/reusable/project-evidence-mapping-check/SKILL.md",
+        "contentHash": "9d80b111c98f429e3adf04225e4b5144eb0f9de9dc303969fb89a94f8a121b32",
+        "tokenSizeEstimate": 869,
+        "privacyStatus": "clean",
+        "creationSource": "reusable",
+        "lastEvaluationDate": "2026-07-27"
+      },
+      {
+        "skillId": "ranking-justification-check",
+        "tier": "reusable",
+        "path": ".claude/skills/reusable/ranking-justification-check/SKILL.md",
+        "contentHash": "c81538945f8dfe691ad1a066122a7be46f5bbb1f5967bca9db4050544e25f8c7",
+        "tokenSizeEstimate": 823,
+        "privacyStatus": "clean",
+        "creationSource": "reusable",
+        "lastEvaluationDate": "2026-07-27"
+      },
+      {
+        "skillId": "resume-evidence-mapping",
+        "tier": "reusable",
+        "path": ".claude/skills/reusable/resume-evidence-mapping/SKILL.md",
+        "contentHash": "a7d3cb95b12ee2b69b5eaf92a1a61e8f92bdbde8b959815277dd2bc725d0c9b5",
+        "tokenSizeEstimate": 855,
+        "privacyStatus": "clean",
+        "creationSource": "reusable",
+        "lastEvaluationDate": "2026-07-27"
+      },
+      {
+        "skillId": "resume-truthfulness-check",
+        "tier": "reusable",
+        "path": ".claude/skills/reusable/resume-truthfulness-check/SKILL.md",
+        "contentHash": "531372d9138452d9cfbb355f35ccc065bc8c9a517007304ad8c352a03c653af0",
+        "tokenSizeEstimate": 872,
+        "privacyStatus": "clean",
+        "creationSource": "reusable",
+        "lastEvaluationDate": "2026-07-27"
+      },
+      {
+        "skillId": "source-quality-assessment",
+        "tier": "reusable",
+        "path": ".claude/skills/reusable/source-quality-assessment/SKILL.md",
+        "contentHash": "0ef3d210494a5f621d4f0800541f24829df20bc94b77516a5d8e3895fa71c5df",
+        "tokenSizeEstimate": 861,
+        "privacyStatus": "clean",
+        "creationSource": "reusable",
+        "lastEvaluationDate": "2026-07-27"
+      }
+    ],
     "generated": []
   },
   "capabilityBindings": [
     {
       "capabilityId": "cross-section-contradiction-detection",
-      "matchedSkill": null,
-      "status": "pending-creation",
-      "reason": "no compatible skill in .claude/skills/reusable or generated; execution skills deferred per project scope"
+      "matchedSkill": "cross-section-contradiction-detection",
+      "status": "bound",
+      "reusableSkillPath": ".claude/skills/reusable/cross-section-contradiction-detection/SKILL.md",
+      "requiredByNodes": [
+        "application-strategy",
+        "global-verifier",
+        "profile-alignment",
+        "resume-analysis",
+        "section-verifier"
+      ]
     },
     {
       "capabilityId": "evidence-backed-web-research",
-      "matchedSkill": null,
-      "status": "pending-creation",
-      "reason": "no compatible skill in .claude/skills/reusable or generated; execution skills deferred per project scope"
+      "matchedSkill": "evidence-backed-web-research",
+      "status": "bound",
+      "reusableSkillPath": ".claude/skills/reusable/evidence-backed-web-research/SKILL.md",
+      "requiredByNodes": [
+        "behavioral",
+        "company-initiatives",
+        "company-intelligence",
+        "compensation-location",
+        "cs-fundamentals",
+        "domain-knowledge",
+        "dsa",
+        "hld",
+        "interview-process",
+        "lld",
+        "networking-referral",
+        "role-intelligence"
+      ]
     },
     {
       "capabilityId": "freshness-verification",
-      "matchedSkill": null,
-      "status": "pending-creation",
-      "reason": "no compatible skill in .claude/skills/reusable or generated; execution skills deferred per project scope"
+      "matchedSkill": "freshness-verification",
+      "status": "bound",
+      "reusableSkillPath": ".claude/skills/reusable/freshness-verification/SKILL.md",
+      "requiredByNodes": [
+        "company-initiatives",
+        "company-intelligence",
+        "compensation-location",
+        "global-verifier",
+        "interview-process",
+        "role-intelligence",
+        "section-verifier"
+      ]
     },
     {
       "capabilityId": "profile-alignment",
-      "matchedSkill": null,
-      "status": "pending-creation",
-      "reason": "no compatible skill in .claude/skills/reusable or generated; execution skills deferred per project scope"
+      "matchedSkill": "profile-alignment",
+      "status": "bound",
+      "reusableSkillPath": ".claude/skills/reusable/profile-alignment/SKILL.md",
+      "requiredByNodes": [
+        "application-strategy",
+        "company-initiatives",
+        "networking-referral",
+        "profile-alignment",
+        "project-deep-dive",
+        "resume-analysis"
+      ]
     },
     {
       "capabilityId": "resume-evidence-mapping",
-      "matchedSkill": null,
-      "status": "pending-creation",
-      "reason": "no compatible skill in .claude/skills/reusable or generated; execution skills deferred per project scope"
+      "matchedSkill": "resume-evidence-mapping",
+      "status": "bound",
+      "reusableSkillPath": ".claude/skills/reusable/resume-evidence-mapping/SKILL.md",
+      "requiredByNodes": [
+        "behavioral",
+        "profile-alignment",
+        "project-deep-dive",
+        "resume-analysis"
+      ]
     },
     {
       "capabilityId": "source-quality-assessment",
-      "matchedSkill": null,
-      "status": "pending-creation",
-      "reason": "no compatible skill in .claude/skills/reusable or generated; execution skills deferred per project scope"
+      "matchedSkill": "source-quality-assessment",
+      "status": "bound",
+      "reusableSkillPath": ".claude/skills/reusable/source-quality-assessment/SKILL.md",
+      "requiredByNodes": [
+        "behavioral",
+        "company-initiatives",
+        "company-intelligence",
+        "compensation-location",
+        "cs-fundamentals",
+        "domain-knowledge",
+        "dsa",
+        "global-verifier",
+        "hld",
+        "interview-process",
+        "lld",
+        "resources",
+        "role-intelligence",
+        "section-verifier"
+      ]
     }
   ],
-  "note": "Bootstrap skills present. No reusable/generated execution skills yet; capability bindings are pending skill-creator generation (intentionally deferred)."
+  "verifierSkills": [
+    "contract-completeness-check",
+    "evidence-support-check",
+    "project-evidence-mapping-check",
+    "ranking-justification-check",
+    "resume-truthfulness-check"
+  ],
+  "summary": {
+    "capabilities": 6,
+    "bound": 6,
+    "pending": 0,
+    "reusableRegistered": 11,
+    "bootstrapRegistered": 7
+  }
 }
