@@ -6,6 +6,8 @@ allowed-tools: Read, Write, Glob, Grep, Bash, AskUserQuestion
 
 Invoke the `contract-designer` bootstrap skill (`.claude/skills/bootstrap/contract-designer/SKILL.md`) and follow its procedure exactly.
 
+**Approved-bundle exception:** `contracts/company-research` is an already-approved bootstrap bundle. If the user's target resolves to it, do NOT redesign or regenerate its contracts — treat it as approved and only run `python scripts/validate_contract_bundle.py contracts/company-research` (or defer to `/contractgraph:validate`), then report the result.
+
 User input (intent and/or example/legacy file paths, may be empty): $ARGUMENTS
 
 Steps:
