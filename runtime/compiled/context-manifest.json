@@ -1,0 +1,64 @@
+{
+  "documentType": "ContractGraphContextManifest",
+  "version": "1.0.0",
+  "generatedBy": "build_context_manifest.py",
+  "contextDir": "context",
+  "note": "References canonical sources by path and hash. Originals are never modified. Private context is excluded.",
+  "entries": [
+    {
+      "path": "canonical/experience.md",
+      "sourcePath": "context/canonical/experience.md",
+      "sha256": "5256394c804547dd6e535271c8a35615392de0fd22e6281df1c4ca4edd9d78fa",
+      "bytes": 246,
+      "type": "text",
+      "status": "empty",
+      "needsSummary": false
+    },
+    {
+      "path": "canonical/goals.md",
+      "sourcePath": "context/canonical/goals.md",
+      "sha256": "428b46320bfdd269123de0b03307319994a20e0a21adb6f2c6adad547fdefcdd",
+      "bytes": 294,
+      "type": "text",
+      "status": "empty",
+      "needsSummary": false
+    },
+    {
+      "path": "canonical/preferences.md",
+      "sourcePath": "context/canonical/preferences.md",
+      "sha256": "da4690c0063684315f978842a1aea9b427ffc8f67009a4075fb7641830be0bad",
+      "bytes": 253,
+      "type": "text",
+      "status": "empty",
+      "needsSummary": false
+    },
+    {
+      "path": "canonical/profile.md",
+      "sourcePath": "context/canonical/profile.md",
+      "sha256": "cb226428e30e76ffbaa4259c19a78e512779b73d57a3ae7ea0ff6ebcab44422c",
+      "bytes": 243,
+      "type": "text",
+      "status": "empty",
+      "needsSummary": false
+    },
+    {
+      "path": "canonical/resume/Naresh B A.pdf",
+      "sourcePath": "context/canonical/resume/Naresh B A.pdf",
+      "sha256": "a229659965ebd2fbb8d0c9a9c319de405f5f49ba31e7cf1cc5c44b3013341184",
+      "bytes": 138972,
+      "type": "binary",
+      "status": null,
+      "needsSummary": true
+    },
+    {
+      "path": "canonical/skills.md",
+      "sourcePath": "context/canonical/skills.md",
+      "sha256": "e4b9e8e5af189a6aa23c0db2551e598e646702dc74df7300441d18cee94aabf3",
+      "bytes": 250,
+      "type": "text",
+      "status": "empty",
+      "needsSummary": false
+    }
+  ],
+  "contextManifestHash": "193d70b738acbf6d33d8e16bd99d31247bdec207b9990b7c56f286ef53046507"
+}

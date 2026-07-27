@@ -1,0 +1,300 @@
+{
+  "documentType": "ContractGraphContractManifest",
+  "version": "1.0.0",
+  "generatedBy": "build_contract_manifest.py",
+  "bundleId": "company-research",
+  "bundleVersion": "1.0.0",
+  "mainContract": "contract.schema.json",
+  "mainContractHash": "61155012fdcf1aa1673722182dbcc3043a4c6b46007e0e10d7186b4fe6d49f03",
+  "nodes": [
+    {
+      "nodeId": "company-intelligence",
+      "contract": "node-contracts/company-intelligence.contract.json",
+      "contractHash": "50285e2daa9ef18d291503ea6ba32e06366467fc320b8b69f55b5746504c32e2",
+      "aggregationPath": "companyIntelligence",
+      "dependsOn": [],
+      "multiplicity": "single",
+      "required": true,
+      "purpose": "Produces the authoritative company facts, engineering culture, technology strategy, target roles, risks, hiring signals, products, scale signals, and official links."
+    },
+    {
+      "nodeId": "role-intelligence",
+      "contract": "node-contracts/role-intelligence.contract.json",
+      "contractHash": "67bb88a98d26c667fa28f3d91ca7503926a8a490ab2877dbef00bc1e4459abdf",
+      "aggregationPath": "roleIntelligence",
+      "dependsOn": [
+        "company-intelligence"
+      ],
+      "multiplicity": "single",
+      "required": true,
+      "purpose": "Researches the target company's role expectations, titles, levels, responsibilities, skill requirements, locations, teams, and current job-posting evidence for the configured role set."
+    },
+    {
+      "nodeId": "company-initiatives",
+      "contract": "node-contracts/company-initiatives.contract.json",
+      "contractHash": "d8618d93bb47c99fd1a46fd0f8e97a8ca5cd933f1561713b9b428808b6047561",
+      "aggregationPath": "companyInitiatives",
+      "dependsOn": [
+        "company-intelligence",
+        "role-intelligence"
+      ],
+      "multiplicity": "single",
+      "required": true,
+      "purpose": "Discovers, verifies, explains, and ranks the company's public products, projects, open-source work, research, infrastructure programs, and recent technical bets against target roles and candidate evidence."
+    },
+    {
+      "nodeId": "interview-process",
+      "contract": "node-contracts/interview-process.contract.json",
+      "contractHash": "f93dc843f3e8ec969f72022256a473aa5dd4b7adf4cd1a048b3ab1bd51ed6678",
+      "aggregationPath": "interviewProcess",
+      "dependsOn": [
+        "company-intelligence",
+        "role-intelligence"
+      ],
+      "multiplicity": "single",
+      "required": true,
+      "purpose": "Produces a role-aware, evidence-backed interview-loop model while clearly separating common patterns from team-specific and anecdotal variation."
+    },
+    {
+      "nodeId": "dsa",
+      "contract": "node-contracts/dsa.contract.json",
+      "contractHash": "f544bc9a478c85d51bbc56b1397751731a0327c4dc13fa94ed829889dc09896d",
+      "aggregationPath": "dsa",
+      "dependsOn": [
+        "role-intelligence",
+        "interview-process"
+      ],
+      "multiplicity": "single",
+      "required": true,
+      "purpose": "Produces role-aware DSA patterns, reported questions, canonical practice URLs, evidence, recognition signals, solution reasoning, complexity, edge cases, follow-ups, and preparation workflow."
+    },
+    {
+      "nodeId": "cs-fundamentals",
+      "contract": "node-contracts/cs-fundamentals.contract.json",
+      "contractHash": "ebc648dbb5e9164d10db61fef2e467ebfeaa51ee23fbaf01d18b90b595668499",
+      "aggregationPath": "csFundamentals",
+      "dependsOn": [
+        "role-intelligence",
+        "interview-process"
+      ],
+      "multiplicity": "single",
+      "required": true,
+      "purpose": "Produces role-specific preparation for programming language internals, OOP, operating systems, DBMS, networking, concurrency, distributed systems, testing, cloud/runtime, AI/ML foundations, and security."
+    },
+    {
+      "nodeId": "domain-knowledge",
+      "contract": "node-contracts/domain-knowledge.contract.json",
+      "contractHash": "2a7137c1da32f069358cac2f1386c34b6a2564c9d5c42668b7b2a43d98971308",
+      "aggregationPath": "domainKnowledge",
+      "dependsOn": [
+        "company-intelligence",
+        "company-initiatives",
+        "role-intelligence"
+      ],
+      "multiplicity": "single",
+      "required": true,
+      "purpose": "Defines the role-specific backend, AI, ML, FDE, and software-engineering knowledge expected by the target company beyond generic CS fundamentals."
+    },
+    {
+      "nodeId": "hld",
+      "contract": "node-contracts/hld.contract.json",
+      "contractHash": "66da2a3d9cd078d6184737c19ca83725954f6a7534d25c4047543f46bf611533",
+      "aggregationPath": "hld",
+      "dependsOn": [
+        "company-intelligence",
+        "company-initiatives",
+        "role-intelligence",
+        "interview-process"
+      ],
+      "multiplicity": "single",
+      "required": true,
+      "purpose": "Produces company- and role-specific high-level system-design questions with requirements, scale, APIs, data models, architecture, consistency, partitioning, reliability, security, observability, rollout, evidence, and project mapping."
+    },
+    {
+      "nodeId": "lld",
+      "contract": "node-contracts/lld.contract.json",
+      "contractHash": "3f0a302f90973c35b0ba0604316a35dac18d34c668a57c6f45a0ff8593bfa305",
+      "aggregationPath": "lld",
+      "dependsOn": [
+        "company-intelligence",
+        "company-initiatives",
+        "role-intelligence",
+        "interview-process"
+      ],
+      "multiplicity": "single",
+      "required": true,
+      "purpose": "Produces company- and role-specific low-level design questions with domain models, interfaces, patterns, concurrency, persistence, validation, error handling, tests, evidence, and project mapping."
+    },
+    {
+      "nodeId": "behavioral",
+      "contract": "node-contracts/behavioral.contract.json",
+      "contractHash": "3bc7e1b7d4f781966566c0e0b4c4e179fcfed9b1ce551bb2af35d6e1a543bf17",
+      "aggregationPath": "behavioral",
+      "dependsOn": [
+        "company-intelligence",
+        "role-intelligence",
+        "interview-process"
+      ],
+      "multiplicity": "single",
+      "required": true,
+      "purpose": "Produces company-values-aligned behavioral questions, role applicability, evidence-backed story mappings, truthful answer blueprints, follow-ups, pitfalls, and unresolved personal-story gaps."
+    },
+    {
+      "nodeId": "profile-alignment",
+      "contract": "node-contracts/profile-alignment.contract.json",
+      "contractHash": "5df765da3844c8c6d6bf29cd0202f63f5b723252dd284feafc432ba3d2487a5d",
+      "aggregationPath": "profileAlignment",
+      "dependsOn": [
+        "company-intelligence",
+        "company-initiatives",
+        "role-intelligence",
+        "domain-knowledge"
+      ],
+      "multiplicity": "single",
+      "required": true,
+      "purpose": "Maps canonical candidate evidence to the company and target roles, producing fit scores, green flags, red flags, gaps, truthful positioning, level assessment, and reusable cross-role evidence."
+    },
+    {
+      "nodeId": "project-deep-dive",
+      "contract": "node-contracts/project-deep-dive.contract.json",
+      "contractHash": "d2cd54176bc42314c3a9f57735d43faa9deefae0a2121747c6699bb92c172cf4",
+      "aggregationPath": "projectDeepDive",
+      "dependsOn": [
+        "company-initiatives",
+        "role-intelligence",
+        "profile-alignment"
+      ],
+      "multiplicity": "single",
+      "required": true,
+      "purpose": "Ranks candidate projects for the company and each target role, maps verified evidence and truth boundaries, and generates project-specific interview question packs."
+    },
+    {
+      "nodeId": "resume-analysis",
+      "contract": "node-contracts/resume-analysis.contract.json",
+      "contractHash": "02badc5dfa1c8c0e481d482a021550390281297544f1174e5588484e820a42f2",
+      "aggregationPath": "resumeAnalysis",
+      "dependsOn": [
+        "role-intelligence",
+        "profile-alignment",
+        "project-deep-dive"
+      ],
+      "multiplicity": "one-output-containing-all-configured-roles",
+      "required": true,
+      "purpose": "Evaluates one or more resumes against all configured roles and company requirements, producing green flags, red flags, requirement mappings, truthful enhancement plans, project ordering, keyword guidance, and best-resume selection."
+    },
+    {
+      "nodeId": "compensation-location",
+      "contract": "node-contracts/compensation-location.contract.json",
+      "contractHash": "51ae0f7684ff615698e52f0fa8eb54148805148d44a6d0ab6b7b62aa2a365810",
+      "aggregationPath": "compensationAndLocation",
+      "dependsOn": [
+        "company-intelligence",
+        "role-intelligence"
+      ],
+      "multiplicity": "single",
+      "required": true,
+      "purpose": "Provides role- and location-specific compensation evidence, sample-quality warnings, cost signals, relocation factors, negotiation guidance, and mandatory refresh rules."
+    },
+    {
+      "nodeId": "networking-referral",
+      "contract": "node-contracts/networking-referral.contract.json",
+      "contractHash": "d4cc3b94d98e030fdca3fb00a6ddeacfeeb46e0a4435ad7169c0ffbb3fc3bb62",
+      "aggregationPath": "networkingAndReferral",
+      "dependsOn": [
+        "company-intelligence",
+        "role-intelligence",
+        "profile-alignment"
+      ],
+      "multiplicity": "single",
+      "required": true,
+      "purpose": "Produces role-aware target personas, outreach sequence, message blueprints, referral package requirements, and follow-up policy grounded in company and candidate alignment."
+    },
+    {
+      "nodeId": "application-strategy",
+      "contract": "node-contracts/application-strategy.contract.json",
+      "contractHash": "201d8a70293b855a275e8aafe0c399030d590db82d61a11173e820d9fa033ce5",
+      "aggregationPath": "applicationStrategy",
+      "dependsOn": [
+        "profile-alignment",
+        "resume-analysis",
+        "interview-process",
+        "compensation-location"
+      ],
+      "multiplicity": "single",
+      "required": true,
+      "purpose": "Builds a role-prioritized application plan using company research, fit, resume analysis, compensation, location, interview risk, and candidate timing."
+    },
+    {
+      "nodeId": "resources",
+      "contract": "node-contracts/resources.contract.json",
+      "contractHash": "b4c241716146d9a502ed59c856f1aa9ede1183696754784c9350731935fe6ccd",
+      "aggregationPath": "resources",
+      "dependsOn": [
+        "company-intelligence",
+        "company-initiatives",
+        "dsa",
+        "cs-fundamentals",
+        "domain-knowledge",
+        "hld",
+        "lld",
+        "behavioral"
+      ],
+      "multiplicity": "single",
+      "required": true,
+      "purpose": "Collects, deduplicates, categorizes, and prioritizes all verified learning, evidence, practice, and official resources emitted by accepted nodes."
+    }
+  ],
+  "roles": [
+    {
+      "roleId": "ai-engineer",
+      "path": "roles/ai-engineer.role.json",
+      "hash": "f410aae72c2dfbb95a05d755c4aa72f2fa5322720f10a3c61b8a1d0698bf2d9d"
+    },
+    {
+      "roleId": "forward-deployed-engineer",
+      "path": "roles/forward-deployed-engineer.role.json",
+      "hash": "16e66afc248681d627617c40228965e059e1a3843800a6b6f6b6e8fbdccc032b"
+    },
+    {
+      "roleId": "backend-engineer",
+      "path": "roles/backend-engineer.role.json",
+      "hash": "25a416df4316a8174a9dc1c28e70d332da90c36ba466cddbfabbf455396b248c"
+    },
+    {
+      "roleId": "software-engineer",
+      "path": "roles/software-engineer.role.json",
+      "hash": "7e994a27e23736313fb549a96a3276a5a7a5fa9b578ef16ef4f5ef522614fd9c"
+    },
+    {
+      "roleId": "ml-engineer",
+      "path": "roles/ml-engineer.role.json",
+      "hash": "9c9bec4dfdd25cd135f6810af6f0fb590a163e14a86fa849ddc268a179e21b4f"
+    }
+  ],
+  "aggregation": {
+    "mode": "deterministic",
+    "acceptOnlyVerifiedNodes": true,
+    "deduplicateSourcesBy": [
+      "canonicalUrl",
+      "sourceRef"
+    ],
+    "preserveCanonicalKeys": true,
+    "rejectDuplicateOwnership": true,
+    "buildGlobalSourceRegistry": true
+  },
+  "globalValidation": [
+    "Every required node must be accepted.",
+    "Every evidenceRef must resolve to the global source registry.",
+    "Every contextRef must resolve to the canonical context manifest.",
+    "Every roleId must resolve to a configured role file.",
+    "Every ranked recommendation must cite its scoring rationale.",
+    "No candidate experience may be invented.",
+    "No research claim may be represented as canonical user truth.",
+    "No stale source may support a current hiring, job, compensation, or organization-health claim.",
+    "DSA practice items require a reachable problem URL.",
+    "HLD and LLD items require at least one learning resource.",
+    "Company-specific project and role claims require evidence.",
+    "Final output must validate against contract.schema.json."
+  ],
+  "manifestHash": "ca1a1ab25db5fa09689a4a8854ca937546818782d9ef6af47281fc5b7ef96454"
+}
