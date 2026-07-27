@@ -1,0 +1,14 @@
+{
+  "cases": [
+    {
+      "bundle": "contracts/company-research",
+      "compiled": "runtime/compiled",
+      "expectLayers": 8
+    },
+    {
+      "bundle": "contracts/study-plan",
+      "compiled": "runtime/compiled/study-plan",
+      "expectLayers": 3
+    }
+  ]
+}

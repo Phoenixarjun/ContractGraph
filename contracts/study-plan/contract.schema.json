@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contractgraph.dev/contracts/study-plan/contract.schema.json",
+  "title": "Personalized Study Plan Final Contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "documentType",
+    "run",
+    "studyPlanMeta",
+    "baselineAssessment",
+    "python",
+    "fastapi",
+    "databases",
+    "distributedSystems",
+    "evaluationPlan",
+    "sourceRegistry"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0.0"
+    },
+    "documentType": {
+      "const": "PersonalizedStudyPlan"
+    },
+    "run": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "runId",
+        "learnerGoal",
+        "contractBundleVersion",
+        "contextManifestHash"
+      ],
+      "properties": {
+        "runId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "learnerGoal": {
+          "type": "string",
+          "minLength": 1
+        },
+        "contractBundleVersion": {
+          "const": "1.0.0"
+        },
+        "contextManifestHash": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "studyPlanMeta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "generatedAt",
+        "caveats"
+      ],
+      "properties": {
+        "generatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "caveats": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "baselineAssessment": {
+      "$ref": "node-contracts/baseline-assessment.contract.json#/properties/data"
+    },
+    "python": {
+      "$ref": "node-contracts/python.contract.json#/properties/data"
+    },
+    "fastapi": {
+      "$ref": "node-contracts/fastapi.contract.json#/properties/data"
+    },
+    "databases": {
+      "$ref": "node-contracts/databases.contract.json#/properties/data"
+    },
+    "distributedSystems": {
+      "$ref": "node-contracts/distributed-systems.contract.json#/properties/data"
+    },
+    "evaluationPlan": {
+      "$ref": "node-contracts/evaluation-plan.contract.json#/properties/data"
+    },
+    "sourceRegistry": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "common/common.schema.json#/$defs/EvidenceSource"
+      }
+    }
+  },
+  "x-contractgraph": {
+    "bundle": "contract.bundle.json",
+    "aggregation": "deterministic",
+    "globalVerifier": "opus"
+  }
+}

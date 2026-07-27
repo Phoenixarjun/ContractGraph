@@ -1,0 +1,120 @@
+{
+  "documentType": "ContractGraphAgentManifest",
+  "version": "1.0.0",
+  "generatedBy": "fixture",
+  "agents": [
+    {
+      "nodeId": "baseline-assessment",
+      "kind": "node",
+      "model": "sonnet",
+      "tools": [
+        "WebSearch",
+        "WebFetch",
+        "Read",
+        "Write"
+      ],
+      "dependsOn": [],
+      "requiredSkills": [
+        "evidence-backed-web-research"
+      ],
+      "nodeContract": "contracts/study-plan/node-contracts/baseline-assessment.contract.json",
+      "output": "runtime/sections/baseline-assessment.json"
+    },
+    {
+      "nodeId": "python",
+      "kind": "node",
+      "model": "sonnet",
+      "tools": [
+        "WebSearch",
+        "WebFetch",
+        "Read",
+        "Write"
+      ],
+      "dependsOn": [
+        "baseline-assessment"
+      ],
+      "requiredSkills": [
+        "evidence-backed-web-research"
+      ],
+      "nodeContract": "contracts/study-plan/node-contracts/python.contract.json",
+      "output": "runtime/sections/python.json"
+    },
+    {
+      "nodeId": "fastapi",
+      "kind": "node",
+      "model": "sonnet",
+      "tools": [
+        "WebSearch",
+        "WebFetch",
+        "Read",
+        "Write"
+      ],
+      "dependsOn": [
+        "baseline-assessment"
+      ],
+      "requiredSkills": [
+        "evidence-backed-web-research"
+      ],
+      "nodeContract": "contracts/study-plan/node-contracts/fastapi.contract.json",
+      "output": "runtime/sections/fastapi.json"
+    },
+    {
+      "nodeId": "databases",
+      "kind": "node",
+      "model": "sonnet",
+      "tools": [
+        "WebSearch",
+        "WebFetch",
+        "Read",
+        "Write"
+      ],
+      "dependsOn": [
+        "baseline-assessment"
+      ],
+      "requiredSkills": [
+        "evidence-backed-web-research"
+      ],
+      "nodeContract": "contracts/study-plan/node-contracts/databases.contract.json",
+      "output": "runtime/sections/databases.json"
+    },
+    {
+      "nodeId": "distributed-systems",
+      "kind": "node",
+      "model": "sonnet",
+      "tools": [
+        "WebSearch",
+        "WebFetch",
+        "Read",
+        "Write"
+      ],
+      "dependsOn": [
+        "baseline-assessment"
+      ],
+      "requiredSkills": [
+        "evidence-backed-web-research"
+      ],
+      "nodeContract": "contracts/study-plan/node-contracts/distributed-systems.contract.json",
+      "output": "runtime/sections/distributed-systems.json"
+    },
+    {
+      "nodeId": "evaluation-plan",
+      "kind": "node",
+      "model": "sonnet",
+      "tools": [
+        "Read",
+        "Write"
+      ],
+      "dependsOn": [
+        "python",
+        "fastapi",
+        "databases",
+        "distributed-systems"
+      ],
+      "requiredSkills": [
+        "evidence-backed-web-research"
+      ],
+      "nodeContract": "contracts/study-plan/node-contracts/evaluation-plan.contract.json",
+      "output": "runtime/sections/evaluation-plan.json"
+    }
+  ]
+}
