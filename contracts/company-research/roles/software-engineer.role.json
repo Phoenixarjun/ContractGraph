@@ -1,0 +1,56 @@
+{
+  "roleId": "software-engineer",
+  "displayName": "Software Engineer",
+  "aliases": [
+    "SDE-1",
+    "SDE-2",
+    "Software Development Engineer",
+    "Member of Technical Staff"
+  ],
+  "levels": [
+    "SDE-1",
+    "SDE-2",
+    "MTS-equivalent"
+  ],
+  "mission": "Deliver maintainable software, solve algorithmic and design problems, and demonstrate increasing ownership across implementation, reliability, and collaboration.",
+  "requiredDomains": [
+    "DSA",
+    "CS fundamentals",
+    "object-oriented design",
+    "system design",
+    "testing",
+    "debugging"
+  ],
+  "preferredDomains": [
+    "distributed systems",
+    "cloud",
+    "observability",
+    "mentoring"
+  ],
+  "interviewEmphasis": [
+    "DSA",
+    "CS fundamentals",
+    "LLD",
+    "HLD",
+    "projects",
+    "behavioral ownership"
+  ],
+  "evaluationWeights": {
+    "coding": 0.25,
+    "fundamentals": 0.2,
+    "design": 0.25,
+    "ownership": 0.2,
+    "communication": 0.1
+  },
+  "minimumEvidence": [
+    "correct implementation",
+    "design reasoning",
+    "tests",
+    "ownership example"
+  ],
+  "truthRisks": [
+    "targeting level only by title",
+    "overstating experience",
+    "weak implementation under time"
+  ]
+}

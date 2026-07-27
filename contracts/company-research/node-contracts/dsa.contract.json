@@ -1,0 +1,508 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contractgraph.dev/contracts/company-research/nodes/dsa.contract.json",
+  "title": "DSA Contract",
+  "description": "Produces role-aware DSA patterns, reported questions, canonical practice URLs, evidence, recognition signals, solution reasoning, complexity, edge cases, follow-ups, and preparation workflow.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "nodeId",
+    "contractVersion",
+    "status",
+    "data",
+    "sources",
+    "contextEvidence",
+    "verification"
+  ],
+  "properties": {
+    "nodeId": {
+      "const": "dsa"
+    },
+    "contractVersion": {
+      "const": "1.0.0"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "complete",
+        "partial"
+      ]
+    },
+    "data": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "difficultyDistribution": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "easyPercent": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "mediumPercent": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "hardPercent": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "evidence_estimate",
+                "preparation_allocation",
+                "unknown"
+              ]
+            },
+            "qualification": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "easyPercent",
+            "mediumPercent",
+            "hardPercent",
+            "type",
+            "qualification"
+          ]
+        },
+        "roleTracks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "roleId": {
+                "$ref": "../common/common.schema.json#/$defs/RoleId"
+              },
+              "level": {
+                "type": "string",
+                "minLength": 1
+              },
+              "expectedDifficulty": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1
+              },
+              "timingExpectations": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1
+              },
+              "priorityPatterns": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1
+              }
+            },
+            "required": [
+              "roleId",
+              "level",
+              "expectedDifficulty",
+              "timingExpectations",
+              "priorityPatterns"
+            ]
+          },
+          "minItems": 5
+        },
+        "topPatterns": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "rank": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "area": {
+                "type": "string",
+                "minLength": 1
+              },
+              "expectedPreparationSharePercent": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 100
+              },
+              "priority": {
+                "type": "string",
+                "enum": [
+                  "critical",
+                  "high",
+                  "medium",
+                  "low"
+                ]
+              },
+              "subPatterns": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1
+              },
+              "recognitionQuestion": {
+                "type": "string",
+                "minLength": 1
+              },
+              "recommendedQuestionKeys": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1,
+                "uniqueItems": true
+              },
+              "roleApplicability": {
+                "type": "array",
+                "items": {
+                  "$ref": "../common/common.schema.json#/$defs/RoleApplicability"
+                },
+                "minItems": 1
+              },
+              "evidenceRefs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "uniqueItems": true
+              }
+            },
+            "required": [
+              "rank",
+              "area",
+              "expectedPreparationSharePercent",
+              "priority",
+              "subPatterns",
+              "recognitionQuestion",
+              "recommendedQuestionKeys",
+              "roleApplicability",
+              "evidenceRefs"
+            ]
+          },
+          "minItems": 1
+        },
+        "questions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "canonicalKey": {
+                "type": "string",
+                "minLength": 1
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1
+              },
+              "aliases": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "uniqueItems": true
+              },
+              "area": {
+                "type": "string",
+                "minLength": 1
+              },
+              "subArea": {
+                "type": "string",
+                "minLength": 1
+              },
+              "pattern": {
+                "type": "string",
+                "minLength": 1
+              },
+              "difficulty": {
+                "type": "string",
+                "enum": [
+                  "Easy",
+                  "Medium",
+                  "Hard",
+                  "Mixed",
+                  "Unknown"
+                ]
+              },
+              "priority": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "frequencyClass": {
+                "type": "string",
+                "enum": [
+                  "explicitly_reported",
+                  "explicitly_reported_custom_problem",
+                  "explicitly_reported_variation",
+                  "direct_equivalent",
+                  "recommended_from_reported_pattern",
+                  "company_relevant_recommended",
+                  "general_foundation"
+                ]
+              },
+              "reportedForRoles": {
+                "type": "array",
+                "items": {
+                  "$ref": "../common/common.schema.json#/$defs/RoleApplicability"
+                },
+                "minItems": 1
+              },
+              "estimatedSolveMinutes": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "estimatedExplanationMinutes": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "problemUrl": {
+                "type": "string",
+                "format": "uri"
+              },
+              "editorialUrl": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "uri"
+              },
+              "practiceLinks": {
+                "type": "array",
+                "items": {
+                  "$ref": "../common/common.schema.json#/$defs/ResourceLink"
+                },
+                "minItems": 1
+              },
+              "evidenceRefs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1,
+                "uniqueItems": true
+              },
+              "problemSummary": {
+                "type": "string",
+                "minLength": 1
+              },
+              "recognitionSignals": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1
+              },
+              "clarifyingQuestions": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1
+              },
+              "prerequisitePatterns": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1
+              },
+              "thoughtProcess": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1
+              },
+              "answerSummary": {
+                "type": "string",
+                "minLength": 1
+              },
+              "expectedComplexity": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "time": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "space": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "time",
+                  "space"
+                ]
+              },
+              "edgeCases": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1
+              },
+              "interviewerFollowUpQuestions": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1
+              },
+              "languageImplementationNotes": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 1
+                }
+              },
+              "canonicalMatching": {
+                "$ref": "../common/common.schema.json#/$defs/CanonicalMatching"
+              },
+              "localTracking": {
+                "$ref": "../common/common.schema.json#/$defs/LocalTracking"
+              },
+              "metadata": {
+                "$ref": "../common/common.schema.json#/$defs/ResearchMetadata"
+              }
+            },
+            "required": [
+              "canonicalKey",
+              "title",
+              "aliases",
+              "area",
+              "subArea",
+              "pattern",
+              "difficulty",
+              "priority",
+              "frequencyClass",
+              "reportedForRoles",
+              "estimatedSolveMinutes",
+              "estimatedExplanationMinutes",
+              "problemUrl",
+              "editorialUrl",
+              "practiceLinks",
+              "evidenceRefs",
+              "problemSummary",
+              "recognitionSignals",
+              "clarifyingQuestions",
+              "prerequisitePatterns",
+              "thoughtProcess",
+              "answerSummary",
+              "expectedComplexity",
+              "edgeCases",
+              "interviewerFollowUpQuestions",
+              "languageImplementationNotes",
+              "canonicalMatching",
+              "localTracking",
+              "metadata"
+            ]
+          },
+          "minItems": 1
+        },
+        "practiceWorkflow": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "sequence": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1
+            },
+            "hintRuleMinutes": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "targetLanguages": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "uniqueItems": true
+            },
+            "confidenceScale": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "progressAggregationRule": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "sequence",
+            "hintRuleMinutes",
+            "targetLanguages",
+            "confidenceScale",
+            "progressAggregationRule"
+          ]
+        },
+        "metadata": {
+          "$ref": "../common/common.schema.json#/$defs/ResearchMetadata"
+        }
+      },
+      "required": [
+        "difficultyDistribution",
+        "roleTracks",
+        "topPatterns",
+        "questions",
+        "practiceWorkflow",
+        "metadata"
+      ]
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "../common/common.schema.json#/$defs/EvidenceSource"
+      },
+      "minItems": 1
+    },
+    "contextEvidence": {
+      "type": "array",
+      "items": {
+        "$ref": "../common/common.schema.json#/$defs/ContextEvidence"
+      }
+    },
+    "verification": {
+      "$ref": "../common/common.schema.json#/$defs/NodeVerification"
+    }
+  },
+  "x-contractgraph": {
+    "purpose": "Produces role-aware DSA patterns, reported questions, canonical practice URLs, evidence, recognition signals, solution reasoning, complexity, edge cases, follow-ups, and preparation workflow.",
+    "aggregationPath": "dsa",
+    "dependsOn": [
+      "role-intelligence",
+      "interview-process"
+    ],
+    "parallelizableWhenReady": true,
+    "multiplicity": "single",
+    "completionRules": [
+      "The output must validate against this schema.",
+      "status must be complete before the node can be accepted.",
+      "Every material research claim must resolve to at least one evidence source.",
+      "Every candidate-specific claim must resolve to canonical context evidence.",
+      "The producing subagent cannot approve its own output.",
+      "Semantic verification must pass before aggregation."
+    ]
+  }
+}

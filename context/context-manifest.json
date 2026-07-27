@@ -1,0 +1,18 @@
+{
+  "workflow": "company-research-and-resume-analysis",
+  "version": 1,
+  "generated_by": "context-advisor",
+  "canonical": [
+    { "path": "canonical/profile.md", "purpose": "Identity, current role, seniority, location — anchors alignment", "required": true, "status": "empty" },
+    { "path": "canonical/goals.md", "purpose": "Target roles, target company(ies), timeline", "required": true, "status": "empty" },
+    { "path": "canonical/skills.md", "purpose": "Technical skills inventory matched against each role", "required": true, "status": "empty" },
+    { "path": "canonical/experience.md", "purpose": "Narrative of prior roles: scope, responsibilities, impact", "required": true, "status": "empty" },
+    { "path": "canonical/projects/", "purpose": "One file per notable project — discrete evidence", "required": false, "status": "empty" },
+    { "path": "canonical/certifications/", "purpose": "One file per credential — verifiable qualifications", "required": false, "status": "empty" },
+    { "path": "canonical/preferences.md", "purpose": "Constraints and role priority", "required": true, "status": "empty" },
+    { "path": "canonical/resume/", "purpose": "Resume source file(s), one or more — the analyzed artifact", "required": true, "status": "empty" }
+  ],
+  "derived": [],
+  "private": { "path": "private/", "git_ignored": true, "purpose": "PII kept out of canonical" },
+  "notes": "Canonical = user-supplied ground truth only. Company intelligence, culture, public initiatives, and interview topics are researchable and fetched per run — never stored here."
+}

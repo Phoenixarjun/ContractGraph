@@ -1,0 +1,283 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contractgraph.dev/contracts/company-research/nodes/application-strategy.contract.json",
+  "title": "Application Strategy Contract",
+  "description": "Builds a role-prioritized application plan using company research, fit, resume analysis, compensation, location, interview risk, and candidate timing.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "nodeId",
+    "contractVersion",
+    "status",
+    "data",
+    "sources",
+    "contextEvidence",
+    "verification"
+  ],
+  "properties": {
+    "nodeId": {
+      "const": "application-strategy"
+    },
+    "contractVersion": {
+      "const": "1.0.0"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "complete",
+        "partial"
+      ]
+    },
+    "data": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "bestChannels": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "channel": {
+                "type": "string",
+                "minLength": 1
+              },
+              "priority": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "rationale": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "channel",
+              "priority",
+              "rationale"
+            ]
+          },
+          "minItems": 1
+        },
+        "roleOrder": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "roleId": {
+                "$ref": "../common/common.schema.json#/$defs/RoleId"
+              },
+              "priority": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "targetLevels": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1
+              },
+              "applicationRule": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "roleId",
+              "priority",
+              "targetLevels",
+              "applicationRule"
+            ]
+          },
+          "minItems": 5
+        },
+        "levelStrategy": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "primaryTargets": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1
+            },
+            "stretchTargets": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "avoidOrDefer": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "primaryTargets",
+            "stretchTargets",
+            "avoidOrDefer",
+            "rationale"
+          ]
+        },
+        "timeline": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "period": {
+                "type": "string",
+                "minLength": 1
+              },
+              "focus": {
+                "type": "string",
+                "minLength": 1
+              },
+              "exitCriteria": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1
+              }
+            },
+            "required": [
+              "period",
+              "focus",
+              "exitCriteria"
+            ]
+          },
+          "minItems": 1
+        },
+        "resumeVariants": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "targetRoles": {
+                "type": "array",
+                "items": {
+                  "$ref": "../common/common.schema.json#/$defs/RoleId"
+                },
+                "minItems": 1,
+                "uniqueItems": true
+              },
+              "leadProjects": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1,
+                "uniqueItems": true
+              },
+              "supportingEvidence": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1
+              }
+            },
+            "required": [
+              "name",
+              "targetRoles",
+              "leadProjects",
+              "supportingEvidence"
+            ]
+          },
+          "minItems": 1
+        },
+        "applicationVolume": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "strategy": {
+              "type": "string",
+              "minLength": 1
+            },
+            "qualityBar": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1
+            }
+          },
+          "required": [
+            "strategy",
+            "qualityBar"
+          ]
+        },
+        "goNoGoCriteria": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "metadata": {
+          "$ref": "../common/common.schema.json#/$defs/ResearchMetadata"
+        }
+      },
+      "required": [
+        "bestChannels",
+        "roleOrder",
+        "levelStrategy",
+        "timeline",
+        "resumeVariants",
+        "applicationVolume",
+        "goNoGoCriteria",
+        "metadata"
+      ]
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "../common/common.schema.json#/$defs/EvidenceSource"
+      }
+    },
+    "contextEvidence": {
+      "type": "array",
+      "items": {
+        "$ref": "../common/common.schema.json#/$defs/ContextEvidence"
+      }
+    },
+    "verification": {
+      "$ref": "../common/common.schema.json#/$defs/NodeVerification"
+    }
+  },
+  "x-contractgraph": {
+    "purpose": "Builds a role-prioritized application plan using company research, fit, resume analysis, compensation, location, interview risk, and candidate timing.",
+    "aggregationPath": "applicationStrategy",
+    "dependsOn": [
+      "profile-alignment",
+      "resume-analysis",
+      "interview-process",
+      "compensation-location"
+    ],
+    "parallelizableWhenReady": true,
+    "multiplicity": "single",
+    "completionRules": [
+      "The output must validate against this schema.",
+      "status must be complete before the node can be accepted.",
+      "Every material research claim must resolve to at least one evidence source.",
+      "Every candidate-specific claim must resolve to canonical context evidence.",
+      "The producing subagent cannot approve its own output.",
+      "Semantic verification must pass before aggregation."
+    ]
+  }
+}

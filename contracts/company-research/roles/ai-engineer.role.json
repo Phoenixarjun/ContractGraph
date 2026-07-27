@@ -1,0 +1,56 @@
+{
+  "roleId": "ai-engineer",
+  "displayName": "AI Engineer",
+  "aliases": [
+    "Applied AI Engineer",
+    "AI Platform Engineer",
+    "LLM Engineer"
+  ],
+  "levels": [
+    "entry",
+    "mid",
+    "senior"
+  ],
+  "mission": "Build reliable AI products and AI platform capabilities with measurable quality, safety, latency, cost, and operational control.",
+  "requiredDomains": [
+    "software engineering",
+    "LLM systems",
+    "RAG",
+    "evaluation",
+    "model serving",
+    "agent systems"
+  ],
+  "preferredDomains": [
+    "distributed systems",
+    "security",
+    "observability",
+    "ML fundamentals"
+  ],
+  "interviewEmphasis": [
+    "coding",
+    "AI system design",
+    "RAG",
+    "agents",
+    "evaluation",
+    "safety",
+    "project deep dive"
+  ],
+  "evaluationWeights": {
+    "softwareEngineering": 0.2,
+    "aiSystems": 0.3,
+    "productionEvidence": 0.2,
+    "projects": 0.15,
+    "communication": 0.15
+  },
+  "minimumEvidence": [
+    "implemented AI workflow",
+    "evaluation evidence",
+    "failure handling",
+    "production or realistic load evidence"
+  ],
+  "truthRisks": [
+    "claiming architecture as implementation",
+    "claiming model quality without evaluation",
+    "calling prompt chains production systems"
+  ]
+}

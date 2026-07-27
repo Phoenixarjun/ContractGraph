@@ -1,0 +1,286 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contractgraph.dev/contracts/company-research/nodes/behavioral.contract.json",
+  "title": "Behavioral Contract",
+  "description": "Produces company-values-aligned behavioral questions, role applicability, evidence-backed story mappings, truthful answer blueprints, follow-ups, pitfalls, and unresolved personal-story gaps.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "nodeId",
+    "contractVersion",
+    "status",
+    "data",
+    "sources",
+    "contextEvidence",
+    "verification"
+  ],
+  "properties": {
+    "nodeId": {
+      "const": "behavioral"
+    },
+    "contractVersion": {
+      "const": "1.0.0"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "complete",
+        "partial"
+      ]
+    },
+    "data": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "framework": {
+          "type": "string",
+          "minLength": 1
+        },
+        "focusAreas": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "companyValues": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "value": {
+                "type": "string",
+                "minLength": 1
+              },
+              "interpretation": {
+                "type": "string",
+                "minLength": 1
+              },
+              "evidenceRefs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1,
+                "uniqueItems": true
+              }
+            },
+            "required": [
+              "value",
+              "interpretation",
+              "evidenceRefs"
+            ]
+          },
+          "minItems": 1
+        },
+        "questions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "canonicalKey": {
+                "type": "string",
+                "minLength": 1
+              },
+              "question": {
+                "type": "string",
+                "minLength": 1
+              },
+              "category": {
+                "type": "string",
+                "minLength": 1
+              },
+              "priority": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "roleApplicability": {
+                "type": "array",
+                "items": {
+                  "$ref": "../common/common.schema.json#/$defs/RoleApplicability"
+                },
+                "minItems": 1
+              },
+              "interviewerSignal": {
+                "type": "string",
+                "minLength": 1
+              },
+              "recommendedCandidateStories": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "contextRef": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "whyRelevant": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "proofPoints": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "minItems": 1
+                    },
+                    "truthBoundary": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "contextRef",
+                    "whyRelevant",
+                    "proofPoints",
+                    "truthBoundary"
+                  ]
+                }
+              },
+              "thoughtProcess": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1
+              },
+              "answerBlueprint": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "sampleAnswer": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "sampleAnswerUsage": {
+                "type": "string",
+                "minLength": 1
+              },
+              "requiresPersonalization": {
+                "type": "boolean"
+              },
+              "pitfalls": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1
+              },
+              "likelyFollowUpQuestions": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1
+              },
+              "evidenceRefs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "uniqueItems": true
+              },
+              "canonicalMatching": {
+                "$ref": "../common/common.schema.json#/$defs/CanonicalMatching"
+              },
+              "localTracking": {
+                "$ref": "../common/common.schema.json#/$defs/LocalTracking"
+              },
+              "metadata": {
+                "$ref": "../common/common.schema.json#/$defs/ResearchMetadata"
+              }
+            },
+            "required": [
+              "canonicalKey",
+              "question",
+              "category",
+              "priority",
+              "roleApplicability",
+              "interviewerSignal",
+              "recommendedCandidateStories",
+              "thoughtProcess",
+              "answerBlueprint",
+              "sampleAnswer",
+              "sampleAnswerUsage",
+              "requiresPersonalization",
+              "pitfalls",
+              "likelyFollowUpQuestions",
+              "evidenceRefs",
+              "canonicalMatching",
+              "localTracking",
+              "metadata"
+            ]
+          },
+          "minItems": 1
+        },
+        "answerRules": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "storyGapQuestions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "metadata": {
+          "$ref": "../common/common.schema.json#/$defs/ResearchMetadata"
+        }
+      },
+      "required": [
+        "framework",
+        "focusAreas",
+        "companyValues",
+        "questions",
+        "answerRules",
+        "storyGapQuestions",
+        "metadata"
+      ]
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "../common/common.schema.json#/$defs/EvidenceSource"
+      },
+      "minItems": 1
+    },
+    "contextEvidence": {
+      "type": "array",
+      "items": {
+        "$ref": "../common/common.schema.json#/$defs/ContextEvidence"
+      }
+    },
+    "verification": {
+      "$ref": "../common/common.schema.json#/$defs/NodeVerification"
+    }
+  },
+  "x-contractgraph": {
+    "purpose": "Produces company-values-aligned behavioral questions, role applicability, evidence-backed story mappings, truthful answer blueprints, follow-ups, pitfalls, and unresolved personal-story gaps.",
+    "aggregationPath": "behavioral",
+    "dependsOn": [
+      "company-intelligence",
+      "role-intelligence",
+      "interview-process"
+    ],
+    "parallelizableWhenReady": true,
+    "multiplicity": "single",
+    "completionRules": [
+      "The output must validate against this schema.",
+      "status must be complete before the node can be accepted.",
+      "Every material research claim must resolve to at least one evidence source.",
+      "Every candidate-specific claim must resolve to canonical context evidence.",
+      "The producing subagent cannot approve its own output.",
+      "Semantic verification must pass before aggregation."
+    ]
+  }
+}
