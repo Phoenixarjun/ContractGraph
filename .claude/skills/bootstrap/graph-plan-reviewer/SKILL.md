@@ -1,6 +1,6 @@
 ---
 name: graph-plan-reviewer
-description: Use as the final adversarial check on a compiled graph plus its capability, skill, and agent manifests — before /contractgraph:init is reported complete, or when asked "review the compiled graph", "audit this workflow plan", "is this graph safe to run". Opus-oriented; this is the last gate before execution, not a design step — do not use it to design the graph (workflow-compiler) or to author contracts (contract-designer).
+description: Use when a compiled graph plus its capability, skill, and agent manifests needs a final adversarial check — before /contractgraph:init is reported complete, or when asked "review the compiled graph", "audit this workflow plan", "is this graph safe to run". Opus-oriented; this is the last gate before execution, not a design step — do not use it to design the graph (workflow-compiler) or to author contracts (contract-designer).
 ---
 
 # Graph Plan Reviewer

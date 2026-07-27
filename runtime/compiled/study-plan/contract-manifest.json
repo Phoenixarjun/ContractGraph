@@ -1,0 +1,104 @@
+{
+  "documentType": "ContractGraphContractManifest",
+  "version": "1.0.0",
+  "generatedBy": "build_contract_manifest.py",
+  "bundleId": "study-plan",
+  "bundleVersion": "1.0.0",
+  "mainContract": "contract.schema.json",
+  "mainContractHash": "d8b41837f9b318538b5c4563daec91ae67ec500814f36558347129bcfa7e635f",
+  "nodes": [
+    {
+      "nodeId": "baseline-assessment",
+      "contract": "node-contracts/baseline-assessment.contract.json",
+      "contractHash": "80250d57b022681d77c2988191e09d2a8d26a5a1d3a409c45c352c9b7b3bd833",
+      "aggregationPath": "baselineAssessment",
+      "dependsOn": [],
+      "multiplicity": "single",
+      "required": true,
+      "purpose": "Assess the learner's current level and gaps from canonical goals/knowledge."
+    },
+    {
+      "nodeId": "python",
+      "contract": "node-contracts/python.contract.json",
+      "contractHash": "eb312bcd4195f13aad2b705cd03bf34b747edb3a8b03118b79053e077f563726",
+      "aggregationPath": "python",
+      "dependsOn": [
+        "baseline-assessment"
+      ],
+      "multiplicity": "single",
+      "required": true,
+      "purpose": "Produce a role-relevant python learning track with objectives, resources and milestones."
+    },
+    {
+      "nodeId": "fastapi",
+      "contract": "node-contracts/fastapi.contract.json",
+      "contractHash": "932a1c7aa910d0a94a7ae69c4fb49e76c9be3d272b9f6ba7e38c82aa566f4002",
+      "aggregationPath": "fastapi",
+      "dependsOn": [
+        "baseline-assessment"
+      ],
+      "multiplicity": "single",
+      "required": true,
+      "purpose": "Produce a role-relevant fastapi learning track with objectives, resources and milestones."
+    },
+    {
+      "nodeId": "databases",
+      "contract": "node-contracts/databases.contract.json",
+      "contractHash": "a0ecd964681a01393733604417722dfad57ce517e363de132cf561d55761a78e",
+      "aggregationPath": "databases",
+      "dependsOn": [
+        "baseline-assessment"
+      ],
+      "multiplicity": "single",
+      "required": true,
+      "purpose": "Produce a role-relevant databases learning track with objectives, resources and milestones."
+    },
+    {
+      "nodeId": "distributed-systems",
+      "contract": "node-contracts/distributed-systems.contract.json",
+      "contractHash": "3d567adad2c0369fdf9a0ec1be3f2c8daaaad70630872591ca2cd6bfa92231ca",
+      "aggregationPath": "distributedSystems",
+      "dependsOn": [
+        "baseline-assessment"
+      ],
+      "multiplicity": "single",
+      "required": true,
+      "purpose": "Produce a role-relevant distributed-systems learning track with objectives, resources and milestones."
+    },
+    {
+      "nodeId": "evaluation-plan",
+      "contract": "node-contracts/evaluation-plan.contract.json",
+      "contractHash": "5918c14a222e09c7c5c5d596d97a01fa75e9f9a6e1c7b77b2a9de44347ea7d94",
+      "aggregationPath": "evaluationPlan",
+      "dependsOn": [
+        "python",
+        "fastapi",
+        "databases",
+        "distributed-systems"
+      ],
+      "multiplicity": "single",
+      "required": true,
+      "purpose": "Define checkpoints and a final assessment tying the topic tracks to the learner goal."
+    }
+  ],
+  "roles": [],
+  "aggregation": {
+    "mode": "deterministic",
+    "acceptOnlyVerifiedNodes": true,
+    "deduplicateSourcesBy": [
+      "url",
+      "sourceRef"
+    ],
+    "preserveCanonicalKeys": true,
+    "rejectDuplicateOwnership": true,
+    "buildGlobalSourceRegistry": true
+  },
+  "globalValidation": [
+    "Every required node must be accepted.",
+    "Every evidenceRef must resolve to the global source registry.",
+    "Every learning track must cite at least one resource.",
+    "No learner-owned progress may be overwritten by a refresh.",
+    "Final output must validate against contract.schema.json."
+  ],
+  "manifestHash": "3336d3089697bb2c6b9e4a7e00afcc4707d794757bb0bbb682f3ca9c1e860602"
+}

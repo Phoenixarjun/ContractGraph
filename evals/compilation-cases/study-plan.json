@@ -1,0 +1,10 @@
+{
+  "bundle": "contracts/study-plan",
+  "expect": {
+    "nodes": 6,
+    "layers": 3,
+    "dependencyConflicts": 0
+  },
+  "provesGenericity": true,
+  "note": "own nodes; no company-research concepts"
+}

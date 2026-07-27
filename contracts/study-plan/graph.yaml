@@ -1,0 +1,45 @@
+version: "1.0.0"
+bundle: contract.bundle.json
+generated: true
+sourceOfTruth: node-contracts
+runtime: claude-code
+
+layers:
+  - id: foundation
+    parallel:
+      - baseline-assessment
+  - id: topics
+    parallel:
+      - python
+      - fastapi
+      - databases
+      - distributed-systems
+  - id: evaluation
+    parallel:
+      - evaluation-plan
+  - id: completion
+    sequence:
+      - deterministic-merge
+      - main-schema-validation
+      - global-verification
+
+dependencies:
+  python:
+    - baseline-assessment
+  fastapi:
+    - baseline-assessment
+  databases:
+    - baseline-assessment
+  distributed-systems:
+    - baseline-assessment
+  evaluation-plan:
+    - python
+    - fastapi
+    - databases
+    - distributed-systems
+
+acceptance:
+  structuralValidation: required
+  semanticVerification: required
+  evidenceVerification: required_when_research
+  globalVerificationModel: opus

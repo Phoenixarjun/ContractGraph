@@ -1,0 +1,99 @@
+{
+  "bundleId": "study-plan",
+  "bundleVersion": "1.0.0",
+  "documentType": "ContractGraphContractBundle",
+  "mainContract": "contract.schema.json",
+  "commonSchema": "common/common.schema.json",
+  "runtimeInputs": {
+    "required": [
+      "learnerGoal"
+    ],
+    "optional": [
+      "targetDate",
+      "hoursPerWeek",
+      "priorKnowledgeRefs"
+    ],
+    "defaults": {}
+  },
+  "canonicalContextRequirements": [
+    "learner goal",
+    "current knowledge",
+    "time/preferences"
+  ],
+  "nodes": [
+    {
+      "nodeId": "baseline-assessment",
+      "contract": "node-contracts/baseline-assessment.contract.json",
+      "required": true,
+      "aggregationPath": "baselineAssessment"
+    },
+    {
+      "nodeId": "python",
+      "contract": "node-contracts/python.contract.json",
+      "required": true,
+      "aggregationPath": "python"
+    },
+    {
+      "nodeId": "fastapi",
+      "contract": "node-contracts/fastapi.contract.json",
+      "required": true,
+      "aggregationPath": "fastapi"
+    },
+    {
+      "nodeId": "databases",
+      "contract": "node-contracts/databases.contract.json",
+      "required": true,
+      "aggregationPath": "databases"
+    },
+    {
+      "nodeId": "distributed-systems",
+      "contract": "node-contracts/distributed-systems.contract.json",
+      "required": true,
+      "aggregationPath": "distributedSystems"
+    },
+    {
+      "nodeId": "evaluation-plan",
+      "contract": "node-contracts/evaluation-plan.contract.json",
+      "required": true,
+      "aggregationPath": "evaluationPlan"
+    }
+  ],
+  "stateOwnership": {
+    "researchOwnedFields": [
+      "resources",
+      "objectives",
+      "milestones",
+      "topics"
+    ],
+    "userOwnedFields": [
+      "masteryStatus",
+      "confidence",
+      "lastPracticedDate",
+      "userNotes"
+    ],
+    "rule": "Research refresh must never overwrite non-empty user-owned state."
+  },
+  "aggregation": {
+    "mode": "deterministic",
+    "acceptOnlyVerifiedNodes": true,
+    "deduplicateSourcesBy": [
+      "url",
+      "sourceRef"
+    ],
+    "preserveCanonicalKeys": true,
+    "rejectDuplicateOwnership": true,
+    "buildGlobalSourceRegistry": true
+  },
+  "globalValidation": [
+    "Every required node must be accepted.",
+    "Every evidenceRef must resolve to the global source registry.",
+    "Every learning track must cite at least one resource.",
+    "No learner-owned progress may be overwritten by a refresh.",
+    "Final output must validate against contract.schema.json."
+  ],
+  "refreshPolicy": {
+    "preserveUserState": true,
+    "deduplicateResourceUrls": true,
+    "retryOnlyFailedNodes": true
+  }
+}
