@@ -1,0 +1,15 @@
+{
+  "documentType": "ContractGraphBenchmarkConfig",
+  "configId": "baseline",
+  "description": "Baseline: JSON canonical, cold cache, context slicing on (existing behavior), TOON disabled, concurrency 2, blocking repairs only. Same contract/context/models/concurrency as optimized -- everything else this task added is OFF.",
+  "format": "json",
+  "cache": "cold",
+  "contextSlicing": true,
+  "contextPackets": false,
+  "dependencySummaries": false,
+  "evidenceDedup": false,
+  "verification": "full",
+  "toon": false,
+  "concurrency": 2,
+  "repairs": "blocking-only"
+}

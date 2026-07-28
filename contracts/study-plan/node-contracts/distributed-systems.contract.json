@@ -10,7 +10,7 @@
     "contractVersion",
     "status",
     "data",
-    "sources",
+    "evidence",
     "verification"
   ],
   "properties": {
@@ -76,13 +76,16 @@
               }
             }
           }
+        },
+        "handoffSummary": {
+          "$ref": "../common/common.schema.json#/$defs/HandoffSummary"
         }
       }
     },
-    "sources": {
+    "evidence": {
       "type": "array",
       "items": {
-        "$ref": "../common/common.schema.json#/$defs/EvidenceSource"
+        "$ref": "../common/common.schema.json#/$defs/EvidenceRef"
       }
     },
     "verification": {
@@ -92,6 +95,9 @@
   "x-contractgraph": {
     "purpose": "Produce a role-relevant distributed-systems learning track with objectives, resources and milestones.",
     "aggregationPath": "distributedSystems",
+    "contextRefs": [
+      "canonical/preferences.md"
+    ],
     "dependsOn": [
       "baseline-assessment"
     ],

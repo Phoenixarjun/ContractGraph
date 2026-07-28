@@ -1,0 +1,18 @@
+# Optional, local-only dependencies for ContractGraph deterministic scripts.
+# The framework core requires none of these; every script degrades to a
+# documented "unavailable" state (never fabricates data) when a package is
+# missing. No package here makes a network or model API call.
+
+# scripts/pdf_extract.py -- embedded-text PDF extraction (page-by-page).
+pypdf>=5.0
+
+# scripts/pdf_extract.py -- OPTIONAL OCR fallback, used only when a page has
+# no usable embedded text. If either is missing, that page is marked
+# method="ocr_unavailable" and no text is invented.
+# pytesseract>=0.3
+# Pillow>=10.0
+
+# scripts/toon_codec.py -- OPTIONAL TOON transport encoding, disabled by
+# default (CLAUDE.md: benchmark_before_enable). Only needed to actually
+# encode/decode TOON; benchmark() reports toonAvailable=false without it.
+# python-toon

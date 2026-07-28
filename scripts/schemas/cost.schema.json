@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contractgraph.dev/schemas/cost.schema.json",
+  "title": "ContractGraph run cost/telemetry",
+  "description": "Normalized per-run token/cost telemetry written to runtime/runs/<run-id>/final/cost.json. Unavailable metrics are null, never fabricated; see coverage.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["documentType", "runId", "generatedBy", "requests", "byNode", "byModel", "byPurpose", "byAttempt", "run", "coverage"],
+  "properties": {
+    "documentType": { "const": "ContractGraphCost" },
+    "runId": { "type": ["string", "null"] },
+    "generatedBy": { "type": "string" },
+    "sources": { "type": "array", "items": { "type": "string" } },
+    "requests": { "type": "array", "items": { "$ref": "#/$defs/RequestRecord" } },
+    "byNode": { "type": "object" },
+    "byModel": { "type": "object" },
+    "byPurpose": { "type": "object" },
+    "byAttempt": { "type": "object" },
+    "run": { "$ref": "#/$defs/Aggregate" },
+    "coverage": { "$ref": "#/$defs/Coverage" }
+  },
+  "$defs": {
+    "RequestRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "runtime", "model", "agent", "skill", "purpose", "node", "attempt",
+        "inputTokens", "outputTokens", "cacheReadTokens", "cacheCreationTokens",
+        "estimatedCostUsd", "durationMs", "toolCalls", "searches", "fetches",
+        "outputBytes", "finalStatus", "available"
+      ],
+      "properties": {
+        "runtime": { "type": "string", "enum": ["claude-code", "opencode", "local"] },
+        "model": { "type": ["string", "null"] },
+        "agent": { "type": ["string", "null"] },
+        "skill": { "type": ["string", "null"] },
+        "purpose": { "type": "string", "enum": ["producer", "verifier", "repair", "global-verifier", "unknown"] },
+        "node": { "type": ["string", "null"] },
+        "attempt": { "type": ["integer", "null"] },
+        "inputTokens": { "type": ["integer", "null"] },
+        "outputTokens": { "type": ["integer", "null"] },
+        "cacheReadTokens": { "type": ["integer", "null"] },
+        "cacheCreationTokens": { "type": ["integer", "null"] },
+        "estimatedCostUsd": { "type": ["number", "null"] },
+        "durationMs": { "type": ["integer", "null"] },
+        "toolCalls": { "type": ["integer", "null"] },
+        "searches": { "type": ["integer", "null"] },
+        "fetches": { "type": ["integer", "null"] },
+        "outputBytes": { "type": ["integer", "null"] },
+        "finalStatus": { "type": ["string", "null"] },
+        "available": { "type": "object" }
+      }
+    },
+    "Aggregate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "inputTokens", "outputTokens", "cacheReadTokens", "cacheCreationTokens",
+        "estimatedCostUsd", "durationMs", "toolCalls", "searches", "fetches",
+        "outputBytes", "requestCount"
+      ],
+      "properties": {
+        "inputTokens": { "type": ["integer", "null"] },
+        "outputTokens": { "type": ["integer", "null"] },
+        "cacheReadTokens": { "type": ["integer", "null"] },
+        "cacheCreationTokens": { "type": ["integer", "null"] },
+        "estimatedCostUsd": { "type": ["number", "null"] },
+        "durationMs": { "type": ["integer", "null"] },
+        "toolCalls": { "type": ["integer", "null"] },
+        "searches": { "type": ["integer", "null"] },
+        "fetches": { "type": ["integer", "null"] },
+        "outputBytes": { "type": ["integer", "null"] },
+        "requestCount": { "type": "integer" }
+      }
+    },
+    "Coverage": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  }
+}

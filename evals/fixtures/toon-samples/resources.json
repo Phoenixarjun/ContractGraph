@@ -1,0 +1,8 @@
+[
+  { "title": "Python asyncio docs", "url": "https://docs.python.org/3/library/asyncio.html", "type": "doc", "free": true },
+  { "title": "FastAPI tutorial", "url": "https://fastapi.tiangolo.com/tutorial/", "type": "doc", "free": true },
+  { "title": "Real Python: async IO", "url": "https://realpython.com/async-io-python/", "type": "article", "free": true },
+  { "title": "Designing Data-Intensive Applications", "url": "https://dataintensive.net/", "type": "book", "free": false },
+  { "title": "PostgreSQL official tutorial", "url": "https://www.postgresql.org/docs/current/tutorial.html", "type": "doc", "free": true },
+  { "title": "SQLAlchemy ORM tutorial", "url": "https://docs.sqlalchemy.org/en/20/orm/quickstart.html", "type": "doc", "free": true }
+]

@@ -22,3 +22,14 @@ context/derived/
 # Generated compiled artifacts that reference private context paths
 runtime/compiled/context-manifest.json
 runtime/compiled/compilation-report.md
+
+# Company-research workflow — private validation test case (CLAUDE.md's "V1 Focus"),
+# kept local-only. Study-plan is the public demonstration workflow; keep it tracked.
+contracts/company-research/
+.claude/agents/generated/
+runtime/compiled/*.json
+runtime/compiled/*.yaml
+evals/compilation-cases/company-research.json
+
+# Personal working notes with real private examples embedded — not for GitHub
+/ContractGraph.md

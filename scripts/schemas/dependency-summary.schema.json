@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contractgraph.dev/schemas/dependency-summary.schema.json",
+  "title": "ContractGraph dependency handoff summary",
+  "description": "Compact, cacheable summary of an accepted node's output, referenced by downstream node packets instead of the full section. summaryHash covers handoff+evidenceRefs+confidence so unchanged upstream output yields an identical hash.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["documentType", "nodeId", "aggregationPath", "summaryHash", "handoff", "evidenceRefs", "fullSectionRef"],
+  "properties": {
+    "documentType": { "const": "ContractGraphDependencySummary" },
+    "nodeId": { "type": "string" },
+    "aggregationPath": { "type": "string" },
+    "contractVersion": { "type": ["string", "null"] },
+    "summaryHash": { "type": "string" },
+    "handoff": { "type": "object" },
+    "evidenceRefs": { "type": "array", "items": { "type": "string" } },
+    "confidence": { "type": ["number", "null"] },
+    "fullSectionRef": { "type": "string" },
+    "producedAt": { "type": ["string", "null"] }
+  }
+}
