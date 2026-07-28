@@ -7,7 +7,7 @@
   "entries": [
     {
       "path": "canonical/goals.md",
-      "sourcePath": "context/canonical/goals.md",
+      "sourcePath": "context/synthetic/study-plan/canonical/goals.md",
       "sha256": "fc80ac50c4ddf292308c4af6c171e89d652d3a4b05b9af0577f3c0a0ae477ee8",
       "bytes": 170,
       "type": "text",
@@ -16,7 +16,7 @@
     },
     {
       "path": "canonical/knowledge.md",
-      "sourcePath": "context/canonical/knowledge.md",
+      "sourcePath": "context/synthetic/study-plan/canonical/knowledge.md",
       "sha256": "81bd5255869c1c81ce7993967eca33caff3f7dc10eea69ef05d45ce6ae3c2d5a",
       "bytes": 186,
       "type": "text",
@@ -25,7 +25,7 @@
     },
     {
       "path": "canonical/preferences.md",
-      "sourcePath": "context/canonical/preferences.md",
+      "sourcePath": "context/synthetic/study-plan/canonical/preferences.md",
       "sha256": "9ee131c66d4040500e4b47ce6ccaebde318aa68af54e20663b97c747249a2bb0",
       "bytes": 152,
       "type": "text",

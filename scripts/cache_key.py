@@ -7,11 +7,20 @@ runtime input, configured role set, skill versions, agent version, freshness
 policy, and node implementation version. Same inputs -> same key; any change ->
 new key (selective refresh).
 
+Also folds --dep-summaries (a {depNode: summaryHash} map from
+build_dependency_summary.py) and --node-packet (a compiled node-packets/<id>/
+packet.json from build_node_packets.py, keyed by its packetHash): unchanged
+upstream summaries and an unchanged packet keep the key stable; either
+changing busts it, so downstream nodes correctly re-run only when something
+that could affect their output actually changed.
+
 Usage:
   python scripts/cache_key.py --bundle <dir> --node <id> --input <input.json>
       [--context-manifest runtime/compiled/context-manifest.json]
       [--agent-manifest runtime/compiled/agent-manifest.json]
       [--skill-manifest runtime/compiled/skill-manifest.json]
+      [--dep-summaries <depNode-to-summaryHash.json>]
+      [--node-packet <node-packets/<id>/packet.json>]
 Output: JSON {cacheKey, components}. Exit 0 ok, 2 IO/usage.
 """
 from __future__ import annotations
@@ -29,7 +38,8 @@ def _load(p):
 
 
 def build(bundle_dir: Path, node_id: str, run_input: dict,
-          ctx_manifest, agent_manifest, skill_manifest) -> dict:
+          ctx_manifest, agent_manifest, skill_manifest,
+          dep_summary_hashes=None, node_packet_hash=None) -> dict:
     bundle = _load(bundle_dir / "contract.bundle.json")
     node = next((n for n in bundle["nodes"] if n["nodeId"] == node_id), None)
     if node is None:
@@ -57,6 +67,10 @@ def build(bundle_dir: Path, node_id: str, run_input: dict,
         a = next((x for x in agent_manifest.get("agents", []) if x["nodeId"] == node_id), None)
         if a:
             components["agentVersion"] = sha256_json(a)
+    if dep_summary_hashes:
+        components["depSummaryHashes"] = dict(sorted(dep_summary_hashes.items()))
+    if node_packet_hash:
+        components["nodePacketHash"] = node_packet_hash
 
     return {"nodeId": node_id, "cacheKey": sha256_json(components), "components": components}
 
@@ -66,7 +80,8 @@ def main(argv=None) -> int:
     opts = {"--bundle": "contracts/company-research", "--node": None, "--input": None,
             "--context-manifest": "runtime/compiled/context-manifest.json",
             "--agent-manifest": "runtime/compiled/agent-manifest.json",
-            "--skill-manifest": "runtime/compiled/skill-manifest.json"}
+            "--skill-manifest": "runtime/compiled/skill-manifest.json",
+            "--dep-summaries": None, "--node-packet": None}
     i = 0
     while i < len(argv):
         if argv[i] in opts:
@@ -79,10 +94,16 @@ def main(argv=None) -> int:
     run_input = {}
     if opts["--input"]:
         run_input = json.loads(Path(opts["--input"]).read_text(encoding="utf-8"))
+    dep_summary_hashes = _load(opts["--dep-summaries"]) if opts["--dep-summaries"] else None
+    node_packet_hash = None
+    if opts["--node-packet"]:
+        packet = _load(opts["--node-packet"])
+        node_packet_hash = packet.get("packetHash") if packet else None
     try:
         out = build(Path(opts["--bundle"]), opts["--node"], run_input,
                     _load(opts["--context-manifest"]), _load(opts["--agent-manifest"]),
-                    _load(opts["--skill-manifest"]))
+                    _load(opts["--skill-manifest"]),
+                    dep_summary_hashes=dep_summary_hashes, node_packet_hash=node_packet_hash)
     except (OSError, json.JSONDecodeError, KeyError) as exc:
         print(json.dumps({"ok": False, "error": str(exc)}), file=sys.stderr)
         return 2

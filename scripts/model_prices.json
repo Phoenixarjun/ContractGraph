@@ -1,0 +1,12 @@
+{
+  "documentType": "ContractGraphModelPrices",
+  "version": "1.0.0",
+  "asOf": "2026-01",
+  "unit": "usd_per_million_tokens",
+  "note": "Static reference prices used only for cost ESTIMATES. Not fetched live; no network call. Update manually when list pricing changes.",
+  "models": {
+    "haiku": { "input": 1.00, "output": 5.00, "cacheRead": 0.10, "cacheWrite": 1.25 },
+    "sonnet": { "input": 3.00, "output": 15.00, "cacheRead": 0.30, "cacheWrite": 3.75 },
+    "opus": { "input": 15.00, "output": 75.00, "cacheRead": 1.50, "cacheWrite": 18.75 }
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "budget": {
+    "searchBudget": null,
+    "tokenBudget": 25000
+  },
+  "contextRefs": [
+    {
+      "loadWhen": "summary",
+      "sha256": "a4bc59da660a0b66adba38695c1f8f3a95792fc662d9782ce7923547445bda58",
+      "sourcePath": "canonical/goals.md",
+      "summaryRef": null
+    }
+  ],
+  "contractHash": "7b39c801e49e19ca40cc888f372d789572a370082452177e728ef08e996cf3cb",
+  "contractRef": "node-contracts/evaluation-plan.contract.json",
+  "dependencySummaryRefs": [
+    {
+      "depNode": "databases",
+      "summaryHash": null
+    },
+    {
+      "depNode": "distributed-systems",
+      "summaryHash": null
+    },
+    {
+      "depNode": "fastapi",
+      "summaryHash": null
+    },
+    {
+      "depNode": "python",
+      "summaryHash": null
+    }
+  ],
+  "documentType": "ContractGraphNodePacket",
+  "evidenceRegistryRef": "runtime/runs/<run-id>/evidence/source-registry.json",
+  "nodeId": "evaluation-plan",
+  "outputInstructions": {
+    "outputPath": "sections/evaluation-plan.json",
+    "requiredEvidence": "claim-level",
+    "schemaRef": "node-contracts/evaluation-plan.contract.json",
+    "stopConditions": [
+      "Output validates against this schema.",
+      "status must be complete to accept.",
+      "Every learning claim cites a resource.",
+      "Producer cannot self-approve."
+    ]
+  },
+  "packetHash": "702f045a1693e3e22bcaa1d4a5a35999d4ce718e4ef06cb1a46bf6584ffcbc56",
+  "policySummary": {
+    "concurrencyClass": "lightSynthesis",
+    "evidenceRules": [
+      "candidateReportClaimsRequireQualification",
+      "preferPrimarySources",
+      "requireClaimLevelEvidence",
+      "requireReachableUrls",
+      "singleAnecdoteCannotBecomeFrequencyClaim"
+    ],
+    "freshnessDaysRelevant": {
+      "activeJobPosting": 30,
+      "companyStructure": 365,
+      "compensation": 180,
+      "foundationalEngineeringMaterial": 1825,
+      "hiringSignals": 90,
+      "interviewProcess": 540,
+      "recentDevelopments": 180
+    },
+    "model": "sonnet",
+    "retry": {
+      "failedOnly": true,
+      "max": 2
+    }
+  },
+  "skills": []
+}

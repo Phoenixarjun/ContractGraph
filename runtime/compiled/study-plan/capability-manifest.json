@@ -1,0 +1,14 @@
+{
+  "documentType": "ContractGraphCapabilityManifest",
+  "version": "1.0.0",
+  "generatedBy": "/contractgraph:init (capability-detector)",
+  "generatedAt": "2026-07-28",
+  "capabilities": [
+    {
+      "capabilityId": "evidence-backed-web-research",
+      "description": "Research claims from primary/reputable web sources with reachable URLs and per-claim evidence.",
+      "requiredTools": ["WebSearch", "WebFetch", "Read", "Write"],
+      "requiredByNodes": ["baseline-assessment", "python", "fastapi", "databases", "distributed-systems"]
+    }
+  ]
+}

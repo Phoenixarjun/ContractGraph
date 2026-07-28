@@ -1,0 +1,64 @@
+{
+  "budget": {
+    "searchBudget": null,
+    "tokenBudget": 25000
+  },
+  "contextRefs": [
+    {
+      "loadWhen": "summary",
+      "sha256": "6f2c10acb1e72e172ac10c1f04876630bfb89d9987a453bf48d331fcfec6a122",
+      "sourcePath": "canonical/preferences.md",
+      "summaryRef": null
+    }
+  ],
+  "contractHash": "076defb58dfc817d2879b985c06ae684babfffea620b6d26327a8f7b77561931",
+  "contractRef": "node-contracts/python.contract.json",
+  "dependencySummaryRefs": [
+    {
+      "depNode": "baseline-assessment",
+      "summaryHash": null
+    }
+  ],
+  "documentType": "ContractGraphNodePacket",
+  "evidenceRegistryRef": "runtime/runs/<run-id>/evidence/source-registry.json",
+  "nodeId": "python",
+  "outputInstructions": {
+    "outputPath": "sections/python.json",
+    "requiredEvidence": "claim-level",
+    "schemaRef": "node-contracts/python.contract.json",
+    "stopConditions": [
+      "Output validates against this schema.",
+      "status must be complete to accept.",
+      "Every learning claim cites a resource.",
+      "Producer cannot self-approve."
+    ]
+  },
+  "packetHash": "9a106591a80929ddefed40a5e56c6e53c0f1787c255b4300f62cd2e4a2ccac3c",
+  "policySummary": {
+    "concurrencyClass": "heavyResearch",
+    "evidenceRules": [
+      "candidateReportClaimsRequireQualification",
+      "preferPrimarySources",
+      "requireClaimLevelEvidence",
+      "requireReachableUrls",
+      "singleAnecdoteCannotBecomeFrequencyClaim"
+    ],
+    "freshnessDaysRelevant": {
+      "activeJobPosting": 30,
+      "companyStructure": 365,
+      "compensation": 180,
+      "foundationalEngineeringMaterial": 1825,
+      "hiringSignals": 90,
+      "interviewProcess": 540,
+      "recentDevelopments": 180
+    },
+    "model": "sonnet",
+    "retry": {
+      "failedOnly": true,
+      "max": 2
+    }
+  },
+  "skills": [
+    "evidence-backed-web-research"
+  ]
+}

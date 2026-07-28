@@ -1,0 +1,71 @@
+{
+  "budget": {
+    "searchBudget": null,
+    "tokenBudget": 25000
+  },
+  "contextRefs": [
+    {
+      "loadWhen": "summary",
+      "sha256": "a4bc59da660a0b66adba38695c1f8f3a95792fc662d9782ce7923547445bda58",
+      "sourcePath": "canonical/goals.md",
+      "summaryRef": null
+    },
+    {
+      "loadWhen": "summary",
+      "sha256": "c4dd3b5cc74d007581ad3cd965faa011a22eab2e75759577255c40f196209ed1",
+      "sourcePath": "canonical/knowledge.md",
+      "summaryRef": null
+    },
+    {
+      "loadWhen": "summary",
+      "sha256": "6f2c10acb1e72e172ac10c1f04876630bfb89d9987a453bf48d331fcfec6a122",
+      "sourcePath": "canonical/preferences.md",
+      "summaryRef": null
+    }
+  ],
+  "contractHash": "90e105830a9eee7ff104ad37a65a5d00c7f16902cf0fa83d07c17df7ce2921f3",
+  "contractRef": "node-contracts/baseline-assessment.contract.json",
+  "dependencySummaryRefs": [],
+  "documentType": "ContractGraphNodePacket",
+  "evidenceRegistryRef": "runtime/runs/<run-id>/evidence/source-registry.json",
+  "nodeId": "baseline-assessment",
+  "outputInstructions": {
+    "outputPath": "sections/baseline-assessment.json",
+    "requiredEvidence": "claim-level",
+    "schemaRef": "node-contracts/baseline-assessment.contract.json",
+    "stopConditions": [
+      "Output validates against this schema.",
+      "status must be complete to accept.",
+      "Every learning claim cites a resource.",
+      "Producer cannot self-approve."
+    ]
+  },
+  "packetHash": "43a7594cda9faebb56e24804705744063592f2508a4f712924f8fc8b8157eefe",
+  "policySummary": {
+    "concurrencyClass": "heavyResearch",
+    "evidenceRules": [
+      "candidateReportClaimsRequireQualification",
+      "preferPrimarySources",
+      "requireClaimLevelEvidence",
+      "requireReachableUrls",
+      "singleAnecdoteCannotBecomeFrequencyClaim"
+    ],
+    "freshnessDaysRelevant": {
+      "activeJobPosting": 30,
+      "companyStructure": 365,
+      "compensation": 180,
+      "foundationalEngineeringMaterial": 1825,
+      "hiringSignals": 90,
+      "interviewProcess": 540,
+      "recentDevelopments": 180
+    },
+    "model": "sonnet",
+    "retry": {
+      "failedOnly": true,
+      "max": 2
+    }
+  },
+  "skills": [
+    "evidence-backed-web-research"
+  ]
+}

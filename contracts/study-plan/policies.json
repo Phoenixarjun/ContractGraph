@@ -29,7 +29,21 @@
       "timeBounded": 8,
       "tokenEfficient": 2
     },
-    "tokenEfficientBatching": true
+    "tokenEfficientBatching": true,
+    "concurrency": {
+      "classing": {
+        "heavyResearch": "hasWebTools",
+        "lightSynthesis": "noWebTools",
+        "verifier": "role=section-verifier",
+        "globalVerifier": "role=global-verifier"
+      },
+      "modes": {
+        "default": { "heavyResearch": 2, "lightSynthesis": 3, "verifier": 2, "globalVerifier": 1 },
+        "tokenEfficient": { "heavyResearch": 1, "lightSynthesis": 2, "verifier": 1, "globalVerifier": 1 },
+        "timeBounded": { "heavyResearch": 2, "lightSynthesis": 3, "verifier": 2, "globalVerifier": 1 }
+      },
+      "note": "heavyResearch stays <=2 in every mode by policy -- time-bounded raises only lightSynthesis/verifier throughput, never research burst size. concurrencyModes above is kept as a legacy aggregate ceiling."
+    }
   },
   "evidence": {
     "requireReachableUrls": true,
@@ -71,6 +85,15 @@
     "passEvidenceSummariesToOpus": true,
     "doNotPassFullTranscriptsBetweenNodes": true,
     "canonicalFormat": "json",
-    "toonMode": "benchmark_before_enable"
+    "toonMode": "benchmark_before_enable",
+    "toon": {
+      "mode": "benchmark_before_enable",
+      "enabledForRuntime": false,
+      "enabledForBenchmarkOnly": true,
+      "eligibleArrays": ["resources", "milestones", "checkpoints", "sourceRegistry"],
+      "minCharSavingsPct": 15,
+      "requireRoundTripLossless": true,
+      "requireSchemaValid": true
+    }
   }
 }

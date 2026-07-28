@@ -1,0 +1,17 @@
+{
+  "documentType": "ContractGraphBenchmarkConfig",
+  "configId": "optimized",
+  "description": "Optimized: same contract, context, models, and concurrency as baseline. Selective TOON only where toon-benchmark.json proved it (resources/milestones/checkpoints/sourceRegistry), compact dependency summaries instead of full upstream sections, evidence deduplication via the run-level source registry, issue-only verification, and cache-aware node-context packets.",
+  "format": "json",
+  "cache": "warm-allowed",
+  "contextSlicing": true,
+  "contextPackets": "cache-aware",
+  "dependencySummaries": true,
+  "evidenceDedup": true,
+  "verification": "issue-only",
+  "toon": "selective",
+  "toonEligibleArrays": ["resources", "milestones", "checkpoints", "sourceRegistry"],
+  "toonDecisionArtifact": "runtime/compiled/study-plan/toon-benchmark.json",
+  "concurrency": 2,
+  "repairs": "blocking-only"
+}

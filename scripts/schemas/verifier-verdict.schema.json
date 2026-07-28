@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contractgraph.dev/schemas/verifier-verdict.schema.json",
+  "title": "ContractGraph issue-only verifier verdict",
+  "description": "The only shape a section-verifier or global-verifier may return: status plus exact JSON paths and repair instructions. additionalProperties is false specifically to forbid rewrite/content/section/output fields -- a verifier names problems, it never rewrites.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["nodeId", "verifier", "status", "issues", "conflicts", "confidence"],
+  "properties": {
+    "nodeId": { "type": "string" },
+    "verifier": { "type": "string" },
+    "attempt": { "type": ["integer", "null"] },
+    "status": { "type": "string", "enum": ["passed", "failed"] },
+    "issues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "issueType", "repairInstruction"],
+        "properties": {
+          "path": { "type": "string" },
+          "issueType": {
+            "type": "string",
+            "enum": ["unsupportedClaim", "staleClaim", "structural", "evidence", "freshness", "conflict", "other"]
+          },
+          "claim": { "type": ["string", "null"] },
+          "repairInstruction": { "type": "string" }
+        }
+      }
+    },
+    "conflicts": { "type": "array", "items": { "type": "string" } },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "note": { "type": ["string", "null"] }
+  }
+}

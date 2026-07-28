@@ -1,0 +1,116 @@
+{
+  "documentType": "ContractGraphSkillManifest",
+  "version": "1.1.0",
+  "generatedBy": "/contractgraph:init (skill-registry-manager)",
+  "generatedAt": "2026-07-28",
+  "registry": {
+    "bootstrap": [
+      {
+        "skillId": "agent-definition-generator",
+        "tier": "bootstrap",
+        "path": ".claude/skills/bootstrap/agent-definition-generator/SKILL.md",
+        "contentHash": "f4fa40d3f3971809c05461ae74c4c1831669fa9e687bb3df98ab1e03675144d1",
+        "tokenSizeEstimate": 1065,
+        "privacyStatus": "clean",
+        "creationSource": "bootstrap",
+        "lastEvaluationDate": "2026-07-28"
+      },
+      {
+        "skillId": "capability-detector",
+        "tier": "bootstrap",
+        "path": ".claude/skills/bootstrap/capability-detector/SKILL.md",
+        "contentHash": "7a5baaf37ef9b2bc1b9cd9593830f3f4777c373ec228a2e660e00e9b5c979721",
+        "tokenSizeEstimate": 1008,
+        "privacyStatus": "clean",
+        "creationSource": "bootstrap",
+        "lastEvaluationDate": "2026-07-28"
+      },
+      {
+        "skillId": "context-advisor",
+        "tier": "bootstrap",
+        "path": ".claude/skills/bootstrap/context-advisor/SKILL.md",
+        "contentHash": "02ab310a78e5fc3728806188b8141bd614fdd27f61fe0ffbe9a3e487c0673cc0",
+        "tokenSizeEstimate": 1893,
+        "privacyStatus": "clean",
+        "creationSource": "bootstrap",
+        "lastEvaluationDate": "2026-07-28"
+      },
+      {
+        "skillId": "contract-designer",
+        "tier": "bootstrap",
+        "path": ".claude/skills/bootstrap/contract-designer/SKILL.md",
+        "contentHash": "8d7bd4bc44036118e40bc54f53a48009e72b0173b726cdc075e51d1bc4884746",
+        "tokenSizeEstimate": 2369,
+        "privacyStatus": "clean",
+        "creationSource": "bootstrap",
+        "lastEvaluationDate": "2026-07-28"
+      },
+      {
+        "skillId": "graph-plan-reviewer",
+        "tier": "bootstrap",
+        "path": ".claude/skills/bootstrap/graph-plan-reviewer/SKILL.md",
+        "contentHash": "4e7a0f0005335edeabac13ad80c95fcce0394d9c37c96a165b402e502bf2d9db",
+        "tokenSizeEstimate": 1053,
+        "privacyStatus": "clean",
+        "creationSource": "bootstrap",
+        "lastEvaluationDate": "2026-07-28"
+      },
+      {
+        "skillId": "skill-registry-manager",
+        "tier": "bootstrap",
+        "path": ".claude/skills/bootstrap/skill-registry-manager/SKILL.md",
+        "contentHash": "40e0613ad4eb039d76950741eae6c55483111bd04284a643721040de7bc7fee3",
+        "tokenSizeEstimate": 1079,
+        "privacyStatus": "clean",
+        "creationSource": "bootstrap",
+        "lastEvaluationDate": "2026-07-28"
+      },
+      {
+        "skillId": "workflow-compiler",
+        "tier": "bootstrap",
+        "path": ".claude/skills/bootstrap/workflow-compiler/SKILL.md",
+        "contentHash": "49c25de5ded2c0898d6f065c8e82c84eed99c90fbe855b136630477b62a324df",
+        "tokenSizeEstimate": 989,
+        "privacyStatus": "clean",
+        "creationSource": "bootstrap",
+        "lastEvaluationDate": "2026-07-28"
+      }
+    ],
+    "reusable": [
+      {
+        "skillId": "evidence-backed-web-research",
+        "tier": "reusable",
+        "path": ".claude/skills/reusable/evidence-backed-web-research/SKILL.md",
+        "contentHash": "1fbd18a31d37ce7f419c94483b52ec9e615696450e45b5a0876f0cb9ef22ae4a",
+        "tokenSizeEstimate": 896,
+        "privacyStatus": "clean",
+        "creationSource": "reusable",
+        "lastEvaluationDate": "2026-07-28"
+      }
+    ],
+    "generated": []
+  },
+  "capabilityBindings": [
+    {
+      "capabilityId": "evidence-backed-web-research",
+      "matchedSkill": "evidence-backed-web-research",
+      "status": "bound",
+      "reusableSkillPath": ".claude/skills/reusable/evidence-backed-web-research/SKILL.md",
+      "requiredByNodes": [
+        "baseline-assessment",
+        "python",
+        "fastapi",
+        "databases",
+        "distributed-systems"
+      ]
+    }
+  ],
+  "verifierSkills": [],
+  "summary": {
+    "capabilities": 1,
+    "bound": 1,
+    "pending": 0,
+    "reusableRegistered": 1,
+    "bootstrapRegistered": 7
+  }
+}

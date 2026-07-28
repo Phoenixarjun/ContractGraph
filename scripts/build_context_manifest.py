@@ -60,7 +60,7 @@ def build(context_dir: Path, out_path: Path) -> dict:
                 status = "unreadable"
         entries.append({
             "path": rel,
-            "sourcePath": f"context/{rel}",
+            "sourcePath": (context_dir / rel).as_posix(),
             "sha256": sha256_file(path),
             "bytes": size,
             "type": "text" if is_text else "binary",

@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contractgraph.dev/schemas/node-packet.schema.json",
+  "title": "ContractGraph node context packet",
+  "description": "Minimal per-node execution packet compiled at init time: this node's contract only, declared context refs by path+hash, dependency summary refs (not full sections), an evidence registry ref, skills, budget, and output instructions.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "documentType", "nodeId", "packetHash", "contractRef", "contractHash",
+    "policySummary", "contextRefs", "dependencySummaryRefs", "evidenceRegistryRef",
+    "skills", "budget", "outputInstructions"
+  ],
+  "properties": {
+    "documentType": { "const": "ContractGraphNodePacket" },
+    "nodeId": { "type": "string" },
+    "packetHash": { "type": "string" },
+    "contractRef": { "type": "string" },
+    "contractHash": { "type": "string" },
+    "policySummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["model", "concurrencyClass", "retry"],
+      "properties": {
+        "model": { "type": "string" },
+        "concurrencyClass": { "type": "string", "enum": ["heavyResearch", "lightSynthesis", "verifier", "globalVerifier"] },
+        "freshnessDaysRelevant": { "type": "object" },
+        "evidenceRules": { "type": "array", "items": { "type": "string" } },
+        "retry": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["max", "failedOnly"],
+          "properties": {
+            "max": { "type": "integer" },
+            "failedOnly": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "contextRefs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["sourcePath", "sha256", "loadWhen"],
+        "properties": {
+          "sourcePath": { "type": "string" },
+          "sha256": { "type": "string" },
+          "loadWhen": { "type": "string", "enum": ["summary", "full-if-exact-evidence-required"] },
+          "summaryRef": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "dependencySummaryRefs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["depNode", "summaryHash"],
+        "properties": {
+          "depNode": { "type": "string" },
+          "summaryHash": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "evidenceRegistryRef": { "type": ["string", "null"] },
+    "skills": { "type": "array", "items": { "type": "string" } },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tokenBudget"],
+      "properties": {
+        "tokenBudget": { "type": "integer" },
+        "searchBudget": { "type": ["integer", "null"] }
+      }
+    },
+    "outputInstructions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["outputPath", "schemaRef"],
+      "properties": {
+        "outputPath": { "type": "string" },
+        "schemaRef": { "type": "string" },
+        "requiredEvidence": { "type": ["string", "null"] },
+        "stopConditions": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

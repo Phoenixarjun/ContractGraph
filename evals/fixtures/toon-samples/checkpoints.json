@@ -1,0 +1,6 @@
+[
+  { "topic": "python", "criteria": "Can explain the GIL's effect on CPU-bound vs I/O-bound concurrency" },
+  { "topic": "fastapi", "criteria": "Can build a dependency-injected, tested CRUD API from scratch" },
+  { "topic": "databases", "criteria": "Can normalize a schema to 3NF and justify a deliberate denormalization" },
+  { "topic": "distributed-systems", "criteria": "Can reason about consistency/availability tradeoffs under partition" }
+]
