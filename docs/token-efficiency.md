@@ -32,6 +32,8 @@ A node's cache key (`scripts/cache_key.py`) is a hash over:
 
 Any one of these changing invalidates only that node's cache entry — a profile.md edit does not invalidate `dsa`'s cache if `dsa` never reads `profile.md`. Only `ACCEPTED` outputs are ever cached; a partial, structurally-invalid, or unresolved-evidence result is never written to `runtime/cache/`, so a cache hit always means "this exact input already produced a verified result," never "this exact input was attempted."
 
+The key also folds each upstream dependency's current `summaryHash` (`--dep-summaries`) and the node's own compiled packet hash (`--node-packet`) — see [token-optimization.md](token-optimization.md) for the full node-packet / dependency-summary design this protects.
+
 `--force-refresh` bypasses cache lookup entirely for that run without deleting existing cache entries.
 
 ## No Full Transcripts Between Nodes
@@ -40,7 +42,7 @@ A downstream node reads its dependencies' accepted `sections/<nodeId>.json` — 
 
 ## Format
 
-JSON is the canonical interchange format everywhere (`canonicalFormat: "json"`). TOON is implemented (`scripts/toon_codec.py`) but gated behind `toonMode: "benchmark_before_enable"` — it is not used in any compiled or run artifact until a measured token-savings benchmark shows it doesn't cost correctness (e.g. via loss of type fidelity on round-trip). Until that benchmark exists and passes, every artifact in this repository is JSON.
+JSON is the canonical interchange format everywhere (`canonicalFormat: "json"`). TOON is implemented (`scripts/toon_codec.py`) but gated behind `toonMode: "benchmark_before_enable"` — it is not used in any compiled or run artifact until a measured token-savings benchmark shows it doesn't cost correctness (e.g. via loss of type fidelity on round-trip). `scripts/toon_benchmark.py` runs that measurement per array shape; `runtime/compiled/study-plan/toon-benchmark.json` is the current decision report. TOON stays disabled for **normal runtime** regardless of that report's result — see [token-optimization.md](token-optimization.md) for the eligibility rules and [opencode-benchmark.md](opencode-benchmark.md) for the one config that may enable it.
 
 ## Other Standing Rules
 

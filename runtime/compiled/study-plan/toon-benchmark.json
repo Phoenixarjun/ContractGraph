@@ -1,0 +1,74 @@
+{
+  "documentType": "ContractGraphToonBenchmarkReport",
+  "version": "1.0.0",
+  "generatedBy": "scripts/toon_benchmark.py",
+  "note": "Measured against small representative fixtures under evals/fixtures/toon-samples/ (deterministic, no model call) -- not a live run. TOON stays disabled in normal runtime regardless of these results (policies.json tokenEfficiency.toon.enabledForRuntime=false); this report only tells the OPTIMIZED benchmark config which eligible arrays it may enable TOON for.",
+  "thresholds": {
+    "minCharSavingsPct": 15,
+    "requireRoundTripLossless": true,
+    "requireSchemaValid": true
+  },
+  "arrays": {
+    "resources": {
+      "sampleFixture": "evals/fixtures/toon-samples/resources.json",
+      "itemSchema": "contracts/study-plan/common/common.schema.json#/$defs/ResourceLink",
+      "itemCount": 6,
+      "jsonBytes": 688,
+      "toonBytes": 523,
+      "charSavingsPct": 23.98,
+      "estTokenSavingsPct": 23.98,
+      "estimated": true,
+      "roundTripLossless": true,
+      "schemaValid": true,
+      "enable": true
+    },
+    "milestones": {
+      "sampleFixture": "evals/fixtures/toon-samples/milestones.json",
+      "itemSchema": null,
+      "itemCount": 4,
+      "jsonBytes": 441,
+      "toonBytes": 351,
+      "charSavingsPct": 20.41,
+      "estTokenSavingsPct": 20.41,
+      "estimated": true,
+      "roundTripLossless": true,
+      "schemaValid": null,
+      "enable": true
+    },
+    "checkpoints": {
+      "sampleFixture": "evals/fixtures/toon-samples/checkpoints.json",
+      "itemSchema": null,
+      "itemCount": 4,
+      "jsonBytes": 414,
+      "toonBytes": 344,
+      "charSavingsPct": 16.91,
+      "estTokenSavingsPct": 16.91,
+      "estimated": true,
+      "roundTripLossless": true,
+      "schemaValid": null,
+      "enable": true
+    },
+    "sourceRegistry": {
+      "sampleFixture": "evals/fixtures/toon-samples/source-registry-entries.json",
+      "itemSchema": "contracts/study-plan/common/common.schema.json#/$defs/EvidenceSource",
+      "note": "sourceRegistry is a dict at runtime; array-ized (its .values()) to benchmark as a uniform array per the plan.",
+      "itemCount": 4,
+      "jsonBytes": 1016,
+      "toonBytes": 670,
+      "charSavingsPct": 34.06,
+      "estTokenSavingsPct": 34.06,
+      "estimated": true,
+      "roundTripLossless": true,
+      "schemaValid": true,
+      "enable": true
+    }
+  },
+  "modelOutputQuality": {
+    "status": "pending",
+    "note": "Whether a producer's OUTPUT quality changes when it must read/write TOON-encoded arrays (vs JSON) can only be measured during an actual OpenCode benchmark run against a real model -- not by this deterministic script. Do not treat 'enable: true' above as a green light for output quality; it only certifies size/losslessness/schema-validity of the encoding itself."
+  },
+  "summary": {
+    "allEligibleArraysPassThreshold": true,
+    "runtimeDecision": "TOON remains disabled for normal runtime execution. The optimized benchmark config may enable TOON transport for exactly these 4 arrays (policies.json tokenEfficiency.toon.eligibleArrays), pending the model-output-quality check above."
+  }
+}

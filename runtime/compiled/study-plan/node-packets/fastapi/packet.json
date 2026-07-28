@@ -1,0 +1,64 @@
+{
+  "budget": {
+    "searchBudget": null,
+    "tokenBudget": 25000
+  },
+  "contextRefs": [
+    {
+      "loadWhen": "summary",
+      "sha256": "6f2c10acb1e72e172ac10c1f04876630bfb89d9987a453bf48d331fcfec6a122",
+      "sourcePath": "canonical/preferences.md",
+      "summaryRef": null
+    }
+  ],
+  "contractHash": "24d903649b1663f31410be33d2b540f287e8c341d2b15ff6a8a3e618b9ffb1b2",
+  "contractRef": "node-contracts/fastapi.contract.json",
+  "dependencySummaryRefs": [
+    {
+      "depNode": "baseline-assessment",
+      "summaryHash": null
+    }
+  ],
+  "documentType": "ContractGraphNodePacket",
+  "evidenceRegistryRef": "runtime/runs/<run-id>/evidence/source-registry.json",
+  "nodeId": "fastapi",
+  "outputInstructions": {
+    "outputPath": "sections/fastapi.json",
+    "requiredEvidence": "claim-level",
+    "schemaRef": "node-contracts/fastapi.contract.json",
+    "stopConditions": [
+      "Output validates against this schema.",
+      "status must be complete to accept.",
+      "Every learning claim cites a resource.",
+      "Producer cannot self-approve."
+    ]
+  },
+  "packetHash": "ebe145d786c02900618be32f6a57bae36611e0052e50309c6be4360ad6a5c775",
+  "policySummary": {
+    "concurrencyClass": "heavyResearch",
+    "evidenceRules": [
+      "candidateReportClaimsRequireQualification",
+      "preferPrimarySources",
+      "requireClaimLevelEvidence",
+      "requireReachableUrls",
+      "singleAnecdoteCannotBecomeFrequencyClaim"
+    ],
+    "freshnessDaysRelevant": {
+      "activeJobPosting": 30,
+      "companyStructure": 365,
+      "compensation": 180,
+      "foundationalEngineeringMaterial": 1825,
+      "hiringSignals": 90,
+      "interviewProcess": 540,
+      "recentDevelopments": 180
+    },
+    "model": "sonnet",
+    "retry": {
+      "failedOnly": true,
+      "max": 2
+    }
+  },
+  "skills": [
+    "evidence-backed-web-research"
+  ]
+}

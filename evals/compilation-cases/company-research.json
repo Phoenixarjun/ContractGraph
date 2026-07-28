@@ -1,9 +1,0 @@
-{
-  "bundle": "contracts/company-research",
-  "expect": {
-    "nodes": 17,
-    "roles": 5,
-    "layers": 8,
-    "dependencyConflicts": 0
-  }
-}

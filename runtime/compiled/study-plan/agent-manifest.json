@@ -110,9 +110,7 @@
         "databases",
         "distributed-systems"
       ],
-      "requiredSkills": [
-        "evidence-backed-web-research"
-      ],
+      "requiredSkills": [],
       "nodeContract": "contracts/study-plan/node-contracts/evaluation-plan.contract.json",
       "output": "runtime/sections/evaluation-plan.json"
     }

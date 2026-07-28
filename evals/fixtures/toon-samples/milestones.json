@@ -1,0 +1,6 @@
+[
+  { "name": "Write an async web scraper", "successCriteria": "handles 100 concurrent requests without blocking" },
+  { "name": "Build a FastAPI CRUD service", "successCriteria": "all endpoints covered by passing pytest tests" },
+  { "name": "Design a normalized schema", "successCriteria": "schema passes a 3NF review with no redundant data" },
+  { "name": "Implement a consistent-hashing cache", "successCriteria": "rebalances with under 20% key movement on node add" }
+]
