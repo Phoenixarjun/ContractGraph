@@ -60,7 +60,7 @@ def preserve(old, new, user_fields):
 
 def main(argv=None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
-    opts = {"--old": None, "--new": None, "--bundle": "contracts/company-research", "--out": None}
+    opts = {"--old": None, "--new": None, "--bundle": "contracts/study-plan", "--out": None}
     i = 0
     while i < len(argv):
         if argv[i] in opts:

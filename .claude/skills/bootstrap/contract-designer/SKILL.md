@@ -41,7 +41,7 @@ A large legacy export (for example a prior Salesforce dump) is a **source of evi
 - a source of **field structures** — each section's shape becomes that node's output schema;
 - a source of **validation requirements** — its required fields, types, enums, and nesting tell you what "valid" means.
 
-The failure mode to avoid: pasting the whole blob into one giant `main.contract.json`. That produces something no node can own and no verifier can check. Decompose it into per-node schemas, each small enough for one subagent to satisfy and one validator to check.
+The failure mode to avoid: pasting the whole blob into one giant `contract.schema.json`. That produces something no node can own and no verifier can check. Decompose it into per-node schemas, each small enough for one subagent to satisfy and one validator to check.
 
 ## Procedure
 
@@ -69,31 +69,44 @@ The schema catches wrong *shape*; the verifier catches wrong, unsupported, stale
 
 ## Contract Bundle Layout
 
+This is the layout `scripts/validate_contract_bundle.py` enforces. Use these exact filenames — a bundle with different names fails validation.
+
 ```text
 contracts/<workflow>/
-├── contract-bundle.json          # wiring: main contract + list of subcontracts
-├── main.contract.json            # final output schema + required subcontracts + aggregation + global verification
-├── nodes/
-│   └── <node>.contract.json      # per node: outputSchema + verification + dependsOn
-├── roles/  (or any set dir)      # per-item contracts when one node is applied over a set
-│   └── <item>.contract.json
-└── policies.yaml                 # optional: budgets, retries, model routing
+├── contract.bundle.json          # wiring: main contract + nodes[] + aggregation + globalValidation
+├── contract.schema.json          # main contract: final output schema + required aggregation paths
+├── common/common.schema.json     # optional: shared $defs reused across node contracts
+├── node-contracts/
+│   └── <node>.contract.json      # per node: output schema + x-contractgraph block
+├── roles/  (or any set dir)      # optional: per-item contracts when one node maps over a set
+│   └── <item>.role.json
+├── graph.yaml                    # declared dependency edges, cross-checked at compile time
+└── policies.json                 # optional: budgets, retries, model routing, concurrency
 ```
 
-`contract-bundle.json` connects everything:
+`contract.bundle.json` connects everything:
 ```json
 {
-  "id": "company-research",
-  "mainContract": "main.contract.json",
-  "subcontracts": [
-    "nodes/company-intelligence.contract.json",
-    "nodes/company-initiatives.contract.json",
-    "nodes/resume-analysis.contract.json"
-  ]
+  "bundleId": "study-plan",
+  "bundleVersion": "1.0.0",
+  "documentType": "ContractGraphContractBundle",
+  "mainContract": "contract.schema.json",
+  "commonSchema": "common/common.schema.json",
+  "runtimeInputs": { "required": ["learnerGoal"], "optional": ["targetDate"], "defaults": {} },
+  "nodes": [
+    {
+      "nodeId": "baseline-assessment",
+      "contract": "node-contracts/baseline-assessment.contract.json",
+      "required": true,
+      "aggregationPath": "baselineAssessment"
+    }
+  ],
+  "aggregation": { "mode": "deterministic", "acceptOnlyVerifiedNodes": true },
+  "globalValidation": ["Every required node must be accepted."]
 }
 ```
 
-Minimum fields a **node** contract carries: `id`, `title`, `outputSchema` (JSON Schema), `verification` (evidence, sources, freshness, acceptance), `dependsOn` (array of node ids — empty if independent). Minimum fields the **main** contract carries: `finalOutputSchema`, `requiredSubcontracts`, `aggregation`, `globalVerification`.
+A **node contract** is a JSON Schema for that node's section, plus an `x-contractgraph` block carrying `aggregationPath`, `dependsOn` (array of node ids — empty if independent), `contextRefs`, and its `verification` requirements (evidence, sources, freshness, acceptance). Its `properties.nodeId.const` must equal the bundle's `nodeId`, and its `x-contractgraph.aggregationPath` must equal the bundle's `aggregationPath` — the validator rejects a mismatch. The **main contract** (`contract.schema.json`) requires every required node's `aggregationPath` at its top level.
 
 ## Examples — same method, different domains
 
@@ -114,5 +127,5 @@ Minimum fields a **node** contract carries: `id`, `title`, `outputSchema` (JSON 
 
 - You are about to add framework logic named after a domain concept.
 - A node's schema has no required fields or no types — it is not machine-validatable.
-- The legacy example is collapsing back into one enormous `main.contract.json`.
+- The legacy example is collapsing back into one enormous `contract.schema.json`.
 - You are creating contract files before the user has approved the tree.

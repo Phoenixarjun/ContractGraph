@@ -4,12 +4,27 @@
 
 ```text
 evals/
+├── run_evals.py         # the suite itself — deterministic, offline, no model calls
 ├── compilation-cases/   # /contractgraph:init behavior
 ├── skill-cases/         # skill trigger / false-trigger / duplication behavior
 ├── workflow-cases/      # full /contractgraph:run scenarios
-├── cases/               # cross-cutting cases that don't fit the three above
+├── benchmarks/          # baseline vs optimized run configs for token comparison
+├── fixtures/            # synthetic sample data (TOON samples, etc.)
 └── rubrics/             # scoring rubrics used by the semantic checks below
 ```
+
+Run it with:
+
+```bash
+python evals/run_evals.py
+```
+
+It exercises the real script CLIs through `subprocess` — no model calls, no
+network, no live research — and exits non-zero if any case fails. Cases that
+need a local-only artifact (a private bundle, or a completed run under the
+git-ignored `runtime/runs/`) report **SKIP** with the reason rather than
+failing or silently disappearing, so a fresh clone is green and honest about
+what it did not cover.
 
 ## The 12 Categories
 
@@ -35,11 +50,9 @@ evals/
 
 | Fixture | Contracts | Context | Proves |
 |---|---|---|---|
-| **company-research** | `contracts/company-research/` (approved bootstrap bundle) | `context/canonical/` (real, private) | The private, production path — real evidence research, real profile alignment, real resume analysis. |
-| **study-plan** | a synthetic contract bundle (public demo shape: e.g. topic breakdown, mastery tracking, practice scheduling) | `context/synthetic/` (fabricated learner profile, no real personal data) | **Genericity** — the identical `/contractgraph:{context,contract,init,validate,run}` mechanism, the identical skill-generation and agent-generation procedure, and the identical three-layer validation model produce a correct, differently-shaped workflow using nothing but a different contract bundle and different context. No core script, skill, or command is edited to support it. |
+| **study-plan** (public) | `contracts/study-plan/` | `context/synthetic/study-plan/` (fabricated learner profile, no real personal data) | The full compile → run → verify → finalize path on a bundle anyone can clone and inspect. This is the reference bundle every default points at. |
+| **your own bundle** (local) | `contracts/<workflow>/` | your `context/canonical/` | **Genericity** — the identical `/contractgraph:{context,contract,init,validate,run,finalize}` mechanism, the identical skill- and agent-generation procedure, and the identical three-layer validation model produce a correct, differently-shaped workflow from nothing but a different contract bundle and different context. No core script, skill, or command is edited to support it. |
 
-The study-plan fixture is the framework's proof of its own central claim: contracts and context define the workflow, Claude Code designs the execution, and nothing domain-specific is hard-coded into the runtime. If the study-plan fixture ever required a code change to pass, that would be a genericity regression, not a feature.
+The genericity cases are the framework's proof of its own central claim: contracts and context define the workflow, Claude Code designs the execution, and nothing domain-specific is hard-coded into the runtime. If a new bundle ever required a core-code change to pass, that would be a genericity regression, not a feature.
 
 `evals/rubrics/` holds the scoring criteria the semantic categories (5, 10) use, so a planted-defect fixture has a machine-checkable pass/fail bar rather than relying on a reviewer's judgment call each time.
-
-As of the current bootstrap state, `evals/` directories are scaffolded and cases are not yet authored — see `runtime/compiled/compilation-report.md` for the live status.

@@ -24,7 +24,7 @@
 
 | File | Purpose |
 |------|---------|
-| `context-manifest.json` | Canonical context indexed by source path + SHA-256, scoped to `context/synthetic/study-plan` (public/synthetic learner "Sam" — never the real private `context/canonical/`). |
+| `context-manifest.json` | Context indexed by source path + SHA-256, scoped to `context/synthetic/study-plan` (the synthetic learner profile — never a private context tree). |
 | `contract-manifest.json` | Node inventory with per-contract hashes, aggregation paths, dependencies, multiplicity. |
 | `graph.json` | **Canonical** compiled graph: 6 nodes, dependencies, 3 layers, source-verification block. |
 | `capability-manifest.json` | 1 capability detected across nodes (`evidence-backed-web-research`). |
@@ -50,7 +50,7 @@
 - **Concurrency class** (per `policies.json.execution.concurrency`): `baseline-assessment`, `python`, `fastapi`, `databases`, `distributed-systems` → `heavyResearch` (WebSearch+WebFetch); `evaluation-plan` → `lightSynthesis` (Read/Write only).
 - Every node agent references its real node contract.
 
-## Token-efficiency additions (this compilation)
+## Token-efficiency properties of this compilation
 
 1. **Node contracts now carry `evidence: [{ref, claims}]`** instead of embedded `sources: [EvidenceSource]` — full source metadata lives once in the run's `evidence/source-registry.json` (`source_registry.py`), not duplicated per node.
 2. **`x-contractgraph.contextRefs`** declares exactly which canonical files each node needs (never "all canonical" as a fallback).
@@ -60,18 +60,19 @@
 
 ## Open questions / known issues
 
-1. **Skill fit for `evaluation-plan`.** No existing reusable skill targets "tie N verified topic tracks to checkpoints + a final assessment" specifically; the node currently runs on its node contract + policies alone (`requiredSkills: []`), matching company-research's precedent for pure-synthesis nodes (`resources`, `application-strategy` — neither declares a skill either).
-2. **`toon-benchmark.json` measures representative fixtures, not a live run's actual arrays.** Model-output-quality under TOON is explicitly marked `pending` — only knowable from an actual OpenCode benchmark execution (not performed this task).
-3. **Company-research mirror is partial by design.** `EvidenceRef`/`HandoffSummary` defs and `x-contractgraph.contextRefs` were mirrored into company-research's contracts for vocabulary consistency, but its existing `sources[].claims[]` evidence convention was intentionally left as-is (not renamed to `evidence[]`) since that workflow is not executed this task and forcing an unverified breaking rename would be pure risk with no executed benefit. See `docs/token-optimization.md`.
+1. **Skill fit for `evaluation-plan`.** No existing reusable skill targets "tie N verified topic tracks to checkpoints plus a final assessment" specifically, so the node runs on its node contract and policies alone (`requiredSkills: []`). This is the expected shape for a pure-synthesis node with no web tools.
+2. **`toon-benchmark.json` measures representative fixtures, not a live run's actual arrays.** Model-output quality under TOON is explicitly marked `pending` — it is only knowable from an executed benchmark run, not from a deterministic script.
 
 ## Reuse / regeneration
 
 Re-running `/contractgraph:init` with no change to contracts, context, policies, or core skills reproduces identical `graph.json` and `contractManifestHash`. Regenerate when any of those inputs change.
 
-## Next command (benchmark preparation only — do not execute yet)
+## Next command
 
 ```
-/contractgraph:run --bundle contracts/study-plan --context context/synthetic/study-plan \
-  --input evals/benchmarks/study-plan/input.json --config evals/benchmarks/study-plan/baseline.config.json
+/contractgraph:run contracts/study-plan --context context/synthetic/study-plan \
+  --input "backend engineering within 6 months, Python web services"
 ```
-See `docs/opencode-benchmark.md` for the exact baseline vs. optimized commands.
+
+For the controlled baseline vs. optimized benchmark invocation, see
+`docs/opencode-benchmark.md`.

@@ -9,7 +9,7 @@ load, skills selected per node, expected cache hits, an estimated token budget,
 and the files that would be written. Deterministic; no model, no network.
 
 Usage:
-  python scripts/dry_run.py --bundle <dir> [--compiled runtime/compiled]
+  python scripts/dry_run.py --bundle <dir> [--compiled runtime/compiled/study-plan]
       [--input <input.json>] [--cache runtime/cache]
 Output: JSON plan. Exit 0 ok, 2 IO/usage.
 """
@@ -91,8 +91,8 @@ def _hist(node_plan):
 
 def main(argv=None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
-    bundle_dir = Path("contracts/company-research")
-    compiled = Path("runtime/compiled")
+    bundle_dir = Path("contracts/study-plan")
+    compiled = Path("runtime/compiled/study-plan")
     cache_dir = Path("runtime/cache")
     run_input = {}
     i = 0

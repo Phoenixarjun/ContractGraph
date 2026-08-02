@@ -29,7 +29,7 @@ Company Research Contract
 
 ## Bundle Wiring
 
-A bundle on disk (e.g. `contracts/company-research/`) contains:
+A bundle on disk (e.g. `contracts/study-plan/`) contains:
 
 ```text
 contracts/<workflow>/

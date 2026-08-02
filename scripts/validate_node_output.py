@@ -47,7 +47,7 @@ def main(argv=None) -> int:
     if not argv:
         return _die("usage: validate_node_output.py <node-output.json> --bundle <dir> [--node <id>]")
     output_path = Path(argv[0])
-    bundle_dir = Path("contracts/company-research")
+    bundle_dir = Path("contracts/study-plan")
     node_hint = None
     i = 1
     while i < len(argv):

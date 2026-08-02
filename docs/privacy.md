@@ -4,7 +4,8 @@
 
 - Canonical **private** context lives under `context/private/` and is git-ignored.
 - `context/private/` is never read by any deterministic script (`validate_context.py`, `build_context_manifest.py` both explicitly exclude any path containing `private`), never read by any skill, and never read by any generated subagent.
-- Personal run outputs live under ignored `runtime/` subdirectories, not in tracked source.
+- `context/canonical/` and `context/derived/` are git-ignored as well: real ground truth and anything derived from it stay local. Only `context/synthetic/` is tracked, and only that tree may appear in public examples.
+- Personal run outputs live under ignored `runtime/` subdirectories (`runtime/runs/`, `runtime/cache/`, `runtime/outputs/`, `runtime/sections/`, `runtime/traces/`), not in tracked source. A compiled artifact that embeds a `context/canonical/` or `context/private/` path is ignored too.
 
 ## Prohibitions
 
@@ -25,6 +26,8 @@
 
 Every item under `context/derived/` must carry its source run ID, generating node, creation time, evidence references, confidence, freshness information, and contract version — so a derived fact can always be traced back to the verified run that produced it. Derived context is written only from globally-verified results, and it must never overwrite canonical context.
 
+See [privacy-propagation.md](privacy-propagation.md) for the full mechanism: `scripts/build_derived_context.py` computes a `privacyClassification` (`public`/`internal`/`private`, never a bare boolean) per entry, inherited through the dependency chain and never downgraded on refresh.
+
 ## Canonical Immutability
 
 Canonical context is treated as read-only for the duration of a run (`canonicalContextIsImmutableDuringRun`). Nothing in `/contractgraph:run` edits `context/canonical/`; only the user updates it, between runs.
@@ -38,4 +41,4 @@ A generated skill or subagent definition is safe to publish (after removing runt
 - no run-specific data (a specific company name, a specific candidate's history, a specific run's evidence),
 - only capability-level language, contract/schema references, and generic procedure — the same skill must work identically for a synthetic example as for a real one.
 
-This is the same bar `contract-designer` applies to public examples: the public demonstration workflow (e.g. a personalized study-plan contract) must use synthetic user context, never real canonical or private data, even though it shares the identical compile/run mechanism as the private company-research workflow.
+This is the same bar `contract-designer` applies to public examples: the shipped demonstration workflow (`contracts/study-plan`) uses synthetic user context only, never real canonical or private data, even though it shares the identical compile/run mechanism as any private workflow you build alongside it.

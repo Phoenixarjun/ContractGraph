@@ -7,7 +7,7 @@ description: Use when a compiled graph plus its capability, skill, and agent man
 
 ## Overview
 
-This skill is an adversarial critic, not a builder. It takes a fully compiled graph (`runtime/compiled/graph.yaml`/`graph.json`) plus `capability-manifest.json`, `skill-manifest.json`, and `agent-manifest.json` and tries to break the plan before it runs — looking for structural defects, privilege overreach, misrouting, duplication, privacy leaks, and missing verification. It never fixes the plan itself; it reports blockers and warnings and hands them back for repair.
+This skill is an adversarial critic, not a builder. It takes a fully compiled graph (`runtime/compiled/<bundleId>/graph.yaml`/`graph.json`) plus `capability-manifest.json`, `skill-manifest.json`, and `agent-manifest.json` and tries to break the plan before it runs — looking for structural defects, privilege overreach, misrouting, duplication, privacy leaks, and missing verification. It never fixes the plan itself; it reports blockers and warnings and hands them back for repair.
 
 ## When to Use
 

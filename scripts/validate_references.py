@@ -12,7 +12,7 @@ against that external file instead of anything inline.
 
 Usage:
   python scripts/validate_references.py <file.json> --bundle <dir>
-      [--context-manifest runtime/compiled/context-manifest.json]
+      [--context-manifest runtime/compiled/study-plan/context-manifest.json]
       [--evidence-registry runtime/runs/<run-id>/evidence/source-registry.json]
 Output: JSON report. Exit 0 ok, 1 unresolved refs, 2 IO/usage.
 """
@@ -118,8 +118,8 @@ def main(argv=None) -> int:
               "[--evidence-registry PATH]", file=sys.stderr)
         return 2
     doc_path = Path(argv[0])
-    bundle_dir = Path("contracts/company-research")
-    ctx = Path("runtime/compiled/context-manifest.json")
+    bundle_dir = Path("contracts/study-plan")
+    ctx = Path("runtime/compiled/study-plan/context-manifest.json")
     evidence_registry = None
     i = 1
     while i < len(argv):

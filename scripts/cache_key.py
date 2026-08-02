@@ -16,9 +16,9 @@ that could affect their output actually changed.
 
 Usage:
   python scripts/cache_key.py --bundle <dir> --node <id> --input <input.json>
-      [--context-manifest runtime/compiled/context-manifest.json]
-      [--agent-manifest runtime/compiled/agent-manifest.json]
-      [--skill-manifest runtime/compiled/skill-manifest.json]
+      [--context-manifest runtime/compiled/study-plan/context-manifest.json]
+      [--agent-manifest runtime/compiled/study-plan/agent-manifest.json]
+      [--skill-manifest runtime/compiled/study-plan/skill-manifest.json]
       [--dep-summaries <depNode-to-summaryHash.json>]
       [--node-packet <node-packets/<id>/packet.json>]
 Output: JSON {cacheKey, components}. Exit 0 ok, 2 IO/usage.
@@ -77,10 +77,10 @@ def build(bundle_dir: Path, node_id: str, run_input: dict,
 
 def main(argv=None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
-    opts = {"--bundle": "contracts/company-research", "--node": None, "--input": None,
-            "--context-manifest": "runtime/compiled/context-manifest.json",
-            "--agent-manifest": "runtime/compiled/agent-manifest.json",
-            "--skill-manifest": "runtime/compiled/skill-manifest.json",
+    opts = {"--bundle": "contracts/study-plan", "--node": None, "--input": None,
+            "--context-manifest": "runtime/compiled/study-plan/context-manifest.json",
+            "--agent-manifest": "runtime/compiled/study-plan/agent-manifest.json",
+            "--skill-manifest": "runtime/compiled/study-plan/skill-manifest.json",
             "--dep-summaries": None, "--node-packet": None}
     i = 0
     while i < len(argv):

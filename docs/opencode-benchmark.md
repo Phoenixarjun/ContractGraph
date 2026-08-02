@@ -1,20 +1,31 @@
 # OpenCode Benchmark — Study Plan
 
-This documents how to run the controlled baseline-vs-optimized comparison of the study-plan workflow under OpenCode, using the private canonical context. **Neither benchmark has been executed as part of this task** — this doc, the two configs, and `input.json` are preparation only, per explicit scope: implement, validate deterministically, document, and prepare the benchmark; do not run it.
+How to run the controlled baseline-vs-optimized comparison of the study-plan
+workflow under OpenCode. This repository ships the procedure and the configs;
+it publishes no benchmark numbers, because a number that has not been measured
+on both sides is not a result. See
+[benchmark-methodology.md](benchmark-methodology.md) for what must be held
+identical for the comparison to be fair.
 
-## Why study-plan, not company-research
+## Why the Study-Plan Bundle
 
-Company-research is the private validation workflow and is explicitly out of scope for execution this task. Study-plan is the public demonstration workflow — domain-neutral, synthetic-context-safe, and small (a 1→4→1 diamond: `baseline-assessment` → {`python`,`fastapi`,`databases`,`distributed-systems`} → `evaluation-plan`) — making it the right target for a reproducible, low-cost benchmark run. The user's **real** canonical context can still be substituted for the synthetic one at run time (the compiled workflow doesn't hard-code either).
+`contracts/study-plan` is the public reference bundle — domain-neutral,
+synthetic-context-safe, and small: a 1→4→1 diamond
+(`baseline-assessment` → {`python`, `fastapi`, `databases`,
+`distributed-systems`} → `evaluation-plan`). That makes it cheap to run
+repeatedly and easy for anyone to reproduce. A different context tree can be
+substituted at run time with `--context`; the compiled workflow hard-codes
+neither.
 
-## The two configs
+## The Two Configs
 
-`evals/benchmarks/study-plan/baseline.config.json` and `optimized.config.json` hold the contract, context, models, and concurrency (2) fixed — only the optimizations this task added vary:
+`evals/benchmarks/study-plan/baseline.config.json` and `optimized.config.json` hold the contract, context, models, and concurrency (2) fixed. Only the token-efficiency mechanisms vary between them:
 
 | | Baseline | Optimized |
 |---|---|---|
 | Format | JSON | JSON |
 | Cache | cold | warm-allowed |
-| Context slicing | on (pre-existing behavior) | on, via cache-aware node packets (`node-packets/<id>/packet.json`) |
+| Context slicing | on | on, via cache-aware node packets (`node-packets/<id>/packet.json`) |
 | Dependency summaries | off (full sections read downstream) | on (`build_dependency_summary.py`) |
 | Evidence dedup | off (embedded `sources[]`) | on (`source_registry.py` + `evidence: [{ref,claims}]`) |
 | Verification | full | issue-only (`verifier-verdict.schema.json`) |
@@ -22,9 +33,9 @@ Company-research is the private validation workflow and is explicitly out of sco
 | Concurrency | 2 | 2 (unchanged — isolates the *other* variables) |
 | Repairs | blocking-only | blocking-only (unchanged) |
 
-`evals/benchmarks/study-plan/input.json` supplies the synthetic learner "Sam"'s stated goal (`context/synthetic/study-plan/canonical/goals.md`) as the runtime input — swap this for the user's real goal/preferences to run the benchmark against real private context instead.
+`evals/benchmarks/study-plan/input.json` supplies the synthetic learner's stated goal (`context/synthetic/study-plan/canonical/goals.md`) as the runtime input. Swap it, together with `--context`, to benchmark against a different context tree.
 
-## Running the baseline (do not execute yet)
+## Running the Baseline
 
 ```
 opencode run "/contractgraph:run \
@@ -44,7 +55,7 @@ python scripts/telemetry_normalize.py --run runtime/runs/sp-baseline-01 \
     --out runtime/runs/sp-baseline-01/final/cost.json
 ```
 
-## Running the optimized config (do not execute yet)
+## Running the Optimized Config
 
 Identical invocation, swapping the config and run id:
 
@@ -62,6 +73,8 @@ python scripts/telemetry_normalize.py --run runtime/runs/sp-optimized-01 \
     --out runtime/runs/sp-optimized-01/final/cost.json
 ```
 
+For per-node telemetry attribution, `scripts/build_opencode_session_slug.py` mints a deterministic session slug (`cg-<runId>-<nodeId>-<purpose>-<attempt>`) so each producer, verifier, and repair request maps to its own session and its usage can be attributed back to the node that caused it.
+
 **Verify the exact OpenCode CLI flags (`run`, `export`, `--session`) against the installed OpenCode version before running these** — the `/contractgraph:run` prompt string is stable across runtimes, but OpenCode's own CLI surface may differ from what's shown here.
 
 ## Comparing the two runs
@@ -73,7 +86,7 @@ python scripts/benchmark_compare.py \
     --out evals/benchmarks/study-plan/comparison.json
 ```
 
-Reports, per metric (input/output/cache-read/cache-creation tokens, estimated cost, duration, tool calls, searches, fetches, output bytes, request count): baseline value, optimized value, delta, and delta percent — never dividing by a null or zero baseline (that metric is reported `unavailable` instead of a fabricated ratio).
+Reports, per metric (input/output/cache-read/cache-creation tokens, estimated cost, duration, tool calls, web searches, web fetches, output bytes, request/success/failure counts): baseline value, optimized value, delta, and delta percent — never dividing by a null or zero baseline (that metric is reported `unavailable` instead of a fabricated ratio). See [benchmark-methodology.md](benchmark-methodology.md) for what must be held identical between the two runs for this comparison to be fair.
 
 ## What this benchmark can and cannot tell you
 

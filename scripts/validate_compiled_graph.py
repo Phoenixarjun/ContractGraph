@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """validate_compiled_graph - deterministic integrity checks on a compiled graph.
 
-Validates the artifact produced by build_contract_manifest (runtime/compiled/
+Validates the artifact produced by build_contract_manifest (runtime/compiled/study-plan/
 graph.json): every dependency resolves to a known node, the graph is acyclic,
 every node is placed in exactly one layer, and map nodes reference real nodes.
 Accepts JSON (preferred) or the restricted YAML subset via yaml_lite.
 
 Usage:  python scripts/validate_compiled_graph.py [graph-path]
-        default: runtime/compiled/graph.json
+        default: runtime/compiled/study-plan/graph.json
 Output: JSON report on stdout. Exit 0 = ok, 1 = invalid graph, 2 = IO/usage.
 """
 from __future__ import annotations
@@ -123,7 +123,7 @@ def validate_graph(graph: dict) -> dict:
 
 def main(argv=None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
-    graph_path = Path(argv[0]) if argv else Path("runtime/compiled/graph.json")
+    graph_path = Path(argv[0]) if argv else Path("runtime/compiled/study-plan/graph.json")
     if not graph_path.is_file():
         print(json.dumps({"ok": False, "error": f"graph not found: {graph_path}"}), file=sys.stderr)
         return 2

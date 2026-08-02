@@ -7,12 +7,12 @@ The dependency graph is COMPILED from each node contract's authoritative
 (differences are recorded as conflicts, not silently accepted or blindly copied).
 Execution layers are derived deterministically by longest-path levelling.
 
-Emits (under runtime/compiled by default):
+Emits (under runtime/compiled/study-plan by default):
   - contract-manifest.json : node/role inventory with hashes + aggregation paths
   - graph.json             : the canonical compiled graph (nodes, deps, layers)
 
 Usage:  python scripts/build_contract_manifest.py [bundle-dir] [--out-dir DIR]
-        defaults: bundle-dir=contracts/company-research  out-dir=runtime/compiled
+        defaults: bundle-dir=contracts/study-plan  out-dir=runtime/compiled/study-plan
 Output: writes both files, prints a JSON summary. Exit 0 ok, 1 compile conflict, 2 IO.
 """
 from __future__ import annotations
@@ -169,8 +169,8 @@ def build(bundle_dir: Path, out_dir: Path) -> dict:
 
 def main(argv=None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
-    bundle_dir = Path("contracts/company-research")
-    out_dir = Path("runtime/compiled")
+    bundle_dir = Path("contracts/study-plan")
+    out_dir = Path("runtime/compiled/study-plan")
     i = 0
     while i < len(argv):
         if argv[i] == "--out-dir":

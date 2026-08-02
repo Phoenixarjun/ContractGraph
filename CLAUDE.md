@@ -46,53 +46,52 @@ contracts/
 Claude Code compiles them into:
 
 ```text
-runtime/compiled/
-├── graph.yaml
+runtime/compiled/<bundleId>/
+├── graph.yaml                  # + canonical graph.json
 ├── context-manifest.json
 ├── contract-manifest.json
+├── capability-manifest.json
 ├── skill-manifest.json
 ├── agent-manifest.json
+├── node-packets/<nodeId>/packet.json
 └── compilation-report.md
 ```
+
+One bundle compiles into one directory named after its `bundleId`. Never write compiled artifacts to the top of `runtime/compiled/`.
 
 ## Architecture
 
 ```mermaid
 flowchart TB
-    CONTEXT["User Context"] --> INIT["/contractgraph:init"]
-    CONTRACTS["Contract Bundle"] --> INIT
-    POLICIES["Optional Policies"] --> INIT
+    CONTEXT_CMD["/contractgraph:context"] --> CANONICAL["Canonical Context"]
+    CONTRACT_CMD["/contractgraph:contract"] --> CONTRACTS["Contract Bundle"]
 
-    INIT --> CONTEXT_ANALYSIS["Context Analysis"]
-    INIT --> CONTRACT_ANALYSIS["Contract Tree Analysis"]
+    CANONICAL --> INIT["/contractgraph:init"]
+    CONTRACTS --> INIT
 
-    CONTEXT_ANALYSIS --> CANONICAL["Canonical Context Manifest"]
-    CONTRACT_ANALYSIS --> PLAN["Dynamic Graph Plan"]
+    INIT --> GRAPH["Compiled DAG"]
+    INIT --> PACKETS["Node Context Packets"]
+    INIT --> SKILLS["Skill Manifest"]
+    INIT --> AGENTS["Agent Manifest"]
 
-    PLAN --> CAPABILITIES["Capability Detection"]
-    CAPABILITIES --> SKILLS["Create or Reuse Skills"]
-    SKILLS --> SKILL_EVAL["Skill Evaluation and Optimization"]
-    SKILL_EVAL --> AGENTS["Generate Specialized Subagents"]
-    AGENTS --> GRAPH["Compile graph.yaml"]
+    GRAPH --> RUN["/contractgraph:run"]
+    PACKETS --> RUN
+    SKILLS --> RUN
+    AGENTS --> RUN
 
-    CANONICAL --> READY["Compiled Workflow"]
-    GRAPH --> READY
+    RUN --> PRODUCER["Scoped Node Production"]
+    PRODUCER --> VALIDATE["/contractgraph:validate"]
 
-    INPUT["Runtime Input"] --> RUN["/contractgraph:run"]
-    READY --> RUN
+    VALIDATE -->|Blocking failure| REPAIR["Targeted Repair"]
+    REPAIR --> VALIDATE
 
-    RUN --> NODES["Execute Ready Nodes"]
-    NODES --> NODE_VERIFY["Validate Contract and Evidence"]
+    VALIDATE -->|Accepted| PERSIST["Persist Accepted Section"]
+    PERSIST --> FINALIZE["/contractgraph:finalize"]
 
-    NODE_VERIFY -->|Failed| REPAIR["Repair Only Failed Node"]
-    REPAIR --> NODES
-
-    NODE_VERIFY -->|Passed| ACCEPT["Accept Verified Section"]
-    ACCEPT --> AGGREGATE["Deterministic Aggregation"]
-    AGGREGATE --> GLOBAL_VERIFY["Global Contract Verification"]
-
-    GLOBAL_VERIFY -->|Failed| REPAIR
-    GLOBAL_VERIFY -->|Passed| OUTPUT["Final Output + Trace + Derived Context"]
+    FINALIZE --> AGGREGATE["Deterministic Aggregation"]
+    AGGREGATE --> GLOBAL["Global Verification"]
+    GLOBAL --> OUTPUT["Final Artifact"]
+    OUTPUT --> DERIVED["Private Derived Context"]
 ```
 
 ## Context Model
@@ -324,6 +323,8 @@ Do not send complete raw research outputs to Opus when compact evidence summarie
 12. write final outputs and traces,
 13. create derived context only from verified results.
 
+`/contractgraph:finalize` is the terminal stage of a run and may also be invoked on its own. It is deterministic and calls no model: it backs the run up, aggregates accepted sections, validates the artifact and its references, confirms global verification exists without re-running it, scores sources, checks source completeness and domain leakage, builds privacy-classified derived context, normalizes telemetry, writes the trace and report, and sets `run.json`'s terminal state to `COMPLETED` or `FINALIZATION_FAILED`. A run is complete only when that state says `COMPLETED`.
+
 ## Validation and Completion
 
 Validation has three layers.
@@ -421,7 +422,7 @@ TOON is optional and may be used only when measured token savings do not reduce 
 contractgraph/
 ├── CLAUDE.md
 ├── .claude/
-│   ├── commands/
+│   ├── commands/contractgraph/   # context, contract, init, run, validate, finalize
 │   ├── skills/
 │   │   ├── bootstrap/
 │   │   ├── reusable/
@@ -464,12 +465,10 @@ A workflow is ready only when:
 - global verification passes,
 - no external model API or application server is required.
 
-## Current V1 Focus
+## Reference Workflow
 
-The first private validation workflow is company research plus role-specific resume analysis.
+The public reference bundle is `contracts/study-plan`, backed by synthetic learner context under `context/synthetic/study-plan/`. It is what every command and script defaults to, and the one bundle guaranteed present in a clone.
 
-This workflow is a test case, not the framework architecture.
+Any private validation workflow (company research plus role-specific resume analysis, for example) lives alongside it as a git-ignored bundle under `contracts/<workflow>/` with its ground truth in `context/canonical/`.
 
-The public demonstration may use a personalized study-plan contract with synthetic user context.
-
-Design every core mechanism so both workflows use the same initialization, graph compilation, skill generation, execution, validation, and aggregation process.
+A workflow is a test case, never the framework architecture. Design every core mechanism so that every workflow — public or private — uses the same initialization, graph compilation, skill generation, execution, validation, aggregation, and finalization process, with zero core-code differences between them.

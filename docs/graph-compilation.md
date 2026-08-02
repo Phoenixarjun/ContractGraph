@@ -1,10 +1,10 @@
 # Graph Compilation
 
-`/contractgraph:init` invokes the `workflow-compiler` bootstrap skill, which owns the full compile sequence below. Any step failure halts compilation at that step — the sequence never partially writes `runtime/compiled/`.
+`/contractgraph:init` invokes the `workflow-compiler` bootstrap skill, which owns the full compile sequence below. Any step failure halts compilation at that step — the sequence never partially writes `runtime/compiled/<bundleId>/`.
 
 ## Compile Sequence
 
-1. Resolve the bundle path (argument, or default `contracts/company-research`). If it targets `contracts/company-research`, treat it as an **approved bootstrap exception** — never redesign or regenerate its contracts, only compile from it. A never-validated non-default bundle must pass `/contractgraph:validate` first.
+1. Resolve the bundle path (argument, or default `contracts/study-plan`) and read its `bundleId`; every artifact below is written under `runtime/compiled/<bundleId>/`. `init` never designs or edits a contract — an existing bundle is strictly input to compile. A never-validated bundle must pass `/contractgraph:validate` first.
 2. Structurally validate the bundle (`scripts/validate_contract_bundle.py`) — stop on failure.
 3. Validate and index canonical context (`scripts/validate_context.py`, then `scripts/build_context_manifest.py`) → `context-manifest.json`. Never read `context/private/`; summarize large documents by reference.
 4. Build `contract-manifest.json` from the bundle's nodes and schemas (`scripts/build_contract_manifest.py`).
@@ -13,7 +13,8 @@
 7. Delegate to `agent-definition-generator`, once per node → `.claude/agents/generated/<nodeId>.md`. Each subagent gets: one bounded responsibility, explicit input/output contract, minimum necessary tools, an assigned model (`policies.json` routing), token/search budget, retry policy, evidence requirements, and stop conditions. A subagent may complete its own node; it may never declare the whole workflow complete.
 8. Compile the runtime graph from the bundle's `nodes[]` plus each node contract's `x-contractgraph.dependsOn` — then **cross-check** those edges against the bundle's own `graph.yaml` `dependencies`. A mismatch is a blocking error to surface, not silently resolved by preferring one source or copying either blindly.
 9. Validate the compiled graph (`scripts/validate_compiled_graph.py`) — no cycles, no orphan nodes, every dependency resolvable, every node's assigned model/skills/tools present.
-10. Write `graph.yaml` (+ canonical `graph.json`), `context-manifest.json`, `contract-manifest.json`, `capability-manifest.json`, `skill-manifest.json`, `agent-manifest.json`, and `compilation-report.md`.
+10. Compile one context packet per node (`scripts/build_node_packets.py`) → `node-packets/<nodeId>/packet.json`, carrying only that node's contract, its declared `contextRefs` (path + hash, never full content), dependency-summary refs, skills, and budget.
+11. Write, all under `runtime/compiled/<bundleId>/`: `graph.yaml` (+ canonical `graph.json`), `context-manifest.json`, `contract-manifest.json`, `capability-manifest.json`, `skill-manifest.json`, `agent-manifest.json`, `node-packets/`, and `compilation-report.md`.
 
 `graph-plan-reviewer` runs as the last adversarial gate before compilation is reported complete: it walks dependency edges for cycles, checks every agent's granted tools against what its assigned skills actually require, flags Opus routing without justification, catches unresolved duplication in `skill-manifest.json`, scans for privacy leaks, and confirms every node has both a structural and a semantic verification path. It never fixes issues itself — it reports blockers/warnings back for repair, and a `fail` verdict stands regardless of warning count.
 
@@ -21,27 +22,26 @@ Init reruns fully only when a contract, canonical context file, policy, or core/
 
 ## Layers and Parallelism
 
-`graph.yaml` expresses the compiled plan as ordered layers. From `contracts/company-research/graph.yaml`:
+`graph.yaml` expresses the compiled plan as ordered layers. From `contracts/study-plan/graph.yaml`:
 
 ```yaml
 layers:
   - id: foundation
-    parallel: [company-intelligence, role-intelligence]
-  - id: company-and-process
-    parallel: [company-initiatives, interview-process, compensation-location]
-  - id: preparation-and-alignment
-    parallel: [dsa, cs-fundamentals, domain-knowledge, hld, lld, behavioral, profile-alignment]
-  - id: candidate-evidence
-    parallel: [project-deep-dive, networking-referral]
-  - id: resume-map
-    map: { node: resume-analysis, over: configuredRoles }
-  - id: strategy
-    parallel: [application-strategy, resources]
+    parallel: [baseline-assessment]
+  - id: topics
+    parallel: [python, fastapi, databases, distributed-systems]
+  - id: evaluation
+    parallel: [evaluation-plan]
   - id: completion
     sequence: [deterministic-merge, main-schema-validation, global-verification]
 ```
 
-A node is ready only when every node in its `dependsOn` is **ACCEPTED** (not merely produced). Within a ready layer, independent nodes run in parallel, capped by `policies.json`'s `execution.maxParallelNodes`. A `map` entry applies one node contract over a runtime-resolved set (e.g. `configuredRoles`) rather than requiring N hand-authored nodes.
+A node is ready only when every node in its `dependsOn` is **ACCEPTED** (not merely produced). Within a ready layer, independent nodes run in parallel, capped by `policies.json`'s `execution.concurrency.modes` (see [execution.md](execution.md)). A bundle may also declare a `map` layer — one node contract applied over a runtime-resolved set — rather than requiring N hand-authored nodes:
+
+```yaml
+  - id: per-role
+    map: { node: resume-analysis, over: configuredRoles }
+```
 
 ## Node Completion Model
 
@@ -58,7 +58,7 @@ node output → structural validation → semantic verification → accept?
 
 ## Deterministic Aggregation
 
-Once all required nodes in a layer are ACCEPTED, `scripts/merge_sections.py` merges only accepted outputs per the bundle's `aggregation` rules: dedupe sources by `canonicalUrl`/`sourceRef`, preserve canonical keys, reject duplicate ownership, build a global source registry, and respect `stateOwnership` (e.g. never let a research refresh overwrite non-empty user-owned fields like `masteryStatus` or `userNotes`).
+Once all required nodes in a layer are ACCEPTED, `scripts/merge_verified_sections.py` merges only accepted outputs per the bundle's `aggregation` rules: dedupe sources by `canonicalUrl`/`sourceRef`, preserve canonical keys, reject duplicate ownership, build a global source registry, and respect `stateOwnership` (e.g. never let a research refresh overwrite non-empty user-owned fields like `masteryStatus` or `userNotes`).
 
 ## Global Verification
 
@@ -70,10 +70,10 @@ After merge, an Opus-routed global verification pass checks:
 - every `roleId` resolves to a configured role file,
 - cross-section claims are consistent and rankings are justified,
 - no candidate experience is invented and no research claim is represented as canonical user truth,
-- the final artifact validates against the main contract's `finalOutputSchema`.
+- the final artifact validates against the bundle's main contract schema.
 
 On failure, verification routes back to repair only the implicated node(s) — never a full workflow restart. The workflow is complete only when global verification passes; a run that exhausts retries without passing is reported incomplete, with the specific failing node(s) named.
 
 ## Deterministic Scripts Involved
 
-`validate_contract_bundle.py`, `validate_context.py`, `build_context_manifest.py`, `build_contract_manifest.py`, `validate_compiled_graph.py`, `merge_sections.py`, `hash_content.py`. None of these call a model API, implement agent reasoning, or choose research conclusions — they enforce shape, compute hashes/cache keys, and merge already-accepted JSON.
+`validate_contract_bundle.py`, `validate_context.py`, `build_context_manifest.py`, `build_contract_manifest.py`, `validate_compiled_graph.py`, `build_node_packets.py`, `merge_verified_sections.py`, `hash_content.py`, `cache_key.py`. None of these call a model API, implement agent reasoning, or choose research conclusions — they enforce shape, compute hashes and cache keys, and merge already-accepted JSON.

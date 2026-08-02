@@ -18,7 +18,7 @@ section-verifier/global-verifier subagents) -- callers pass that class
 explicitly for verification-pass scheduling.
 
 Usage:
-  python scripts/schedule_plan.py --bundle <dir> [--compiled runtime/compiled]
+  python scripts/schedule_plan.py --bundle <dir> [--compiled runtime/compiled/study-plan]
       --mode default|tokenEfficient|timeBounded --ready <ready.json>
   <ready.json>: [{"id": "python", "class": "heavyResearch"}, ...] or a bare
   list of bundle node ids (auto-classified via agent-manifest).
@@ -69,7 +69,7 @@ def admit(classified_items: list, caps: dict) -> dict:
 
 def main(argv=None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
-    opts = {"--bundle": "contracts/company-research", "--compiled": "runtime/compiled",
+    opts = {"--bundle": "contracts/study-plan", "--compiled": "runtime/compiled/study-plan",
             "--mode": "default", "--ready": None}
     i = 0
     while i < len(argv):

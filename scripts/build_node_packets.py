@@ -15,7 +15,7 @@ canonical file simply gets an empty contextRefs list. Deterministic; no model,
 no network.
 
 Usage:
-  python scripts/build_node_packets.py --bundle <dir> [--compiled runtime/compiled]
+  python scripts/build_node_packets.py --bundle <dir> [--compiled runtime/compiled/study-plan]
       [--out-dir <compiled>/node-packets]
 Output: JSON summary {ok, packets: [{nodeId, path, packetHash}, ...]}.
 Exit 0 ok, 2 IO/usage.
@@ -148,7 +148,7 @@ def build(bundle_dir: Path, compiled: Path, out_dir: Path) -> dict:
 
 def main(argv=None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
-    opts = {"--bundle": "contracts/company-research", "--compiled": "runtime/compiled", "--out-dir": None}
+    opts = {"--bundle": "contracts/study-plan", "--compiled": "runtime/compiled/study-plan", "--out-dir": None}
     i = 0
     while i < len(argv):
         if argv[i] in opts:

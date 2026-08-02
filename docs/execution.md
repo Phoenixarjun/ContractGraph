@@ -1,16 +1,17 @@
 # Execution
 
-`/contractgraph:run` executes a compiled graph (`runtime/compiled/graph.json`) against one runtime input. This is the only command that produces sections, evidence, final outputs, or derived context — `init` never runs a node.
+`/contractgraph:run` executes a compiled graph (`runtime/compiled/<bundleId>/graph.json`) against one runtime input. This is the only command that produces sections, evidence, final outputs, or derived context — `init` never runs a node.
 
 ## Flags
 
 ```text
-/contractgraph:run --input "<companyName>" [--roles ...] [--resume-refs ...] [--job-urls ...] [--as-of <date>] [--force-refresh] [--dry-run]
+/contractgraph:run contracts/<bundle> --input "<value>" [--context <dir>] [--roles ...] [--as-of <date>] [--force-refresh] [--dry-run]
 ```
 
 | Flag | Meaning |
 |---|---|
-| `--input` | The bundle's required runtime input (e.g. `companyName`). |
+| `--input` | The bundle's required runtime input (e.g. `learnerGoal` for the study-plan bundle). |
+| `--context` | Context root for this run (default `context`; the shipped example uses `context/synthetic/study-plan`). Recorded in `run.json` as `contextDir`. |
 | `--roles` | Overrides the bundle's default `targetRoles`. |
 | `--resume-refs` | Paths to canonical resume(s) to evaluate, when the bundle's node set needs them. |
 | `--job-urls` | Job posting URLs to ground role/compensation research in. |
@@ -35,20 +36,21 @@ runtime/runs/<run-id>/
 ├── verification/              # verifier verdicts per node (see validation.md)
 ├── telemetry/raw/             # per-call usage records this run captured, before normalization
 ├── logs/                      # dispatch and retry logs
+├── trace/trace.json           # node-by-node execution trace
+├── .migrations/<NNN>-pre-finalize/   # audit backup taken before each finalization pass
 └── final/
     ├── final.json             # merged artifact, only written on global-verification pass
     ├── report.md
-    ├── trace.json
     ├── cost.json
-    ├── validation-report.json
+    ├── verification-summary.json
     └── derived-context.json
 ```
 
 The snapshot in `graph.snapshot.yaml` exists so a run is never affected by an `/contractgraph:init` that happens to complete mid-run.
 
-## The 19 Steps
+## The Lifecycle, Step by Step
 
-1. Confirm a prior successful `/contractgraph:init` — stop if `runtime/compiled/graph.json` is missing or `compilation-report.md` reports a failed compile.
+1. Confirm a prior successful `/contractgraph:init` — stop if `runtime/compiled/<bundleId>/graph.json` is missing or `compilation-report.md` reports a failed compile.
 2. Parse flags (`--input`, `--roles`, `--resume-refs`, `--job-urls`, `--as-of`, `--force-refresh`, `--dry-run`).
 3. Resolve runtime input against the bundle's `runtimeInputs`: required fields must be present (ask if missing), optional fields fall back to declared defaults.
 4. Create `runtime/runs/<run-id>/`; write `run.json` and `input.json`.
@@ -58,7 +60,7 @@ The snapshot in `graph.snapshot.yaml` exists so a run is never affected by an `/
 8. Unless `--force-refresh`, check `runtime/cache/` for a valid entry per node; a hit sets that node's state to `SKIPPED_CACHE` without dispatching it.
 9. Initialize `node-state/`: every node `PENDING`, then `READY` once its `dependsOn` set is empty or already `ACCEPTED`/`SKIPPED_CACHE`.
 10. If `--dry-run`: report the planned execution order, cache hits/misses, and model routing, then stop — no section, evidence, or final file is written.
-11. Dispatch each `READY` node to its generated subagent (`.claude/agents/generated/<nodeId>.md`). Independent nodes within a layer are admitted per the **weighted** concurrency caps in `policies.json.execution.concurrency.modes` (`scripts/schedule_plan.py`) — classified `heavyResearch`/`lightSynthesis`/`verifier`/`globalVerifier`, each with its own per-mode cap, not one flat count. The subagent loads only its compiled `runtime/compiled/node-packets/<nodeId>/packet.json` (own contract, declared context refs, dependency-summary refs, evidence-registry ref) — never the whole bundle or all canonical context.
+11. Dispatch each `READY` node to its generated subagent (`.claude/agents/generated/<nodeId>.md`). Independent nodes within a layer are admitted per the **weighted** concurrency caps in `policies.json.execution.concurrency.modes` (`scripts/schedule_plan.py`) — classified `heavyResearch`/`lightSynthesis`/`verifier`/`globalVerifier`, each with its own per-mode cap, not one flat count. The subagent loads only its compiled `runtime/compiled/<bundleId>/node-packets/<nodeId>/packet.json` (own contract, declared context refs, dependency-summary refs, evidence-registry ref) — never the whole bundle or all canonical context.
 12. Node state moves to `RUNNING`; the subagent writes `sections/<nodeId>.json` (citing evidence as `evidence: [{ref, claims}]` against the run's shared registry, never an embedded `sources[]` array of full metadata) and raw `evidence/<nodeId>/`, preserved regardless of outcome. New sources are folded into `evidence/source-registry.json` (`scripts/source_registry.py`), deduplicated by normalized URL.
 13. Structural validation (`scripts/validate_node_output.py`) against the node's `outputSchema`. Invalid JSON/schema triggers one bounded structural repair (haiku); persistent failure → `STRUCTURAL_FAILED`.
 14. A structurally-valid node (`STRUCTURAL_PASSED`) is dispatched to `section-verifier` — never the producing subagent — for semantic, evidence, and freshness verification (see [validation.md](validation.md)). Its verdict is exactly `scripts/schemas/verifier-verdict.schema.json`'s shape — `additionalProperties:false` means it cannot smuggle in a rewritten `content`/`section` field even if it tried.
@@ -66,7 +68,8 @@ The snapshot in `graph.snapshot.yaml` exists so a run is never affected by an `/
 16. A verifier acceptance moves the node to `ACCEPTED`; its `sections/<nodeId>.json` becomes immutable, `scripts/build_dependency_summary.py` writes its compact `summaries/<nodeId>.summary.json`, and its dependents become `READY` once every entry in their `dependsOn` is `ACCEPTED` or `SKIPPED_CACHE`.
 17. Once every required node in the bundle is `ACCEPTED`/`SKIPPED_CACHE`, deterministic aggregation (`scripts/merge_verified_sections.py --evidence-registry evidence/source-registry.json`) merges only accepted outputs — resolving each section's `evidence[].ref` against the run registry — into one candidate final artifact.
 18. Global verification (opus, `global-verifier`) checks the candidate artifact against `contract.bundle.json.globalValidation[]` and `contract.schema.json`. Failure routes back to step 15 for only the implicated node(s) — never a full run restart.
-19. On global pass, write `final/` (final artifact, report, trace, `cost.json` via `scripts/telemetry_normalize.py` — normalized from whatever Claude Code/OpenCode/local telemetry the run actually captured, unavailable metrics left `null` and never fabricated, validation report, derived-context) and any new derived context. On failure after exhausting retries, report the run incomplete with the specific failing node(s) named — `final/final.json` is not written as if the run were complete.
+19. On global pass, hand off to **finalization** (`scripts/finalize_run.py`, also reachable directly as `/contractgraph:finalize <run-id>`). Finalization is a single deterministic pass with no model calls: it backs the run up to `.migrations/<NNN>-pre-finalize/`, aggregates accepted sections into `final/final.json`, validates that artifact and its references, confirms global verification exists (it never re-runs it), scores sources, checks source completeness and domain leakage, builds derived context with privacy classification, normalizes telemetry into `final/cost.json` (unavailable metrics stay `null` and are never fabricated), writes `trace.json`, `final/verification-summary.json`, and `final/report.md`.
+20. Finalization writes the run's terminal state into `run.json`: `COMPLETED` when every check passes, `FINALIZATION_FAILED` otherwise. On failure after exhausting retries, report the run incomplete with the specific failing node(s) or check names — never report completion while `run.json` says otherwise.
 
 ## Node State Machine
 
@@ -99,7 +102,7 @@ Only `ACCEPTED` and `SKIPPED_CACHE` unlock dependents. A node's own producing su
 
 ## Controlled Parallelism
 
-`policies.json.execution.maxParallelNodes` is **4** in both the company-research and study-plan bundles (the earlier "5" here was a documentation error, not a policy value — `policies.json` is always the source of truth). That integer is kept only as a legacy aggregate ceiling.
+`policies.json.execution.maxParallelNodes` is **4** in the shipped study-plan bundle. A bundle's own `policies.json` is always the source of truth for its caps. That integer is kept only as a legacy aggregate ceiling.
 
 The real admission logic is **weighted per concurrency class**, `policies.json.execution.concurrency.modes`:
 

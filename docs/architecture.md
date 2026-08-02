@@ -17,25 +17,26 @@ The user supplies two mandatory inputs — `context/` and `contracts/` — plus 
 
 | Plane | Command | Input | Output |
 |---|---|---|---|
-| **Init** (compile-time) | `/contractgraph:init` | contract bundle + canonical context + policies | `runtime/compiled/` (graph, manifests, skills, subagents) |
-| **Run** (execution-time) | `/contractgraph:run` | compiled graph + runtime input | `runtime/outputs/`, traces, derived context |
+| **Init** (compile-time) | `/contractgraph:init` | contract bundle + canonical context + policies | `runtime/compiled/<bundleId>/` (graph, manifests, node packets, skills, subagents) |
+| **Run** (execution-time) | `/contractgraph:run` | compiled graph + runtime input | `runtime/runs/<run-id>/` — sections, evidence, verdicts, final artifact, trace, derived context |
 
-Two supporting commands sit upstream of `init`: `/contractgraph:context` scaffolds a minimal `context/` tree, and `/contractgraph:contract` designs a contract bundle. `/contractgraph:validate` runs deterministic structural checks on demand, independent of the other two planes.
+Two supporting commands sit upstream of `init`: `/contractgraph:context` scaffolds a minimal `context/` tree, and `/contractgraph:contract` designs a contract bundle. `/contractgraph:validate` runs deterministic structural checks on demand, independent of the other two planes, and `/contractgraph:finalize` is the terminal stage of a run — aggregation, global-verification check, artifact generation, and the run's terminal state.
 
 Init only needs to rerun when a contract, canonical context file, policy, or core/generated skill actually changes — see [graph-compilation.md](graph-compilation.md).
 
 ## Compiled Artifacts
 
-`/contractgraph:init` writes exactly these files under `runtime/compiled/`:
+`/contractgraph:init` writes exactly these files under `runtime/compiled/<bundleId>/`. Each bundle compiles into its own directory, so two bundles never overwrite each other's manifests:
 
 ```text
-runtime/compiled/
+runtime/compiled/<bundleId>/
 ├── graph.yaml                 # + canonical graph.json
 ├── context-manifest.json
 ├── contract-manifest.json
 ├── capability-manifest.json
 ├── skill-manifest.json
 ├── agent-manifest.json
+├── node-packets/<nodeId>/packet.json
 └── compilation-report.md
 ```
 
@@ -45,40 +46,35 @@ Each is produced by one delegated step (see [graph-compilation.md](graph-compila
 
 ```mermaid
 flowchart TB
-    CONTEXT["User Context"] --> INIT["/contractgraph:init"]
-    CONTRACTS["Contract Bundle"] --> INIT
-    POLICIES["Optional Policies"] --> INIT
+    CONTEXT_CMD["/contractgraph:context"] --> CANONICAL["Canonical Context"]
+    CONTRACT_CMD["/contractgraph:contract"] --> CONTRACTS["Contract Bundle"]
 
-    INIT --> CONTEXT_ANALYSIS["Context Analysis"]
-    INIT --> CONTRACT_ANALYSIS["Contract Tree Analysis"]
+    CANONICAL --> INIT["/contractgraph:init"]
+    CONTRACTS --> INIT
 
-    CONTEXT_ANALYSIS --> CANONICAL["Canonical Context Manifest"]
-    CONTRACT_ANALYSIS --> PLAN["Dynamic Graph Plan"]
+    INIT --> GRAPH["Compiled DAG"]
+    INIT --> PACKETS["Node Context Packets"]
+    INIT --> SKILLS["Skill Manifest"]
+    INIT --> AGENTS["Agent Manifest"]
 
-    PLAN --> CAPABILITIES["Capability Detection"]
-    CAPABILITIES --> SKILLS["Create or Reuse Skills"]
-    SKILLS --> SKILL_EVAL["Skill Evaluation and Optimization"]
-    SKILL_EVAL --> AGENTS["Generate Specialized Subagents"]
-    AGENTS --> GRAPH["Compile graph.yaml"]
+    GRAPH --> RUN["/contractgraph:run"]
+    PACKETS --> RUN
+    SKILLS --> RUN
+    AGENTS --> RUN
 
-    CANONICAL --> READY["Compiled Workflow"]
-    GRAPH --> READY
+    RUN --> PRODUCER["Scoped Node Production"]
+    PRODUCER --> VALIDATE["/contractgraph:validate"]
 
-    INPUT["Runtime Input"] --> RUN["/contractgraph:run"]
-    READY --> RUN
+    VALIDATE -->|Blocking failure| REPAIR["Targeted Repair"]
+    REPAIR --> VALIDATE
 
-    RUN --> NODES["Execute Ready Nodes"]
-    NODES --> NODE_VERIFY["Validate Contract and Evidence"]
+    VALIDATE -->|Accepted| PERSIST["Persist Accepted Section"]
+    PERSIST --> FINALIZE["/contractgraph:finalize"]
 
-    NODE_VERIFY -->|Failed| REPAIR["Repair Only Failed Node"]
-    REPAIR --> NODES
-
-    NODE_VERIFY -->|Passed| ACCEPT["Accept Verified Section"]
-    ACCEPT --> AGGREGATE["Deterministic Aggregation"]
-    AGGREGATE --> GLOBAL_VERIFY["Global Contract Verification"]
-
-    GLOBAL_VERIFY -->|Failed| REPAIR
-    GLOBAL_VERIFY -->|Passed| OUTPUT["Final Output + Trace + Derived Context"]
+    FINALIZE --> AGGREGATE["Deterministic Aggregation"]
+    AGGREGATE --> GLOBAL["Global Verification"]
+    GLOBAL --> OUTPUT["Final Artifact"]
+    OUTPUT --> DERIVED["Private Derived Context"]
 ```
 
 ## Repository Shape
@@ -87,23 +83,24 @@ flowchart TB
 contractgraph/
 ├── CLAUDE.md
 ├── .claude/
-│   ├── commands/contractgraph/   # init, run, validate, context, contract
+│   ├── commands/contractgraph/   # context, contract, init, run, validate, finalize
 │   ├── skills/
 │   │   ├── bootstrap/            # framework-authoring skills (context-advisor, contract-designer, workflow-compiler, ...)
 │   │   ├── reusable/             # verified, domain-neutral capability skills
 │   │   └── generated/            # capability skills created for a specific bundle
 │   ├── agents/generated/         # one subagent definition per compiled node
 │   └── settings.json
-├── contracts/<workflow>/         # bundle: contract-bundle.json, node-contracts/, roles/ or other sets, graph.yaml, policies.json
+├── contracts/<workflow>/         # bundle: contract.bundle.json, contract.schema.json, node-contracts/, graph.yaml, policies.json
 ├── context/
-│   ├── canonical/                # user-supplied ground truth
-│   ├── derived/                  # produced by verified runs
-│   └── private/                  # git-ignored PII, never enters skills/agents
+│   ├── canonical/                # user-supplied ground truth (git-ignored)
+│   ├── derived/                  # produced by verified runs (git-ignored)
+│   ├── private/                  # git-ignored PII, never enters skills/agents
+│   └── synthetic/                # publishable example context
 ├── scripts/                      # deterministic utilities only — no model calls, no reasoning
 ├── runtime/
-│   ├── compiled/                 # this init's output
+│   ├── compiled/<bundleId>/      # one init output per bundle
 │   ├── cache/
-│   ├── runs/
+│   ├── runs/<run-id>/            # everything one run produced (git-ignored)
 │   ├── sections/                 # per-node raw outputs
 │   ├── traces/
 │   └── outputs/                  # final artifacts

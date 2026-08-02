@@ -66,7 +66,7 @@ def build(bundle_dir: Path, node_id: str, section: dict, full_section_ref: str) 
 
 def main(argv=None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
-    opts = {"--bundle": "contracts/company-research", "--node": None, "--section": None, "--out": None}
+    opts = {"--bundle": "contracts/study-plan", "--node": None, "--section": None, "--out": None}
     i = 0
     while i < len(argv):
         if argv[i] in opts:

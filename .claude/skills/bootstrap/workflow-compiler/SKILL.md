@@ -24,7 +24,9 @@ This is the top-level orchestrator for `/contractgraph:init`. It does not design
 
 ## Outputs
 
-`runtime/compiled/`: `graph.yaml` (+ canonical `graph.json`), `context-manifest.json`, `contract-manifest.json`, `capability-manifest.json`, `skill-manifest.json`, `agent-manifest.json`, `compilation-report.md`.
+`runtime/compiled/<bundleId>/`: `graph.yaml` (+ canonical `graph.json`), `context-manifest.json`, `contract-manifest.json`, `capability-manifest.json`, `skill-manifest.json`, `agent-manifest.json`, `node-packets/<nodeId>/packet.json`, `compilation-report.md`.
+
+One bundle compiles into exactly one directory named after its `bundleId`. Never write compiled artifacts to the top of `runtime/compiled/` — that layout lets two bundles overwrite each other.
 
 ## Procedure
 
@@ -36,11 +38,12 @@ This is the top-level orchestrator for `/contractgraph:init`. It does not design
 6. Delegate subagent generation, one call per node, to **agent-definition-generator**.
 7. Compile the runtime graph from the bundle's `nodes[]` plus each node's `x-contractgraph.dependsOn`, but **verify** those edges against `graph.yaml`'s `dependencies` — do not copy either source blindly; a mismatch is a blocking error to surface, not silently resolve.
 8. Validate the compiled graph (`scripts/validate_compiled_graph.py`): no cycles, no orphan nodes, every dependency resolvable.
-9. Write all manifests and `compilation-report.md` (what was reused, what was created, what failed, open questions).
+9. Compile per-node context packets (`scripts/build_node_packets.py`) — one packet per node, carrying only that node's contract, its declared `contextRefs`, dependency-summary refs, skills, and budget.
+10. Write all manifests and `compilation-report.md` (what was reused, what was created, what failed, open questions).
 
 ## Failure Behavior
 
-Any step failure halts the sequence at that step — do not proceed to compile downstream artifacts from an unvalidated upstream one. Report which step failed and why; do not partially write `runtime/compiled/`.
+Any step failure halts the sequence at that step — do not proceed to compile downstream artifacts from an unvalidated upstream one. Report which step failed and why; do not partially write `runtime/compiled/<bundleId>/`.
 
 ## Privacy Restrictions
 
@@ -56,6 +59,6 @@ Rerun the full sequence when contracts, canonical context, policies, or core ski
 
 ## Red Flags
 
-- Writing `runtime/compiled/*` before the corresponding validation step passed.
+- Writing `runtime/compiled/<bundleId>/*` before the corresponding validation step passed.
 - Reimplementing capability detection, skill creation, or agent generation inline instead of delegating.
 - Trusting `x-contractgraph.dependsOn` or `graph.yaml` alone without cross-checking the other.

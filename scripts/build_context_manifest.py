@@ -10,7 +10,7 @@ An overall contextManifestHash (hash of the sorted per-file hashes) is emitted s
 runs can be cache-keyed and the final contract's run.contextManifestHash resolved.
 
 Usage:  python scripts/build_context_manifest.py [context-dir] [--out PATH]
-        defaults: context-dir=context  out=runtime/compiled/context-manifest.json
+        defaults: context-dir=context  out=runtime/compiled/study-plan/context-manifest.json
 Output: writes the manifest, prints a JSON summary. Exit 0 ok, 2 on IO error.
 """
 from __future__ import annotations
@@ -88,7 +88,7 @@ def build(context_dir: Path, out_path: Path) -> dict:
 def main(argv=None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
     context_dir = Path("context")
-    out_path = Path("runtime/compiled/context-manifest.json")
+    out_path = Path("runtime/compiled/study-plan/context-manifest.json")
     i = 0
     while i < len(argv):
         if argv[i] == "--out":
