@@ -192,23 +192,23 @@ evals/test_finalize_debug.py   docs/optimization-plan.md      scripts/__pycache_
 
 Stated plainly. None of these block release; all are honest limitations rather than hidden ones.
 
-1. **Git history retains the author's employer email** in commits `8788bec` and earlier, plus a private `contracts/company-research/` tree and one generated agent file that were committed before being untracked. Those historical files are contract schemas and agent definitions — no PII was found in them — so history was **not** rewritten. Rewriting would break every existing clone and the two open feature branches. If the employer email must be scrubbed, that is a deliberate `git filter-repo` operation on an otherwise-quiet repository, not part of a stabilization pass.
+1. **Six eval cases only run with local data.** They exercise real-run trace normalization, timestamp validation, privacy classification, source scoring at scale, and the migration script. On a fresh clone they skip with a reason. Converting them to synthetic fixtures would restore that coverage for everyone.
 
-2. **Six eval cases only run with local data.** They exercise real-run trace normalization, timestamp validation, privacy classification, source scoring at scale, and the migration script. On a fresh clone they skip with a reason. Converting them to synthetic fixtures would restore that coverage for everyone.
+2. **`contracts/study-plan` is the only shipped bundle.** Genericity is argued in the docs and enforced by the "no domain logic in core" boundary, but a second *public* bundle of a different shape would prove it to a reader rather than asking for trust.
 
-3. **`contracts/study-plan` is the only shipped bundle.** Genericity is argued in the docs and enforced by the "no domain logic in core" boundary, but a second *public* bundle of a different shape would prove it to a reader rather than asking for trust.
+3. **Node-state writing is a prose instruction, not a script.** `run.md` tells the orchestrator to write `state`; nothing enforces the key at write time, which is why `generate_trace.py` must accept a legacy `status` alias. A `write_node_state.py` would close this.
 
-4. **Node-state writing is a prose instruction, not a script.** `run.md` tells the orchestrator to write `state`; nothing enforces the key at write time, which is why `generate_trace.py` must accept a legacy `status` alias. A `write_node_state.py` would close this.
+4. **TOON output-quality dimension remains `pending`.** Size and round-trip losslessness are measured; whether TOON-encoded arrays degrade model output can only come from an executed benchmark. TOON stays disabled at runtime, which is the correct posture until then.
 
-5. **No CI.** The eval suite is deterministic, offline, and fast — it is a natural GitHub Actions job, and adding one would make the "240/240 on a clean checkout" claim continuously true rather than true as of this audit.
+5. **Benchmark results are unpublished.** The methodology, configs, and comparison tooling ship; no numbers do. This is deliberate — see `docs/benchmark-methodology.md`.
 
-6. **No issue/PR templates, no `CODE_OF_CONDUCT.md`, no `SECURITY.md`.** CONTRIBUTING.md points security-relevant reports at a private advisory, but the file itself does not exist yet.
+6. **`docs/` is 24 files.** Thorough, but there is overlap between `token-efficiency.md` / `token-optimization.md` and between `token-telemetry.md` / `runtime-telemetry.md`. A future consolidation pass would reduce reader load. Not attempted here: merging documents is an editorial rewrite, outside a stabilization brief.
 
-7. **TOON output-quality dimension remains `pending`.** Size and round-trip losslessness are measured; whether TOON-encoded arrays degrade model output can only come from an executed benchmark. TOON stays disabled at runtime, which is the correct posture until then.
+### Closed since the first audit pass
 
-8. **Benchmark results are unpublished.** The methodology, configs, and comparison tooling ship; no numbers do. This is deliberate — see `docs/benchmark-methodology.md`.
-
-9. **`docs/` is 24 files.** Thorough, but there is overlap between `token-efficiency.md` / `token-optimization.md` and between `token-telemetry.md` / `runtime-telemetry.md`. A future consolidation pass would reduce reader load. Not attempted here: merging documents is an editorial rewrite, outside a stabilization brief.
+- ~~No CI~~ — resolved, see §10.
+- ~~No issue/PR templates, `CODE_OF_CONDUCT.md`, or `SECURITY.md`~~ — resolved, see §10.
+- ~~Git history retains the author's employer email and private paths~~ — resolved, see §11.
 
 ---
 
@@ -234,8 +234,10 @@ Stated plainly. None of these block release; all are honest limitations rather t
 | 16 | CONTRIBUTING.md present | **Pass** |
 | 17 | LICENSE present and consistent | **Pass** — MIT |
 | 18 | Limitations stated honestly | **Pass** |
-| 19 | Automated CI | **Not present** — debt item 5 |
-| 20 | Issue/PR templates, CODE_OF_CONDUCT, SECURITY.md | **Not present** — debt item 6 |
+| 19 | Automated CI | **Pass** — §10 |
+| 20 | Issue/PR templates, CODE_OF_CONDUCT, SECURITY.md | **Pass** — §10 |
+| 21 | Commit history free of personal email and private paths | **Pass** — §11 |
+| 22 | All commits authored by the release identity | **Pass** — §11 |
 
 ---
 
@@ -243,8 +245,72 @@ Stated plainly. None of these block release; all are honest limitations rather t
 
 ### ✅ Ready for public release
 
+*(Sections 10 and 11 below record the follow-up pass that closed the two gaps
+this section originally flagged.)*
+
 A developer can clone this repository, run one command to verify it works, read one README to understand what it is, and run the bundled example without supplying any data of their own. Every command default, script default, documented path, and cross-reference resolves against files that are actually in the repository. No personal, private, or experimental data reaches a committable file.
 
-The two remaining gaps — CI and community health files — are additive repository configuration, not defects in the framework. They can land in a follow-up without touching a line of framework code.
-
 One judgment call is worth flagging explicitly for the maintainer: the domain-leakage vocabulary was **moved from the framework core into bundle policy** (issue B5). This was not a redesign but the removal of a hard-coded domain that the project's own `CLAUDE.md` forbids, and it turned a validator that silently no-opped on every public bundle into one that actually runs. Behavior is preserved for any bundle that declares the policy; a bundle that declares none is now reported as *unchecked* rather than passing. If you prefer the previous behavior, that decision is a one-file revert in `scripts/validate_domain_leakage.py`.
+
+---
+
+## 10. Follow-Up: CI and Community Health
+
+Added after the first audit pass, closing former debt items 5 and 6.
+
+| File | Purpose |
+|---|---|
+| `.github/workflows/evals.yml` | Three jobs. **evals** runs `python evals/run_evals.py` across a 2×2 matrix (Ubuntu + Windows, Python 3.11 + 3.12). **validators** runs the three public-bundle validators. **hygiene** fails the build if any ignored path is tracked or any private path (`context/canonical/`, `context/derived/`, `runtime/runs/`, `contracts/company-research/`) appears in the index. |
+| `SECURITY.md` | Scopes what counts as a security issue for a framework with no server and no API keys — private context reaching a publishable artifact, `.gitignore` gaps, misclassified derived context, path traversal, code execution from an untrusted bundle — and routes reports to a private GitHub advisory. States plainly what is *not* a security issue, including the documented fact that `context/private/` is a confinement convention rather than a sandbox. Explicitly instructs reporters never to attach real personal data. |
+| `CODE_OF_CONDUCT.md` | Contributor Covenant 2.1, with one project-specific addition: submitting another person's private data to an issue or PR is listed as unacceptable behaviour, and technical disputes are to be settled with evidence rather than assertion. |
+| `.github/ISSUE_TEMPLATE/bug_report.yml` | Requires the exact command, the exact output, the eval-suite result on a clean checkout, the commit, and the environment. Two mandatory preflight checkboxes: the suite was run, and the report contains no real personal data. |
+| `.github/ISSUE_TEMPLATE/feature_request.yml` | Asks for the problem before the solution, forces a choice of architectural layer, and requires ticking four boundary confirmations (no server, no external model API, no domain term in the core, scripts stay deterministic). |
+| `.github/ISSUE_TEMPLATE/config.yml` | Disables blank issues; routes security reports to the private advisory form and open-ended questions to Discussions. |
+| `.github/PULL_REQUEST_TEMPLATE.md` | Requires pasted eval output rather than a claim, an "out of scope" statement, a seven-point checklist, and five architectural-boundary confirmations. Directs PRs at `dev`. |
+
+**Verified:** the `hygiene` job's two shell checks were executed locally against the current index before the workflow was committed — both report OK.
+
+The README gained a CI status badge and links to all three community files; CONTRIBUTING.md now references the Code of Conduct, the security path, and the CI matrix.
+
+---
+
+## 11. Follow-Up: History Rewrite
+
+The first audit pass deliberately left history alone and logged it as debt. On explicit instruction, it was rewritten.
+
+### What was wrong
+
+| Problem | Extent |
+|---|---|
+| Author/committer identity `Naresh B A <naresh.b@prodapt.com>` (employer email) | 6 commits |
+| Author/committer identity `Naresh.B.A <113781396+Phoenixarjun@users.noreply.github.com>` / `GitHub <noreply@github.com>` | 3 commits |
+| `Co-Authored-By: Claude Opus 5 …` trailer in commit messages | 2 commits |
+| Private `contracts/company-research/` bundle (23 files) present in history | reachable from several commits |
+| Generated subagents under `.claude/agents/generated/` (20 files) | same |
+| `evals/compilation-cases/company-research.json`, `context/context-manifest.json`, `files.py` | same |
+
+### What was done
+
+A single `git filter-branch` pass over **all refs**:
+
+- **Identity** — every author and committer normalized to `PhoenixArjun <nareshba.dev@gmail.com>`. Author and committer dates were preserved; only identity changed.
+- **Messages** — the `Co-Authored-By:` trailer stripped from every commit, leaving no third-party attribution.
+- **Tree** — the private paths above removed from every commit in which they appear, so they are unreachable from any ref rather than merely untracked at `HEAD`.
+
+Original refs were then expunged (`refs/original/`), reflogs dropped, and the object database repacked with `git gc --prune=now --aggressive` so the old objects are genuinely gone rather than dangling.
+
+### Consequences, stated plainly
+
+- **Every commit SHA changed.** Any existing clone of this repository is now divergent and must re-clone or hard-reset. This is inherent to a history rewrite, not a side effect that could have been avoided.
+- The two stale feature branches (`feat/execution-verification-plane`, `feat/token-efficiency-optimization`) were rewritten along with `main` and `dev`, so no old-identity commit survives on any branch.
+- GitHub may retain unreachable objects server-side until its own garbage collection runs. If any commit SHA from the pre-rewrite history was ever shared publicly, treat that content as having been disclosed regardless of this rewrite.
+
+### Verification
+
+| Check | Result |
+|---|---|
+| Distinct author/committer identities across all refs | **1** — `PhoenixArjun <nareshba.dev@gmail.com>` |
+| Occurrences of the employer email anywhere in history | **0** |
+| Occurrences of `Co-Authored-By` in any commit message | **0** |
+| Private paths reachable from any ref | **0** |
+| Eval suite after rewrite | **270/270 passed** (working tree), **240/240 passed, 7 skipped** (fresh clone) |

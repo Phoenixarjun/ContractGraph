@@ -3,9 +3,12 @@
 Thanks for considering a contribution. This document covers how to set up, what
 the project will and will not accept, and how to get a change merged.
 
-By participating you agree to keep interactions respectful and technical.
+By participating you agree to the [Code of Conduct](CODE_OF_CONDUCT.md).
 Disagreements are resolved with evidence — a failing test, a file and line, a
 reproduction — not assertion.
+
+Security and privacy issues follow a separate, private path: see
+[SECURITY.md](SECURITY.md). Never open a public issue for one.
 
 ---
 
@@ -221,6 +224,11 @@ Before opening a PR:
 3. An eval case covers the new behavior.
 4. No ignored path appears in your diff.
 5. Commits are conventional and scoped to one concern.
+
+CI runs the same suite on every push and pull request — Ubuntu and Windows,
+Python 3.11 and 3.12 — plus the public-bundle validators and a check that no
+private path is tracked. The PR template restates this checklist; paste your
+actual eval output into it rather than asserting it passed.
 
 A PR description should state what changed, why, how it was verified (with the
 actual command output), and anything deliberately left out of scope. Small,

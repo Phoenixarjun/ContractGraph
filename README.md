@@ -6,6 +6,7 @@
 
 A Claude Code-native graph-engineering framework. You supply *context* (what is already known) and *contracts* (what must be produced); ContractGraph compiles them into a verified DAG of scoped subagents, reusable skills, explicit dependencies, verification gates, and targeted repair — then executes it and proves the result against your contract.
 
+[![evals](https://github.com/Phoenixarjun/ContractGraph/actions/workflows/evals.yml/badge.svg)](https://github.com/Phoenixarjun/ContractGraph/actions/workflows/evals.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Runtime: Claude Code](https://img.shields.io/badge/runtime-Claude%20Code-8A63D2.svg)](https://claude.com/claude-code)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-3776AB.svg)](https://www.python.org/)
@@ -346,6 +347,12 @@ Directions, not commitments — none of the following is implemented today:
 Contributions are welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md) — it covers the development setup, the architectural boundaries a PR must respect, the eval suite, and the commit and PR conventions.
 
 The short version: run `python evals/run_evals.py` before you open a PR, keep domain knowledge inside `contracts/`, and never commit anything from `context/canonical/`, `context/private/`, or `runtime/runs/`.
+
+- [CONTRIBUTING.md](CONTRIBUTING.md) — setup, boundaries, testing, commit and PR conventions
+- [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) — expected conduct and enforcement
+- [SECURITY.md](SECURITY.md) — what counts as a security issue here, and how to report one privately
+
+Every push and pull request runs the eval suite on Ubuntu and Windows across Python 3.11 and 3.12, plus the public-bundle validators and a check that no private path is tracked.
 
 ## Documentation Index
 

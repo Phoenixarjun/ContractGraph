@@ -1,0 +1,83 @@
+name: Feature proposal
+description: Propose a change to ContractGraph
+title: "feat: "
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please open a proposal **before** writing code.
+
+        ContractGraph has hard architectural boundaries — see
+        [CONTRIBUTING.md](../blob/main/CONTRIBUTING.md). Proposals that would
+        require a server, an external model API, an API key, or domain logic in
+        the framework core will be declined. That is usually not the end of the
+        idea: the same capability can very often be expressed as a contract, a
+        policy, or a reusable skill instead.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: >
+        Describe the problem, not the solution. What are you unable to do
+        today, and what did you try?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: What you think should happen, and roughly where it would live.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: layer
+    attributes:
+      label: Which layer does this belong in?
+      description: >
+        Domain knowledge belongs in a contract bundle. If your answer is
+        "framework core" for something domain-specific, that is a signal the
+        design needs rethinking.
+      options:
+        - Contract bundle (contracts/) — domain knowledge
+        - Policy (policies.json) — rules and budgets
+        - Reusable skill (.claude/skills/reusable/)
+        - Deterministic script (scripts/)
+        - Slash command (.claude/commands/)
+        - Eval suite (evals/)
+        - Documentation
+        - Not sure
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: boundaries
+    attributes:
+      label: Architectural boundaries
+      description: Confirm the proposal respects each of these.
+      options:
+        - label: Requires no server, database, queue, or background daemon.
+          required: true
+        - label: Requires no external model API and no API key.
+          required: true
+        - label: Adds no domain-specific term to scripts/, commands, or bootstrap skills.
+          required: true
+        - label: Keeps Python scripts deterministic — no model calls, no agent reasoning.
+          required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: What else would solve this, and why is this better?
+
+  - type: textarea
+    id: verification
+    attributes:
+      label: How would this be tested?
+      description: >
+        What eval case would prove it works — and, for a validator, what
+        planted defect would fail before the change and pass after?

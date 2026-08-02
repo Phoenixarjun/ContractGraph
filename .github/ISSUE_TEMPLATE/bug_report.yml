@@ -1,0 +1,95 @@
+name: Bug report
+description: Something in ContractGraph behaves incorrectly
+title: "bug: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report.
+
+        **Do not paste real personal data** — no real resume text, no real
+        canonical context, no real run output. Use a synthetic reproduction.
+
+        If this is a privacy or security issue (private context leaking into a
+        publishable artifact, a `.gitignore` gap, path traversal), please use
+        the private advisory flow in [SECURITY.md](../blob/main/SECURITY.md)
+        instead of this form.
+
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Preflight
+      options:
+        - label: I ran `python evals/run_evals.py` on a clean checkout.
+          required: true
+        - label: This report contains no real personal data.
+          required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What did you observe, and what did you expect instead?
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: The exact command(s) you ran, in order.
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: output
+    attributes:
+      label: Output
+      description: >
+        The exact output, including the exit code and any JSON error report.
+        Do not paraphrase it.
+      render: shell
+    validations:
+      required: true
+
+  - type: input
+    id: evals
+    attributes:
+      label: Eval suite result on a clean checkout
+      description: The final line of `python evals/run_evals.py`.
+      placeholder: "240/240 passed, 7 skipped"
+    validations:
+      required: true
+
+  - type: input
+    id: commit
+    attributes:
+      label: Commit
+      description: Output of `git rev-parse --short HEAD`.
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: OS and Python version
+      placeholder: "Windows 11 / Python 3.12.1"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Deterministic script (scripts/)
+        - Slash command (.claude/commands/)
+        - Skill (.claude/skills/)
+        - Contract bundle (contracts/)
+        - Eval suite (evals/)
+        - Documentation (docs/, README)
+        - Not sure
+    validations:
+      required: true
