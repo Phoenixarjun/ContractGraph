@@ -149,7 +149,7 @@ python evals/run_evals.py     # deterministic self-check: no network, no model c
 claude                        # open Claude Code in the repo
 ```
 
-A clean checkout should report `240/240 passed` with a handful of explicitly-named SKIPs for cases that need a local-only artifact. If anything **FAILs**, that is a bug — please [open an issue](https://github.com/Phoenixarjun/ContractGraph/issues).
+A clean checkout with nothing installed should report `226/226 passed, 8 skipped`. Every skip prints its reason — a case needing a local-only artifact, or one needing an optional extra. Installing the extras (`pip install pypdf`) raises it to `240/240 passed, 7 skipped`. If anything **FAILs**, that is a bug — please [open an issue](https://github.com/Phoenixarjun/ContractGraph/issues).
 
 ## Quick Start
 

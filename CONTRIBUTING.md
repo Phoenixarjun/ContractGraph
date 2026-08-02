@@ -58,10 +58,12 @@ Optional extras used by a few scripts are listed in `scripts/requirements.txt`.
 Every one of them is optional: a script whose optional dependency is missing must
 report a documented `unavailable` state and must never invent data to fill the gap.
 
-A clean checkout should print `240/240 passed` plus a small number of named
-SKIPs. A SKIP means a case needed a local-only artifact (a private bundle, or a
-completed run under the git-ignored `runtime/runs/`). A **FAIL** on a clean
-checkout is a bug — please report it.
+A clean checkout with nothing installed should print
+`226/226 passed, 8 skipped`. A SKIP means the case needed something a clean
+checkout legitimately lacks: a local-only private bundle, a completed run under
+the git-ignored `runtime/runs/`, or an optional extra. Installing the extras
+(`pip install pypdf`) raises it to `240/240 passed, 7 skipped`. A **FAIL** on a
+clean checkout is a bug — please report it.
 
 ## Architectural Boundaries
 

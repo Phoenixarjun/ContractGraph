@@ -12,8 +12,9 @@ Everything below was verified by running it in this session, not by inspection a
 
 | Check | Command | Result |
 |---|---|---|
-| Full eval suite, working tree (with local private data present) | `python evals/run_evals.py` | **270/270 passed** |
-| Full eval suite, simulated fresh clone (only committable files) | same, in an export of `git ls-files -co --exclude-standard` | **240/240 passed, 7 skipped** |
+| Full eval suite, working tree (local private data + optional extras present) | `python evals/run_evals.py` | **270/270 passed** |
+| Full eval suite, fresh clone, optional extras installed | same, in an export of `git ls-files` | **240/240 passed, 7 skipped** |
+| Full eval suite, fresh clone, **stdlib-only venv** (what CI runs) | same, under a venv with no `pypdf`/`toon` | **226/226 passed, 8 skipped** |
 | Public bundle structural validation | `python scripts/validate_contract_bundle.py contracts/study-plan` | ok — 6 nodes, 0 errors, 0 warnings |
 | Public context validation | `python scripts/validate_context.py context/synthetic/study-plan` | ok — 3 files, 0 errors |
 | Compiled graph validation | `python scripts/validate_compiled_graph.py runtime/compiled/study-plan/graph.json` | ok — 6 nodes, 3 layers, no cycles/orphans |
@@ -21,7 +22,9 @@ Everything below was verified by running it in this session, not by inspection a
 | Every `scripts/*.py` referenced from a command, skill, or doc | path existence check | 30/30 exist |
 | Sensitive-marker scan over all 145 committable files | regex over names, emails, employer, run/session ids, absolute paths | **0 hits** |
 
-The **7 skips** on a fresh clone are intentional and each prints its reason: 6 cases need a completed run under the git-ignored `runtime/runs/`, and 1 needs a local-only private bundle. A skip is never counted as a pass.
+Every skip is intentional and prints its reason: 6 cases need a completed run under the git-ignored `runtime/runs/`, 1 needs a local-only private bundle, and — in a stdlib-only environment — 1 needs the optional `pypdf` extra. A skip is never counted as a pass.
+
+The stdlib-only row is the one that matters for a first-time cloner, and it is what CI enforces: the `evals` matrix asserts no optional extra is installed before running, so the "works with nothing installed" claim cannot silently rot. A separate `evals-with-extras` job installs `pypdf` and covers the PDF path that the matrix necessarily skips.
 
 ---
 
@@ -111,7 +114,7 @@ The **7 skips** on a fresh clone are intentional and each prints its reason: 6 c
 
 - **`README.md`** — rewritten end to end: badges, TOC, why-it-exists (with a failure-mode table), what-it-is-not, architecture + Mermaid diagram, workflow lifecycle, installation, quick start, all six commands, concepts (Context / Contract / Graph Compilation / Validation / Repair), repository structure, examples, limitations, roadmap, contributing, and a documentation index.
 - **`CONTRIBUTING.md`** — new: ways to contribute, setup, the architectural boundaries a PR must respect, project layout, testing rules (including SKIP-vs-FAIL), coding standards, skill/agent/contract authoring rules, privacy rules, Conventional Commits, branching and PR checklist, bug reports, feature proposals, license of contributions.
-- **`LICENSE`** — copyright holder aligned to the release identity (PhoenixArjun).
+- **`LICENSE`** — copyright holder aligned to the release identity (Phoenixarjun).
 - **`CLAUDE.md`** — compiled layout, finalize stage, command list, diagram, and the "Current V1 Focus" section (which named a private workflow as the project's focus) replaced with a neutral "Reference Workflow" section.
 
 ---
@@ -216,7 +219,7 @@ Stated plainly. None of these block release; all are honest limitations rather t
 
 | # | Criterion | Status |
 |---|---|---|
-| 1 | Repository clones and self-checks green with no extra setup | **Pass** — 240/240, 7 explained skips |
+| 1 | Repository clones and self-checks green with no extra setup | **Pass** — 226/226, 8 explained skips |
 | 2 | Every slash command's default resolves to something present in the repo | **Pass** |
 | 3 | Every script default path resolves | **Pass** |
 | 4 | Every referenced script exists (30/30) | **Pass** |
@@ -260,7 +263,7 @@ Added after the first audit pass, closing former debt items 5 and 6.
 
 | File | Purpose |
 |---|---|
-| `.github/workflows/evals.yml` | Three jobs. **evals** runs `python evals/run_evals.py` across a 2×2 matrix (Ubuntu + Windows, Python 3.11 + 3.12). **validators** runs the three public-bundle validators. **hygiene** fails the build if any ignored path is tracked or any private path (`context/canonical/`, `context/derived/`, `runtime/runs/`, `contracts/company-research/`) appears in the index. |
+| `.github/workflows/evals.yml` | Four jobs. **evals** runs the suite across a 2×2 matrix (Ubuntu + Windows, Python 3.11 + 3.12), first asserting that no optional extra is installed so the stdlib-only promise is actually proven. **evals-with-extras** installs `pypdf` and covers the paths the matrix skips. **validators** runs the three public-bundle validators. **hygiene** fails the build if any ignored path is tracked or any private path (`context/canonical/`, `context/derived/`, `runtime/runs/`, `contracts/company-research/`) appears in the index. |
 | `SECURITY.md` | Scopes what counts as a security issue for a framework with no server and no API keys — private context reaching a publishable artifact, `.gitignore` gaps, misclassified derived context, path traversal, code execution from an untrusted bundle — and routes reports to a private GitHub advisory. States plainly what is *not* a security issue, including the documented fact that `context/private/` is a confinement convention rather than a sandbox. Explicitly instructs reporters never to attach real personal data. |
 | `CODE_OF_CONDUCT.md` | Contributor Covenant 2.1, with one project-specific addition: submitting another person's private data to an issue or PR is listed as unacceptable behaviour, and technical disputes are to be settled with evidence rather than assertion. |
 | `.github/ISSUE_TEMPLATE/bug_report.yml` | Requires the exact command, the exact output, the eval-suite result on a clean checkout, the commit, and the environment. Two mandatory preflight checkboxes: the suite was run, and the report contains no real personal data. |
@@ -293,7 +296,7 @@ The first audit pass deliberately left history alone and logged it as debt. On e
 
 A single `git filter-branch` pass over **all refs**:
 
-- **Identity** — every author and committer normalized to `PhoenixArjun <nareshba.dev@gmail.com>`. Author and committer dates were preserved; only identity changed.
+- **Identity** — every author and committer normalized to `Phoenixarjun <nareshba.dev@gmail.com>`. Author and committer dates were preserved; only identity changed.
 - **Messages** — the `Co-Authored-By:` trailer stripped from every commit, leaving no third-party attribution.
 - **Tree** — the private paths above removed from every commit in which they appear, so they are unreachable from any ref rather than merely untracked at `HEAD`.
 
@@ -309,8 +312,8 @@ Original refs were then expunged (`refs/original/`), reflogs dropped, and the ob
 
 | Check | Result |
 |---|---|
-| Distinct author/committer identities across all refs | **1** — `PhoenixArjun <nareshba.dev@gmail.com>` |
+| Distinct author/committer identities across all refs | **1** — `Phoenixarjun <nareshba.dev@gmail.com>` |
 | Occurrences of the employer email anywhere in history | **0** |
 | Occurrences of `Co-Authored-By` in any commit message | **0** |
 | Private paths reachable from any ref | **0** |
-| Eval suite after rewrite | **270/270 passed** (working tree), **240/240 passed, 7 skipped** (fresh clone) |
+| Eval suite after rewrite | **270/270** (working tree), **240/240, 7 skipped** (clone + extras), **226/226, 8 skipped** (clone, stdlib only) |

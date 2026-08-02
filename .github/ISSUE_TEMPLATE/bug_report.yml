@@ -59,7 +59,7 @@ body:
     attributes:
       label: Eval suite result on a clean checkout
       description: The final line of `python evals/run_evals.py`.
-      placeholder: "240/240 passed, 7 skipped"
+      placeholder: "226/226 passed, 8 skipped"
     validations:
       required: true
 

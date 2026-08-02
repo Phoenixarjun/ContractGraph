@@ -13,6 +13,9 @@ permissions:
   contents: read
 
 jobs:
+  # The contract: a clean checkout with nothing installed must be green.
+  # Cases needing an optional extra report SKIP with a reason; the
+  # evals-with-extras job below covers those paths.
   evals:
     name: run_evals (${{ matrix.os }}, py${{ matrix.python-version }})
     runs-on: ${{ matrix.os }}
@@ -32,7 +35,40 @@ jobs:
       - name: Show Python version
         run: python --version
 
-      - name: Run the eval suite
+      - name: Assert no optional extra is installed
+        shell: bash
+        run: |
+          python - <<'PY'
+          import importlib.util, sys
+          present = [m for m in ("pypdf", "toon") if importlib.util.find_spec(m)]
+          if present:
+              sys.exit(f"Optional extras unexpectedly present: {present}. "
+                       "This job must prove the stdlib-only path.")
+          print("OK: stdlib-only environment.")
+          PY
+
+      - name: Run the eval suite (stdlib only)
+        run: python evals/run_evals.py
+
+  # Covers the paths the stdlib-only matrix necessarily skips: PDF extraction
+  # (pypdf) and TOON encoding (toon).
+  evals-with-extras:
+    name: run_evals (optional extras installed)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install optional extras
+        run: |
+          python -m pip install --upgrade pip
+          pip install pypdf
+
+      - name: Run the eval suite (extras installed)
         run: python evals/run_evals.py
 
   validators:

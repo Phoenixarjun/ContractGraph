@@ -6,14 +6,17 @@ bundle and synthetic fixtures, covering the eval categories in
 docs/evaluation.md. No model calls, no network, no live research. Prints a
 pass/fail table and exits non-zero if any case fails.
 
-Every case runs on a fresh clone. Cases that need a local-only private bundle
-(see PRIVATE_BUNDLES) are reported as SKIP when that bundle is absent, never as
-a failure and never silently dropped.
+Every case runs on a fresh clone. Cases that need something a clean checkout
+legitimately lacks -- a local-only private bundle, a completed run under the
+git-ignored runtime/runs/, or an optional extra from scripts/requirements.txt
+-- are reported as SKIP with a reason, never as a failure and never silently
+dropped. A skip is never counted as a pass.
 
 Usage:  python evals/run_evals.py
 """
 from __future__ import annotations
 
+import importlib.util
 import json
 import shutil
 import subprocess
@@ -62,6 +65,15 @@ def available_bundles():
 
 def have_real_run() -> bool:
     return (ROOT / REAL_RUN).is_dir()
+
+
+def _module_available(name: str) -> bool:
+    """Is an optional extra importable by the interpreter the script CLIs run under?
+
+    run() shells out with sys.executable, so this interpreter's view is the
+    same one every subprocess gets.
+    """
+    return importlib.util.find_spec(name) is not None
 
 
 def write(path: Path, obj):
@@ -1441,6 +1453,16 @@ def _make_test_pdf(path: Path, page_texts):
 
 
 def t_pdf_extract():
+    # pypdf is an OPTIONAL extra (scripts/requirements.txt). The framework core
+    # is stdlib-only, so a clean checkout legitimately has no pypdf and
+    # pdf_extract.py correctly reports "unavailable" rather than fabricating
+    # text. Skip here rather than failing; CI runs a separate job that installs
+    # the extras so this path is still covered somewhere.
+    if not _module_available("pypdf"):
+        skip("token-efficiency", "pdf extraction (optional pypdf)",
+             "pypdf not installed — optional extra, see scripts/requirements.txt")
+        return
+
     pdf_dir = TMP / "pdf"
     pdf_path = pdf_dir / "sample.pdf"
     _make_test_pdf(pdf_path, ["Hello World", None])
