@@ -72,6 +72,28 @@
     "companyStructure": 365,
     "foundationalEngineeringMaterial": 1825
   },
+  "domainLeakage": {
+    "note": "Declared by this bundle, read by scripts/validate_domain_leakage.py. The framework core holds no domain vocabulary of its own.",
+    "allowedUnconditional": [
+      "python", "fastapi", "pydantic", "asyncio", "uvicorn", "pytest",
+      "postgresql", "sqlalchemy", "redis", "indexing", "transactions",
+      "replication", "sharding", "consistency", "message queue", "kafka",
+      "docker", "kubernetes", "observability"
+    ],
+    "allowedWithLabel": {
+      "django": "Adjacent Python web framework — fine as a labelled comparison, not as a substitute track",
+      "flask": "Adjacent Python web framework — fine as a labelled comparison",
+      "node.js": "Different runtime — fine as a labelled comparison",
+      "express": "Different runtime's framework — fine as a labelled comparison",
+      "mongodb": "Different data model — fine as a labelled comparison to the relational track",
+      "graphql": "Different API style — fine as a labelled comparison to the REST track"
+    },
+    "disallowed": {},
+    "exemptNodes": {
+      "databases": ["mongodb"],
+      "distributed-systems": ["node.js", "graphql"]
+    }
+  },
   "privacy": {
     "privateContextMustNotEnterSkills": true,
     "privateContextMustNotEnterPublicExamples": true,

@@ -100,7 +100,7 @@ def merge(bundle_dir: Path, sections_dir: Path, run_meta, evidence_registry=None
                 missing.append(nid)
 
     if run_meta:
-        for k in ("run", "candidateContextSnapshot", "meta"):
+        for k in ("run", "studyPlanMeta", "candidateContextSnapshot", "meta"):
             if k in run_meta:
                 final[k] = run_meta[k]
 
@@ -119,7 +119,7 @@ def merge(bundle_dir: Path, sections_dir: Path, run_meta, evidence_registry=None
 
 def main(argv=None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
-    opts = {"--bundle": "contracts/company-research", "--sections": None, "--out": None,
+    opts = {"--bundle": "contracts/study-plan", "--sections": None, "--out": None,
             "--run-meta": None, "--evidence-registry": None}
     i = 0
     while i < len(argv):

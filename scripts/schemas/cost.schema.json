@@ -2,15 +2,16 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://contractgraph.dev/schemas/cost.schema.json",
   "title": "ContractGraph run cost/telemetry",
-  "description": "Normalized per-run token/cost telemetry written to runtime/runs/<run-id>/final/cost.json. Unavailable metrics are null, never fabricated; see coverage.",
+  "description": "Normalized per-run token/cost telemetry written to runtime/runs/<run-id>/final/cost.json (aggregate) and runtime/runs/<run-id>/telemetry/requests.jsonl (one RequestRecord per line, raw). Unavailable metrics are null, never fabricated; see coverage/unavailableFields. estimatedCostUsd is always a provider-list-price ESTIMATE, never a provider-reported actual charge.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["documentType", "runId", "generatedBy", "requests", "byNode", "byModel", "byPurpose", "byAttempt", "run", "coverage"],
+  "required": ["documentType", "runId", "generatedBy", "sources", "dedupedCount", "requests", "byNode", "byModel", "byPurpose", "byAttempt", "run", "coverage"],
   "properties": {
     "documentType": { "const": "ContractGraphCost" },
     "runId": { "type": ["string", "null"] },
     "generatedBy": { "type": "string" },
     "sources": { "type": "array", "items": { "type": "string" } },
+    "dedupedCount": { "type": "integer", "description": "Number of exact-duplicate requestIds dropped (e.g. the same call captured by both a parent transcript export and a subagent-local record)." },
     "requests": { "type": "array", "items": { "$ref": "#/$defs/RequestRecord" } },
     "byNode": { "type": "object" },
     "byModel": { "type": "object" },
@@ -24,30 +25,38 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "runtime", "model", "agent", "skill", "purpose", "node", "attempt",
-        "inputTokens", "outputTokens", "cacheReadTokens", "cacheCreationTokens",
-        "estimatedCostUsd", "durationMs", "toolCalls", "searches", "fetches",
-        "outputBytes", "finalStatus", "available"
+        "requestId", "runId", "nodeId", "attempt", "runtime", "sessionId", "agent", "skill",
+        "model", "purpose", "inputTokens", "outputTokens", "cacheReadTokens", "cacheCreationTokens",
+        "estimatedCostUsd", "startedAt", "completedAt", "durationMs", "toolCalls",
+        "webSearches", "webFetches", "outputBytes", "status", "telemetrySource",
+        "unavailableFields", "available"
       ],
       "properties": {
+        "requestId": { "type": "string" },
+        "runId": { "type": ["string", "null"] },
+        "nodeId": { "type": ["string", "null"] },
+        "attempt": { "type": ["integer", "null"] },
         "runtime": { "type": "string", "enum": ["claude-code", "opencode", "local"] },
-        "model": { "type": ["string", "null"] },
+        "sessionId": { "type": ["string", "null"] },
         "agent": { "type": ["string", "null"] },
         "skill": { "type": ["string", "null"] },
-        "purpose": { "type": "string", "enum": ["producer", "verifier", "repair", "global-verifier", "unknown"] },
-        "node": { "type": ["string", "null"] },
-        "attempt": { "type": ["integer", "null"] },
+        "model": { "type": ["string", "null"] },
+        "purpose": { "type": "string", "enum": ["producer", "verifier", "repair", "global-verifier", "orchestration", "unknown"] },
         "inputTokens": { "type": ["integer", "null"] },
         "outputTokens": { "type": ["integer", "null"] },
         "cacheReadTokens": { "type": ["integer", "null"] },
         "cacheCreationTokens": { "type": ["integer", "null"] },
         "estimatedCostUsd": { "type": ["number", "null"] },
+        "startedAt": { "type": ["string", "null"] },
+        "completedAt": { "type": ["string", "null"] },
         "durationMs": { "type": ["integer", "null"] },
         "toolCalls": { "type": ["integer", "null"] },
-        "searches": { "type": ["integer", "null"] },
-        "fetches": { "type": ["integer", "null"] },
+        "webSearches": { "type": ["integer", "null"] },
+        "webFetches": { "type": ["integer", "null"] },
         "outputBytes": { "type": ["integer", "null"] },
-        "finalStatus": { "type": ["string", "null"] },
+        "status": { "type": ["string", "null"] },
+        "telemetrySource": { "type": "string" },
+        "unavailableFields": { "type": "array", "items": { "type": "string" } },
         "available": { "type": "object" }
       }
     },
@@ -56,8 +65,8 @@
       "additionalProperties": false,
       "required": [
         "inputTokens", "outputTokens", "cacheReadTokens", "cacheCreationTokens",
-        "estimatedCostUsd", "durationMs", "toolCalls", "searches", "fetches",
-        "outputBytes", "requestCount"
+        "estimatedCostUsd", "durationMs", "toolCalls", "webSearches", "webFetches",
+        "outputBytes", "requestCount", "successCount", "failureCount"
       ],
       "properties": {
         "inputTokens": { "type": ["integer", "null"] },
@@ -67,10 +76,12 @@
         "estimatedCostUsd": { "type": ["number", "null"] },
         "durationMs": { "type": ["integer", "null"] },
         "toolCalls": { "type": ["integer", "null"] },
-        "searches": { "type": ["integer", "null"] },
-        "fetches": { "type": ["integer", "null"] },
+        "webSearches": { "type": ["integer", "null"] },
+        "webFetches": { "type": ["integer", "null"] },
         "outputBytes": { "type": ["integer", "null"] },
-        "requestCount": { "type": "integer" }
+        "requestCount": { "type": "integer" },
+        "successCount": { "type": "integer" },
+        "failureCount": { "type": "integer" }
       }
     },
     "Coverage": {

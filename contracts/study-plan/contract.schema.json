@@ -56,12 +56,18 @@
       "additionalProperties": false,
       "required": [
         "generatedAt",
-        "caveats"
+        "timestampSource",
+        "caveats",
+        "scopeDisclaimer"
       ],
       "properties": {
         "generatedAt": {
+          "type": ["string", "null"],
+          "description": "ISO-8601 UTC with millisecond precision when measured; null (with timestampSource: 'unavailable') when no trustworthy real timestamp exists rather than a fabricated or unverifiable one."
+        },
+        "timestampSource": {
           "type": "string",
-          "format": "date-time"
+          "enum": ["measured", "unavailable"]
         },
         "caveats": {
           "type": "array",
@@ -69,6 +75,11 @@
           "items": {
             "type": "string"
           }
+        },
+        "scopeDisclaimer": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Machine-checked (validate_final_output.py) human-readable statement that this is a backend-and-AI-systems study plan, not a complete career-preparation plan -- must name every contract.bundle.json scope.outOfScope topic (e.g. DSA) and point to its companionWorkflow."
         }
       }
     },
@@ -94,6 +105,30 @@
       "type": "object",
       "additionalProperties": {
         "$ref": "common/common.schema.json#/$defs/EvidenceSource"
+      }
+    },
+    "sourceGovernance": {
+      "type": "object",
+      "description": "Optional: per-node recommended/archived source split written by migrate_run_metadata.py's repair_source_governance. Optional (not in required[]) so final.json artifacts produced before this field existed remain valid.",
+      "additionalProperties": false,
+      "required": ["recommendedSources", "archivedSources"],
+      "properties": {
+        "recommendedSources": {
+          "type": "object",
+          "description": "nodeId -> best 5-10 ranked sources for that node.",
+          "additionalProperties": {
+            "type": "array",
+            "items": { "type": "object" }
+          }
+        },
+        "archivedSources": {
+          "type": "object",
+          "description": "nodeId -> remaining valid but lower-ranked sources for that node.",
+          "additionalProperties": {
+            "type": "array",
+            "items": { "type": "object" }
+          }
+        }
       }
     }
   },

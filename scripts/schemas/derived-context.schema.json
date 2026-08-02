@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contractgraph.dev/schemas/derived-context.schema.json",
+  "title": "ContractGraph derived context",
+  "description": "Provenance-aware derived context written to runtime/runs/<run-id>/final/derived-context.json (and, on opt-in, context/derived/). Every entry traces back to the verified run/node that produced it and carries an explicit privacy classification -- never a bare boolean.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["documentType", "version", "runId", "bundleId", "generatedAt", "timestampSource", "generatedBy", "entries", "artifactPrivacyClassification"],
+  "properties": {
+    "documentType": { "const": "ContractGraphDerivedContext" },
+    "version": { "type": "string" },
+    "runId": { "type": ["string", "null"] },
+    "bundleId": { "type": ["string", "null"] },
+    "generatedAt": { "type": ["string", "null"] },
+    "timestampSource": { "type": "string", "enum": ["measured", "unavailable"] },
+    "generatedBy": { "type": "string" },
+    "entries": { "type": "array", "items": { "$ref": "#/$defs/DerivedContextEntry" } },
+    "artifactPrivacyClassification": {
+      "type": "string",
+      "enum": ["public", "internal", "private"],
+      "description": "The classification of the artifact as a whole: the most restrictive classification among its entries, unless a deterministic redaction/export process produced a separate public artifact."
+    }
+  },
+  "$defs": {
+    "DerivedContextEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nodeId", "aggregationPath", "privacyClassification", "sourceContextRefs",
+        "sourceRunId", "sourceNodeId", "evidenceRefs", "confidence", "confidenceSource",
+        "createdAt", "expiresAt", "summary"
+      ],
+      "properties": {
+        "nodeId": { "type": "string" },
+        "aggregationPath": { "type": "string" },
+        "privacyClassification": { "type": "string", "enum": ["public", "internal", "private"] },
+        "sourceContextRefs": { "type": "array", "items": { "type": "string" } },
+        "sourceRunId": { "type": ["string", "null"] },
+        "sourceNodeId": { "type": "string" },
+        "evidenceRefs": { "type": "array", "items": { "type": "string" } },
+        "confidence": { "type": ["string", "number", "null"] },
+        "confidenceSource": { "type": "string", "enum": ["measured", "unavailable"] },
+        "createdAt": { "type": ["string", "null"] },
+        "timestampSource": { "type": "string", "enum": ["measured", "unavailable"] },
+        "expiresAt": { "type": ["string", "null"] },
+        "freshnessBasis": { "type": ["string", "null"] },
+        "contractVersion": { "type": ["string", "null"] },
+        "summary": { "type": "string" }
+      }
+    }
+  }
+}

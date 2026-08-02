@@ -20,6 +20,17 @@
     "current knowledge",
     "time/preferences"
   ],
+  "scope": {
+    "description": "This bundle produces a backend-and-AI-systems study plan. It is not a complete career-preparation plan.",
+    "inScope": ["python", "fastapi", "databases", "distributed-systems", "AI/ML serving as a parallel track"],
+    "outOfScope": [
+      {
+        "topic": "DSA",
+        "reason": "Data-structures-and-algorithms interview preparation is a distinct, high-volume skill track deliberately excluded from this bundle so it stays small and reproducible for the runtime benchmark. It is not represented by any node here and must not be silently absorbed into another node's scope.",
+        "companionWorkflow": "contracts/company-research (dsa node) or a dedicated DSA study-plan bundle"
+      }
+    ]
+  },
   "nodes": [
     {
       "nodeId": "baseline-assessment",
@@ -89,7 +100,8 @@
     "Every evidenceRef must resolve to the global source registry.",
     "Every learning track must cite at least one resource.",
     "No learner-owned progress may be overwritten by a refresh.",
-    "Final output must validate against contract.schema.json."
+    "Final output must validate against contract.schema.json.",
+    "studyPlanMeta.scopeDisclaimer must name every scope.outOfScope topic -- the plan can never be presented as complete career preparation."
   ],
   "refreshPolicy": {
     "preserveUserState": true,

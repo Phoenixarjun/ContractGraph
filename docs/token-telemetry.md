@@ -20,7 +20,12 @@ Field name aliases are resolved via dotted-path lookup (`usage.input_tokens` / `
 
 ## The canonical `RequestRecord`
 
-Every request produced by any source normalizes to the same shape (`scripts/schemas/cost.schema.json`):
+**Updated in [runtime-telemetry.md](runtime-telemetry.md)** — read that for the
+current field set (`requestId`, `runId`, `sessionId`, `telemetrySource`,
+`unavailableFields`, `webSearches`/`webFetches`, `status`, and the
+`requests.jsonl` raw layer). The shape below is kept for the original
+design rationale (never-fabricate, purpose taxonomy, cost estimation), but
+the exact field names have since evolved:
 
 ```json
 {
@@ -38,15 +43,15 @@ Every request produced by any source normalizes to the same shape (`scripts/sche
   "estimatedCostUsd": 0.0087,
   "durationMs": 4200,
   "toolCalls": 3,
-  "searches": null,
-  "fetches": null,
+  "webSearches": null,
+  "webFetches": null,
   "outputBytes": null,
-  "finalStatus": "accepted",
-  "available": { "inputTokens": true, "searches": false, "...": "..." }
+  "status": "accepted",
+  "available": { "inputTokens": true, "webSearches": false, "...": "..." }
 }
 ```
 
-`purpose` is one of `producer | verifier | repair | global-verifier | unknown` — `unknown` (not a guessed default) when a source can't say which role a call played.
+`purpose` is one of `producer | verifier | repair | global-verifier | orchestration | unknown` — `unknown` (not a guessed default) when a source can't say which role a call played.
 
 ## Cost estimation
 

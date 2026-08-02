@@ -20,8 +20,8 @@ from pathlib import Path
 
 METRICS = [
     "inputTokens", "outputTokens", "cacheReadTokens", "cacheCreationTokens",
-    "estimatedCostUsd", "durationMs", "toolCalls", "searches", "fetches",
-    "outputBytes", "requestCount",
+    "estimatedCostUsd", "durationMs", "toolCalls", "webSearches", "webFetches",
+    "outputBytes", "requestCount", "successCount", "failureCount",
 ]
 
 
