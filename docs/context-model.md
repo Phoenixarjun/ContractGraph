@@ -55,7 +55,7 @@ Before a workflow has any `context/` tree, the `context-advisor` bootstrap skill
 3. **Stop for approval** — present the proposed tree, a one-line rationale per file, and what was deliberately excluded as researchable. Create nothing until approved.
 4. Only after approval, scaffold empty placeholder files (frontmatter + `TODO` prompts, no real data) and a `context-manifest.json` skeleton.
 
-The skill never fills in real personal data — that remains the user's job. Two workflows can need very different minimum sets (e.g. company research needs `experience/` and `documents/`; a study plan needs `goals.md` and `knowledge.md` instead) — the same procedure produces both without any domain logic baked into the skill itself.
+The skill never fills in real personal data — that remains the user's job. Two workflows can need very different minimum sets (e.g. a career roadmap needs `experience/` and `documents/`; a study plan needs `goals.md` and `knowledge.md` instead) — the same procedure produces both without any domain logic baked into the skill itself.
 
 ## Derived Context
 

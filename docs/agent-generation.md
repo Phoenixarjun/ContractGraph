@@ -13,7 +13,7 @@ For node `<nodeId>`, the generator reads:
 
 ## Generated File Shape
 
-Every file under `.claude/agents/generated/` follows the same structure (see `.claude/agents/generated/company-intelligence.md` and `section-verifier.md` for worked examples):
+Every file under `.claude/agents/generated/` follows the same structure (see `.claude/agents/generated/<nodeId>.md` and `section-verifier.md` for worked examples):
 
 ```markdown
 ---

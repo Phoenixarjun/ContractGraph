@@ -1,6 +1,6 @@
 ---
 name: context-advisor
-description: Use when a user is setting up ContractGraph context before /contractgraph:init, when creating or restructuring context/, or when unsure which canonical folders and files a given research workflow actually needs. Works for any workflow (company research, study plan, resume analysis, etc.) — it recommends structure, it does not fill in private data.
+description: Use when a user is setting up ContractGraph context before /contractgraph:init, when creating or restructuring context/, or when unsure which canonical folders and files a given workflow actually needs. Works for any workflow (study plan, technical roadmap, project planning, etc.) — it recommends structure, it does not fill in private data.
 ---
 
 # Context Advisor
@@ -64,15 +64,15 @@ context/
 
 ## Worked Examples (same method, different minimal output)
 
-**Company research + resume analysis.** Ground truth = the user's background and target roles. Company facts are *researchable* → excluded.
+**Career planning + portfolio review.** Ground truth = the user's background and target roles. Market facts are *researchable* → excluded.
 ```text
 context/
 ├── canonical/
 │   ├── profile.md         # name, current role, seniority
 │   ├── preferences.md     # target roles, locations, constraints
-│   ├── experience/        # prior roles/projects to map against JDs
-│   └── documents/         # resume source file(s)
-├── derived/               # research-history/, company dossiers land here per run
+│   ├── experience/        # prior roles/projects
+│   └── documents/         # resume and project source file(s)
+├── derived/               # review dossiers land here per run
 └── context-manifest.json
 ```
 

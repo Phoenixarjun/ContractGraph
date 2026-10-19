@@ -1,6 +1,6 @@
 # Adding a New Workflow
 
-The test of ContractGraph's core claim is this: adding a brand-new workflow — company research, a study plan, or anything else — never requires touching `scripts/`, `.claude/skills/bootstrap/`, or any `/contractgraph:*` command. Only `contracts/<new-workflow>/` and `context/` change.
+The test of ContractGraph's core claim is this: adding a brand-new workflow — a study plan, an architecture review, or anything else — never requires touching `scripts/`, `.claude/skills/bootstrap/`, or any `/contractgraph:*` command. Only `contracts/<new-workflow>/` and `context/` change.
 
 ## The Path
 
@@ -32,7 +32,7 @@ Every mode stops for your approval before writing a single contract file. See [c
 
 This is where genericity is actually exercised: `workflow-compiler` runs the identical 10-step compile sequence — structural validation, context indexing, capability detection, skill reuse/creation, agent generation, graph compilation, compiled-graph validation — against your new bundle, with zero branching on what domain it is. See [graph-compilation.md](graph-compilation.md), [skill-generation.md](skill-generation.md), and [agent-generation.md](agent-generation.md).
 
-If your workflow needs a capability no existing skill satisfies (e.g. a domain-specific scoring method), `skill-creator` authors one — evaluated on the same seven dimensions as any other skill, with the same privacy bar. Nothing about your new domain is written into the skill's trigger or procedure beyond what the capability itself requires — a well-formed generated skill for your workflow should read no differently than one authored for company-research.
+If your workflow needs a capability no existing skill satisfies (e.g. a domain-specific scoring method), `skill-creator` authors one — evaluated on the same seven dimensions as any other skill, with the same privacy bar. Nothing about your new domain is written into the skill's trigger or procedure beyond what the capability itself requires — a well-formed generated skill for your workflow should read no differently than one authored for any reference workflow.
 
 ### 4. `/contractgraph:validate`
 
@@ -50,4 +50,4 @@ Executes exactly the same 19-step lifecycle described in [execution.md](executio
 
 ## Proof This Works
 
-`evals/workflow-cases/` exercises this exact path against the synthetic study-plan fixture — a workflow that looks nothing like company research (no roles, no resumes, no company facts) compiled and run through the identical mechanism. See [evaluation.md](evaluation.md).
+`evals/workflow-cases/` exercises this exact path against the synthetic study-plan fixture — a domain-specific workflow compiled and run through the identical mechanism. See [evaluation.md](evaluation.md).

@@ -11,7 +11,7 @@ Policies define what is allowed.
 Claude Code designs how the workflow executes.
 ```
 
-The user supplies two mandatory inputs — `context/` and `contracts/` — plus optional `policies.json`. Claude Code compiles them into a runtime graph, then executes that graph against a runtime input (e.g. a company name, a learner profile). Nothing about the domain (company research, study plans, or any other workflow) is hard-coded into the framework: contracts describe the shape, the compiler infers the rest.
+The user supplies two mandatory inputs — `context/` and `contracts/` — plus optional `policies.json`. Claude Code compiles them into a runtime graph, then executes that graph against a runtime input (e.g. a learning goal, a project spec). Nothing about the domain (study plans, technical roadmaps, or any other workflow) is hard-coded into the framework: contracts describe the shape, the compiler infers the rest.
 
 ## Two Planes
 
@@ -114,6 +114,6 @@ contractgraph/
 - No FastAPI/Flask/Django, no Node servers, no databases, queues, or background daemons.
 - Python is for small, deterministic utilities only (extraction, hashing, schema validation, JSON merging, cache keys) — never model calls, agent reasoning, or research conclusions.
 - JSON is the canonical interchange format; TOON is optional and gated behind a measured token-savings benchmark (`policies.json` → `tokenEfficiency.toonMode: "benchmark_before_enable"`).
-- No domain workflow (company research, resume analysis, or any other) is hard-coded into framework core — it lives entirely in `contracts/<workflow>/`.
+- No domain workflow (study planning, technical assessment, or any other) is hard-coded into framework core — it lives entirely in `contracts/<workflow>/`.
 
 See [context-model.md](context-model.md), [contract-model.md](contract-model.md), [skill-lifecycle.md](skill-lifecycle.md), [graph-compilation.md](graph-compilation.md), and [privacy.md](privacy.md) for the deep dives.
