@@ -1,10 +1,10 @@
 <div align="center">
 
+<img src="public/ContractGraph.png" alt="ContractGraph Logo" width="160" />
+
 # ContractGraph
 
 **Contracts define what must be produced. Claude Code designs how it gets produced.**
-
-A Claude Code-native graph-engineering framework. You supply *context* (what is already known) and *contracts* (what must be produced); ContractGraph compiles them into a verified DAG of scoped subagents, reusable skills, explicit dependencies, verification gates, and targeted repair — then executes it and proves the result against your contract.
 
 [![evals](https://github.com/Phoenixarjun/ContractGraph/actions/workflows/evals.yml/badge.svg)](https://github.com/Phoenixarjun/ContractGraph/actions/workflows/evals.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
@@ -13,6 +13,10 @@ A Claude Code-native graph-engineering framework. You supply *context* (what is 
 [![No API keys](https://img.shields.io/badge/API%20keys-none%20required-success.svg)](#installation)
 
 </div>
+
+Multi-step AI workflows often fail in predictable ways: uncheckable monolithic outputs, ballooning context windows, cascading re-runs caused by single-node errors, hallucinated sources, and domain logic hard-coded into orchestration scripts. **ContractGraph** is a Claude Code-native, contract-driven workflow-engineering framework that compiles user context, strict JSON Schema contracts, and execution policies into an executable DAG of single-responsibility subagents, isolated node context packets, independent verification gates, and targeted repair. Claude Code serves as the reasoning and orchestration runtime, while standard-library Python scripts handle deterministic validation, hashing, and aggregation without external APIs, background services, or hosted infrastructure.
+
+> 📖 **Design Rationale:** For the architectural thesis behind contract-driven graphs over unstructured prompt loops, see [*Graph Engineering for AI Coding Agents: Beyond Prompt Loops*](https://medium.com/@phoenixarjun007/graph-engineering-for-ai-coding-agents-beyond-prompt-loops-dd74bc1c4608).
 
 ---
 
@@ -24,6 +28,8 @@ A Claude Code-native graph-engineering framework. You supply *context* (what is 
 - [Workflow Lifecycle](#workflow-lifecycle)
 - [Installation](#installation)
 - [Quick Start](#quick-start)
+- [See a Workflow Run](#see-a-workflow-run)
+- [Deterministic Offline Evaluation Suite and CI](#deterministic-offline-evaluation-suite-and-ci)
 - [Commands](#commands)
 - [Concepts](#concepts)
 - [Repository Structure](#repository-structure)
@@ -31,6 +37,7 @@ A Claude Code-native graph-engineering framework. You supply *context* (what is 
 - [Limitations](#limitations)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
+- [Documentation Index](#documentation-index)
 - [License](#license)
 
 ---
@@ -180,6 +187,145 @@ Where things land:
 
 Full walkthrough: [docs/getting-started.md](docs/getting-started.md).
 
+## See a Workflow Run
+
+To inspect how ContractGraph executes without needing private data or external API credentials, run the public **study-plan** workflow (`contracts/study-plan/`) against synthetic context (`context/synthetic/study-plan/`).
+
+### 1. Execution Commands
+
+```text
+# Step 1: Deterministically validate bundle schemas, node contracts, and context trees
+/contractgraph:validate contracts/study-plan --context context/synthetic/study-plan
+
+# Step 2: Compile contracts and context into the runtime DAG, manifests, and node packets
+/contractgraph:init     contracts/study-plan --context context/synthetic/study-plan
+
+# Step 3: Execute node subagents, verification gates, aggregation, and finalization
+/contractgraph:run      contracts/study-plan --input "backend and AI systems engineering" \
+                        --context context/synthetic/study-plan
+```
+
+To preview the execution plan offline before spending any model tokens:
+
+```text
+/contractgraph:run contracts/study-plan --input "backend and AI systems engineering" --dry-run
+```
+
+You can also run the deterministic dry-run utility directly from the shell:
+```bash
+python scripts/dry_run.py --bundle contracts/study-plan
+```
+This prints the exact 3-layer execution sequence (foundation `baseline-assessment` → parallel tracks `python`, `fastapi`, `databases`, `distributed-systems` → synthesis `evaluation-plan`), model assignments, tool allocations, and scheduled output paths.
+
+### 2. Resulting Runtime Artifacts
+
+Each execution writes its complete state into an isolated run directory under `runtime/runs/<run-id>/` (git-ignored to protect user data):
+
+| Artifact | Location | Purpose |
+|---|---|---|
+| **Final Artifact** | `runtime/runs/<run-id>/final/final.json` | Deterministically aggregated output validated against [`contract.schema.json`](contracts/study-plan/contract.schema.json). |
+| **Run Record** | `runtime/runs/<run-id>/run.json` | Terminal lifecycle state (`COMPLETED` or `FINALIZATION_FAILED`), check counts, and timestamps. |
+| **Human Report** | `runtime/runs/<run-id>/final/report.md` | Human-readable markdown overview of the verified study tracks. |
+| **Execution Trace** | `runtime/runs/<run-id>/final/trace.json` | State machine transitions, repair attempts, and node completion status. |
+| **Attributed Telemetry** | `runtime/runs/<run-id>/final/cost.json` | Normalized token and cost metrics attributed by node and phase. |
+| **Source Registry** | `runtime/runs/<run-id>/evidence/source-registry.json` | Deduplicated, scored, and reachable source citations. |
+| **Section Outputs** | `runtime/runs/<run-id>/sections/<nodeId>.json` | Verified section data accepted by independent verifiers. |
+
+### 3. Illustrative Artifact Structure
+
+The compiled DAG for the study-plan workflow is committed and tracked in the repository at [`runtime/compiled/study-plan/graph.json`](runtime/compiled/study-plan/graph.json), with compiler decisions in [`runtime/compiled/study-plan/compilation-report.md`](runtime/compiled/study-plan/compilation-report.md).
+
+When execution completes, `scripts/merge_verified_sections.py` deterministically aggregates all accepted sections into `final.json`. Below is an illustrative excerpt showing selected fields from the final artifact structure. Placeholder objects represent omitted fields and are not intended to be validated directly:
+
+```json
+{
+  "schemaVersion": "1.0.0",
+  "documentType": "PersonalizedStudyPlan",
+  "run": {
+    "runId": "study-plan-sample",
+    "learnerGoal": "backend and AI systems engineering",
+    "contractBundleVersion": "1.0.0",
+    "contextManifestHash": "4ab3d6ff0ed3d0f5610e2fa9d3660b883387ea004be5374a280a73f51945c60d"
+  },
+  "studyPlanMeta": {
+    "generatedAt": null,
+    "timestampSource": "unavailable",
+    "caveats": ["Requires familiarity with basic Python syntax."],
+    "scopeDisclaimer": "This is a backend-and-AI-systems study plan, not a complete career-preparation plan -- data-structures-and-algorithms (DSA) interview preparation is excluded per contract scope (requires a dedicated DSA study-plan bundle)."
+  },
+  "baselineAssessment": { "..." : "..." },
+  "python": {
+    "topic": "Python for backend engineering",
+    "objectives": ["Master async I/O and concurrency patterns", "Implement robust type checking"],
+    "resources": [
+      {
+        "title": "Python asyncio documentation",
+        "url": "https://docs.python.org/3/library/asyncio.html",
+        "type": "doc",
+        "free": true
+      }
+    ],
+    "milestones": [
+      {
+        "name": "Build an Async Task Queue",
+        "successCriteria": "All concurrent tasks complete under backpressure with zero dropped jobs"
+      }
+    ]
+  },
+  "fastapi": { "..." : "..." },
+  "databases": { "..." : "..." },
+  "distributedSystems": { "..." : "..." },
+  "evaluationPlan": { "..." : "..." },
+  "sourceRegistry": {
+    "s1": {
+      "sourceRef": "s1",
+      "title": "Python asyncio documentation",
+      "url": "https://docs.python.org/3/library/asyncio.html",
+      "sourceType": "official_documentation"
+    }
+  }
+}
+```
+
+*(Illustrative structural schema example; does not represent a measured execution. Live run directories under `runtime/runs/` remain git-ignored by design).*
+
+## Deterministic Offline Evaluation Suite and CI
+
+ContractGraph includes a comprehensive, offline evaluation suite that validates framework mechanics, contracts, schemas, and privacy boundaries. It runs with **no network access, no model calls, and no API keys**.
+
+- **Eval Runner:** [`evals/run_evals.py`](evals/run_evals.py)
+- **CI Workflow:** [`.github/workflows/evals.yml`](.github/workflows/evals.yml) (matrix: Ubuntu and Windows across Python 3.11 and 3.12)
+
+### Verified Test Counts
+
+Run the suite locally from a clean repository checkout:
+
+```bash
+python evals/run_evals.py
+```
+
+| Environment | Verified Result | Notes |
+|---|---|---|
+| **Clean clone (Python standard library only)** | **226 passed, 8 skipped** | Enforced by CI (`evals` job). Asserts zero third-party packages are installed. |
+| **With optional extras (`pip install pypdf`)** | **240 passed, 7 skipped** | Tested in CI (`evals-with-extras`). Covers PDF extraction and fallback paths. |
+| **Working tree with local private fixtures** | **270 passed, 0 skipped** | Runs when local private bundles and completed run artifacts are present on disk. |
+
+*Skip Policy:* Skips represent cases requiring local-only artifacts (e.g., completed run histories under `runtime/runs/` or private bundles) or optional extras. Skips print clear reasons and are never counted as passes.
+
+You can also run individual bundle validators directly:
+```bash
+python scripts/validate_contract_bundle.py contracts/study-plan
+python scripts/validate_context.py context/synthetic/study-plan
+python scripts/validate_compiled_graph.py runtime/compiled/study-plan/graph.json
+```
+
+### Deterministic Integrity vs. Real-World Effectiveness
+
+> [!IMPORTANT]
+> The offline eval suite verifies **deterministic system integrity**: JSON Schema validation, graph acyclicity, dependency cross-checks, rejection of malformed outputs or invalid URLs, idempotent finalization, cache key determinism, and privacy exclusion rules.
+>
+> It does **not** claim to prove stochastic agent output quality, model reasoning depth, or real-world effectiveness on open-ended creative tasks. Real-world agent quality is evaluated via rubric-based inspection ([`evals/rubrics/verification-rubric.md`](evals/rubrics/verification-rubric.md)) and controlled execution benchmarks ([`docs/opencode-benchmark.md`](docs/opencode-benchmark.md)), not deterministic unit tests.
+
 ## Commands
 
 | Command | Purpose |
@@ -230,7 +376,7 @@ Contract *structure* does not define execution order. Dependencies are inferred 
 
 ```text
 runtime/compiled/<bundleId>/
-├── graph.yaml  (+ canonical graph.json)
+├── graph.json                 # canonical compiled graph (verified against graph.yaml)
 ├── context-manifest.json
 ├── contract-manifest.json
 ├── capability-manifest.json
@@ -293,7 +439,7 @@ ContractGraph/
 │   ├── runs/<run-id>/            # everything one run produced (git-ignored)
 │   └── cache/ outputs/ sections/ traces/
 ├── evals/                        # deterministic offline regression suite
-└── docs/                         # 25 topic docs
+└── docs/                         # 24 topic docs
 ```
 
 ## Examples

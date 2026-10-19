@@ -112,7 +112,7 @@ jobs:
             'context/canonical/*' \
             'context/derived/*' \
             'runtime/runs/*' \
-            'contracts/company-research/*' \
+            'contracts/*-private/*' \
             | grep -v 'README.md' || true)
           if [ -n "$leaked" ]; then
             echo "Private paths are tracked:"

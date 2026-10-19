@@ -2,16 +2,15 @@
 """merge_verified_sections - deterministically aggregate ACCEPTED node sections
 into the final artifact.
 
-Places each accepted node's `data` at its bundle aggregationPath, merges the
-map node (resume-analysis) from per-role fragments, and builds a global source
-registry deduplicated by canonicalUrl (else sourceRef). Deterministic: identical
-inputs -> byte-identical output (sorted keys). It never calls a model; it only
-assembles what verification already accepted.
+Places each accepted node's `data` at its bundle aggregationPath, merges any
+map node from per-item fragments, and builds a global source registry deduplicated
+by canonicalUrl (else sourceRef). Deterministic: identical inputs -> byte-identical
+output (sorted keys). It never calls a model; it only assembles what verification
+already accepted.
 
-Two evidence shapes feed the final registry: the legacy embedded
-`sources[]` (full metadata per section; company-research) and, when
---evidence-registry is given, `data.evidence: [{ref, claims}]` resolved
-against that external run-level registry (study-plan's dedup-by-registry
+Two evidence shapes feed the final registry: embedded `sources[]` (full metadata
+per section) and, when --evidence-registry is given, `data.evidence: [{ref, claims}]`
+resolved against that external run-level registry (study-plan's dedup-by-registry
 design) -- sections in this shape never embed full source metadata, so the
 external file supplies it.
 

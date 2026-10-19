@@ -6,5 +6,5 @@
     "dependencyConflicts": 0
   },
   "provesGenericity": true,
-  "note": "own nodes; no company-research concepts"
+  "note": "own nodes; domain-neutral concepts"
 }

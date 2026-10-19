@@ -34,11 +34,11 @@ The stdlib-only row is the one that matters for a first-time cloner, and it is w
 
 | # | Issue | Impact |
 |---|---|---|
-| B1 | The eval suite hard-depended on `contracts/company-research/`, a git-ignored private bundle. | On a fresh clone the suite failed 28 cases. The repo's own self-check was broken for every user but the author. |
-| B2 | `/contractgraph:init`, `:run`, and `:validate` all defaulted to `contracts/company-research` — a bundle not present in the repo. | Every command failed out of the box. |
-| B3 | `/contractgraph:finalize` fell back to `contracts/claude-architect-professional` (also absent) and its usage examples used private run IDs. | Same, plus leaked internal run identifiers. |
-| B4 | 11 scripts defaulted `--bundle` to `contracts/company-research`; 8 defaulted compiled paths to a flat `runtime/compiled/` that init no longer produces. | Every script's documented default was wrong. |
-| B5 | `scripts/validate_domain_leakage.py` hard-coded a domain vocabulary keyed on `bundleId == "claude-architect-professional"`, and `finalize_run.py` carried a second inline copy keyed on `"claude-architect" in bundle_id`. | Direct violation of the project's own non-negotiable boundary ("no domain workflow hard-coded into the framework core"), and the checker silently no-opped for every public bundle — a validator that appears to run but checks nothing. |
+| B1 | The eval suite hard-depended on `contracts/<private-bundle>/`, a git-ignored private bundle. | On a fresh clone the suite failed 28 cases. The repo's own self-check was broken for every user but the author. |
+| B2 | `/contractgraph:init`, `:run`, and `:validate` all defaulted to `contracts/<private-bundle>` — a bundle not present in the repo. | Every command failed out of the box. |
+| B3 | `/contractgraph:finalize` fell back to `contracts/<private-bundle>` (also absent) and its usage examples used private run IDs. | Same, plus leaked internal run identifiers. |
+| B4 | 11 scripts defaulted `--bundle` to `contracts/<private-bundle>`; 8 defaulted compiled paths to a flat `runtime/compiled/` that init no longer produces. | Every script's documented default was wrong. |
+| B5 | `scripts/validate_domain_leakage.py` hard-coded a domain vocabulary keyed on private bundle IDs, and `finalize_run.py` carried a second inline copy. | Direct violation of the project's own non-negotiable boundary ("no domain workflow hard-coded into the framework core"), and the checker silently no-opped for every public bundle — a validator that appears to run but checks nothing. |
 
 ### Consistency and correctness
 
@@ -60,8 +60,8 @@ The stdlib-only row is the one that matters for a first-time cloner, and it is w
 | H1 | 13 scratch/debug files tracked or untracked at the repo root and in `evals/`: `ANCHORED_SUMMARY.md`, `files.py`, `_check_dl.py`, `_check_repair.py`, `_check_run.py`, `evals/dbg_*.py` (6), `evals/test_finalize_debug.py`. |
 | H2 | `scripts/repair_evidence_domain.py` was a one-off with a hard-coded absolute path to a personal run directory. |
 | H3 | `runtime/telemetry-preflight/` contained a raw session export with a real session ID and absolute user paths — untracked but not ignored, one `git add -A` from being published. |
-| H4 | `runtime/compiled/claude-architect-professional/` contained a real person's name in its compilation report and context manifest — untracked but not ignored. |
-| H5 | `.gitignore` did not cover `runtime/telemetry-preflight/`, `.migrations/`, `contracts/claude-architect-professional/`, editor/OS/venv noise, or scratch-file patterns. |
+| H4 | `runtime/compiled/<private-bundle>/` contained author's personal name in its compilation report and context manifest — untracked but not ignored. |
+| H5 | `.gitignore` did not cover `runtime/telemetry-preflight/`, `.migrations/`, `contracts/<private-bundle>/`, editor/OS/venv noise, or scratch-file patterns. |
 | H6 | `context/derived/` was ignored by a bare directory rule that would also have dropped its tracked `README.md`. |
 | H7 | `__pycache__/` directories present in the working tree. |
 
@@ -160,19 +160,19 @@ evals/test_finalize_debug.py   docs/optimization-plan.md      scripts/__pycache_
 
 | Item | Where | Disposition |
 |---|---|---|
-| Author's real name | `runtime/compiled/claude-architect-professional/{compilation-report.md, context-manifest.json}` | Directory git-ignored; never committed |
+| Author's personal name | `runtime/compiled/<private-bundle>/{compilation-report.md, context-manifest.json}` | Directory git-ignored; never committed |
 | Resume filename and canonical resume paths | same context manifest | Same |
-| Employer email in commit metadata | pre-existing commits (`8788bec` and earlier) | Historical; git config set so new commits use the release identity. Not rewritten — see §7 |
-| Absolute user paths (`C:\Users\naresh.b\...`) | `_check_*.py`, `evals/dbg_trace*.py`, `scripts/repair_evidence_domain.py` | Files deleted |
+| Employer email in commit metadata | pre-existing commits (`8788bec` and earlier) | Historical; git config set so new commits use the release identity. |
+| Absolute user paths (`C:\Users\<user>\...`) | `_check_*.py`, `evals/dbg_trace*.py`, `scripts/repair_evidence_domain.py` | Files deleted |
 | Real OpenCode session export (session id, model, absolute paths, full transcript) | `runtime/telemetry-preflight/opencode/raw/session-*.json` | Directory git-ignored; never committed |
-| Company name from a real research run (`paypal`) and run identifiers | `ANCHORED_SUMMARY.md` (forensic audit of private runs) | File deleted |
-| Private contract bundle | `contracts/claude-architect-professional/` | Git-ignored |
-| Private contract bundle | `contracts/company-research/` | Already ignored; kept ignored |
+| Company name from a real research run (`<company-name>`) and run identifiers | `ANCHORED_SUMMARY.md` (forensic audit of private runs) | File deleted |
+| Private contract bundle | `contracts/<private-bundle>/` | Git-ignored |
+| Private contract bundle | `contracts/<private-bundle>/` | Already ignored; kept ignored |
 | Real canonical context (19 files) | `context/canonical/` | Already ignored; ignore rule retained and documented |
 | 735 files of real run output | `runtime/runs/` | Already ignored; ignore rule retained |
 | Description of real canonical content | `docs/privacy-propagation.md` | Text rewritten |
 | Private run IDs referenced as documentation anchors | 6 docs | Rewritten |
-| Personal long-form notes with private examples | `ContractGraph.md` | Remains git-ignored (verified to contain a real resume filename and a real company name) |
+| Personal long-form notes with private examples | `ContractGraph.md` | Remains git-ignored (verified to contain private notes) |
 
 **Verification:** a regex sweep for names, employer, personal email, session ids, run ids, and absolute user paths across all **145** committable files returns **zero** hits.
 
@@ -263,7 +263,7 @@ Added after the first audit pass, closing former debt items 5 and 6.
 
 | File | Purpose |
 |---|---|
-| `.github/workflows/evals.yml` | Four jobs. **evals** runs the suite across a 2×2 matrix (Ubuntu + Windows, Python 3.11 + 3.12), first asserting that no optional extra is installed so the stdlib-only promise is actually proven. **evals-with-extras** installs `pypdf` and covers the paths the matrix skips. **validators** runs the three public-bundle validators. **hygiene** fails the build if any ignored path is tracked or any private path (`context/canonical/`, `context/derived/`, `runtime/runs/`, `contracts/company-research/`) appears in the index. |
+| `.github/workflows/evals.yml` | Four jobs. **evals** runs the suite across a 2×2 matrix (Ubuntu + Windows, Python 3.11 + 3.12), first asserting that no optional extra is installed so the stdlib-only promise is actually proven. **evals-with-extras** installs `pypdf` and covers the paths the matrix skips. **validators** runs the three public-bundle validators. **hygiene** fails the build if any ignored path is tracked or any private path (`context/canonical/`, `context/derived/`, `runtime/runs/`, private bundles) appears in the index. |
 | `SECURITY.md` | Scopes what counts as a security issue for a framework with no server and no API keys — private context reaching a publishable artifact, `.gitignore` gaps, misclassified derived context, path traversal, code execution from an untrusted bundle — and routes reports to a private GitHub advisory. States plainly what is *not* a security issue, including the documented fact that `context/private/` is a confinement convention rather than a sandbox. Explicitly instructs reporters never to attach real personal data. |
 | `CODE_OF_CONDUCT.md` | Contributor Covenant 2.1, with one project-specific addition: submitting another person's private data to an issue or PR is listed as unacceptable behaviour, and technical disputes are to be settled with evidence rather than assertion. |
 | `.github/ISSUE_TEMPLATE/bug_report.yml` | Requires the exact command, the exact output, the eval-suite result on a clean checkout, the commit, and the environment. Two mandatory preflight checkboxes: the suite was run, and the report contains no real personal data. |
@@ -285,18 +285,18 @@ The first audit pass deliberately left history alone and logged it as debt. On e
 
 | Problem | Extent |
 |---|---|
-| Author/committer identity `Naresh B A <naresh.b@prodapt.com>` (employer email) | 6 commits |
-| Author/committer identity `Naresh.B.A <113781396+Phoenixarjun@users.noreply.github.com>` / `GitHub <noreply@github.com>` | 3 commits |
+| Author/committer identity `<author-name> <<employer-email>>` (employer email) | 6 commits |
+| Author/committer identity `<author-alias> <<developer-noreply>>` / `GitHub <noreply@github.com>` | 3 commits |
 | `Co-Authored-By: Claude Opus 5 …` trailer in commit messages | 2 commits |
-| Private `contracts/company-research/` bundle (23 files) present in history | reachable from several commits |
+| Private `contracts/<private-bundle>/` bundle (23 files) present in history | reachable from several commits |
 | Generated subagents under `.claude/agents/generated/` (20 files) | same |
-| `evals/compilation-cases/company-research.json`, `context/context-manifest.json`, `files.py` | same |
+| `evals/compilation-cases/<private-bundle>.json`, `context/context-manifest.json`, `files.py` | same |
 
 ### What was done
 
 A single `git filter-branch` pass over **all refs**:
 
-- **Identity** — every author and committer normalized to `Phoenixarjun <nareshba.dev@gmail.com>`. Author and committer dates were preserved; only identity changed.
+- **Identity** — every author and committer normalized to `Phoenixarjun <developer-email>`. Author and committer dates were preserved; only identity changed.
 - **Messages** — the `Co-Authored-By:` trailer stripped from every commit, leaving no third-party attribution.
 - **Tree** — the private paths above removed from every commit in which they appear, so they are unreachable from any ref rather than merely untracked at `HEAD`.
 
@@ -312,7 +312,7 @@ Original refs were then expunged (`refs/original/`), reflogs dropped, and the ob
 
 | Check | Result |
 |---|---|
-| Distinct author/committer identities across all refs | **1** — `Phoenixarjun <nareshba.dev@gmail.com>` |
+| Distinct author/committer identities across all refs | **1** — `Phoenixarjun <developer-email>` |
 | Occurrences of the employer email anywhere in history | **0** |
 | Occurrences of `Co-Authored-By` in any commit message | **0** |
 | Private paths reachable from any ref | **0** |

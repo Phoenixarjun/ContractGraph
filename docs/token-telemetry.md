@@ -1,6 +1,6 @@
 # Token Telemetry
 
-Before this feature, no run recorded actual token usage anywhere. A real completed company-research run records only output byte counts, `attempts`, `cache HIT/MISS`, and day-granularity timestamps — no input/output tokens, no model-usage figures, no duration, no tool-call counts. `final/cost.json` was a reserved output path with no script producing it. `scripts/telemetry_normalize.py` fills that gap.
+Before this feature, no run recorded actual token usage anywhere. An un-instrumented run records only output byte counts, `attempts`, `cache HIT/MISS`, and day-granularity timestamps — no input/output tokens, no model-usage figures, no duration, no tool-call counts. `final/cost.json` was a reserved output path with no script producing it. `scripts/telemetry_normalize.py` fills that gap.
 
 ## Principle: never fabricate
 

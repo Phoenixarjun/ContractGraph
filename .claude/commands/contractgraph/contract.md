@@ -1,6 +1,6 @@
 ---
 description: Design a contract bundle for a workflow (explicit / assisted / hybrid), then validate it. Runs before /contractgraph:init.
-argument-hint: [intent and/or paths to example or legacy JSON outputs, e.g. "company research; examples/legacy-salesforce.json"]
+argument-hint: [intent and/or paths to example or legacy JSON outputs, e.g. "study plan; examples/legacy-plan.json"]
 allowed-tools: Read, Write, Glob, Grep, Bash, AskUserQuestion
 ---
 

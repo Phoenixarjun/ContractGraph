@@ -40,11 +40,11 @@ The run produces `runtime/runs/<run-id>/final/final.json` — verified against `
 The same six commands, pointed at a bundle you design and your own ground truth:
 
 ```text
-/contractgraph:context    "research target companies and tailor my resume"
-/contractgraph:contract   "company research; examples/legacy-report.json"
-/contractgraph:validate   contracts/company-research
-/contractgraph:init       contracts/company-research
-/contractgraph:run        contracts/company-research --input "Acme Corp" --roles ai-engineer,backend-engineer
+/contractgraph:context    "create a personalized distributed systems study plan"
+/contractgraph:contract   "study plan; examples/sample-goals.json"
+/contractgraph:validate   contracts/my-study-plan
+/contractgraph:init       contracts/my-study-plan
+/contractgraph:run        contracts/my-study-plan --input "distributed systems engineering"
 ```
 
 - `context/canonical/` holds your real profile, resume, skills, and experience. It is git-ignored.

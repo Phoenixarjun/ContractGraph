@@ -31,10 +31,10 @@ TMP = ROOT / "runtime" / "runs" / "_evaltmp"
 PUBLIC_BUNDLE = "contracts/study-plan"
 # Bundles that are git-ignored local-only validation workflows. Cases that
 # depend on one are skipped (not failed) when it is not on disk.
-PRIVATE_BUNDLES = ("contracts/company-research",)
+PRIVATE_BUNDLES = ()
 # A completed local run used by a few regression cases. runtime/runs/ is
 # git-ignored, so a fresh clone has none — those cases skip rather than fail.
-REAL_RUN = "runtime/runs/20260728-study-plan"
+REAL_RUN = "runtime/runs/sample-study-plan"
 
 results = []
 skips = []
@@ -1388,10 +1388,9 @@ def t_triggering():
 def t_genericity():
     g = json.loads((ROOT / "runtime/compiled/study-plan/graph.json").read_text())
     sp_nodes = {n["nodeId"] for n in g["nodes"]}
-    cr_terms = {"dsa", "hld", "lld", "resume-analysis", "company-intelligence", "behavioral"}
-    check("graph-compilation", "study-plan has its OWN nodes (no company-research nodes)",
+    check("graph-compilation", "study-plan has its OWN nodes (no domain leakage)",
           sp_nodes == {"baseline-assessment", "python", "fastapi", "databases", "distributed-systems", "evaluation-plan"})
-    # no company-research concept strings leak into study-plan bundle files.
+    # no private workflow concept strings leak into study-plan bundle files.
     # "dsa" is exempt from this blanket scan: it now appears legitimately as
     # an explicit out-of-scope companion-workflow label in contract.bundle.json's
     # scope block (task: workflow-scope clarity) -- a deliberate exclusion
@@ -1402,7 +1401,7 @@ def t_genericity():
         for term in ("hld", "lld", "resume", "company-intelligence", "salesforce"):
             if term in low:
                 leak.append((f.name, term))
-    check("privacy-leakage", "no company-research concepts in study-plan bundle", not leak, str(leak))
+    check("privacy-leakage", "no private workflow concepts in study-plan bundle", not leak, str(leak))
 
     for f in (ROOT / "contracts/study-plan/node-contracts").rglob("*.json"):
         low = f.read_text(encoding="utf-8").lower()
