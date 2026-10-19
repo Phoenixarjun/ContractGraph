@@ -1,27 +1,22 @@
 # Contract Model
 
-A contract describes the **required final output** and how a machine and a verifier decide it is correct. ContractGraph's core understands only four things: a main contract, its node subcontracts, the dependencies between them, and the rules for validating and aggregating them. Everything domain-specific — "HLD", "DSA", "company intelligence", or any other concept — is just a node name and schema inside one particular contract, never framework logic.
+A contract describes the **required final output** and how a machine and a verifier decide it is correct. ContractGraph's core understands only four things: a main contract, its node subcontracts, the dependencies between them, and the rules for validating and aggregating them. Everything domain-specific — "baseline assessment", "fastapi", "databases", or any other concept — is just a node name and schema inside one particular contract, never framework logic.
 
 ## Main Contract + Node Subcontracts
 
 A main contract may contain multiple subcontracts, one per independently-verifiable section of the output:
 
 ```text
-Company Research Contract
-├── Company Intelligence
-├── Public Projects and Initiatives
-├── DSA
-├── HLD
-├── LLD
-├── Behavioral
-├── Profile Alignment
-└── Resume Analysis
-    ├── AI Engineer
-    ├── Backend Engineer
-    └── ... (one per configured role)
+Study Plan Contract
+├── Baseline Assessment
+├── Python Track
+├── FastAPI Track
+├── Databases Track
+├── Distributed Systems Track
+└── Evaluation Plan
 ```
 
-- Each subcontract becomes one node, or one subtree when a section repeats over a set (e.g. `resume-analysis` applied per role, modeled as one node contract in `roles/`, applied via a `map` layer — not N hand-written nodes).
+- Each subcontract becomes one node, or one subtree when a section repeats over a set (e.g. per-track or per-role analysis applied via a `map` layer — not N hand-written nodes).
 - Contract *tree* structure does not automatically define execution order. Dependencies are inferred from data needs, not nesting.
 - Independent nodes may execute in parallel; dependent nodes wait for verified prerequisites.
 - The final output must conform exactly to the main contract's `finalOutputSchema`.
@@ -43,26 +38,29 @@ contracts/<workflow>/
 └── policies.json                 # model routing, evidence rules, freshness windows
 ```
 
-`contract.bundle.json` names every node once, with its contract path and `aggregationPath` — the key under which the node's accepted output is merged into the final artifact (e.g. `company-intelligence` → `companyIntelligence`).
+`contract.bundle.json` names every node once, with its contract path and `aggregationPath` — the key under which the node's accepted output is merged into the final artifact (e.g. `baseline-assessment` → `baselineAssessment`).
 
 ## The `x-contractgraph` Block
 
-Every node contract carries an `x-contractgraph` extension alongside its JSON Schema `properties`. From `node-contracts/company-intelligence.contract.json`:
+Every node contract carries an `x-contractgraph` extension alongside its JSON Schema `properties`. From `node-contracts/baseline-assessment.contract.json`:
 
 ```json
 "x-contractgraph": {
-  "purpose": "Produces the authoritative company facts, engineering culture, ...",
-  "aggregationPath": "companyIntelligence",
+  "purpose": "Assess the learner's current level and gaps from canonical goals/knowledge.",
+  "aggregationPath": "baselineAssessment",
+  "contextRefs": [
+    "canonical/goals.md",
+    "canonical/knowledge.md",
+    "canonical/preferences.md"
+  ],
   "dependsOn": [],
   "parallelizableWhenReady": true,
   "multiplicity": "single",
   "completionRules": [
-    "The output must validate against this schema.",
-    "status must be complete before the node can be accepted.",
-    "Every material research claim must resolve to at least one evidence source.",
-    "Every candidate-specific claim must resolve to canonical context evidence.",
-    "The producing subagent cannot approve its own output.",
-    "Semantic verification must pass before aggregation."
+    "Output validates against this schema.",
+    "status must be complete to accept.",
+    "Every learning claim cites a resource.",
+    "Producer cannot self-approve."
   ]
 }
 ```
@@ -89,13 +87,9 @@ The `contract-designer` bootstrap skill supports three modes, chosen from what t
 
 In every mode, the skill **stops for approval** before writing any file — it presents the bundle layout, one-line purpose per node, dependency edges, and open questions first. A legacy JSON export is treated as evidence to decompose into per-node schemas, never copied wholesale into one giant contract.
 
-## Approved Bootstrap Exception
-
-`contracts/company-research` is an already-approved bootstrap bundle. `contract-designer`, `/contractgraph:contract`, and `/contractgraph:init` must **not** redesign or regenerate its contracts — they treat it strictly as validated input and, when asked to act on it, run only `python scripts/validate_contract_bundle.py contracts/company-research` (or defer to `/contractgraph:validate`) before compiling or reporting. This exception exists because the bundle is the project's first validated end-to-end test case, not because bundles are normally exempt from the design/approval flow.
-
 ## Common Mistakes
 
-- Baking a domain term ("HLD", "DSA") into framework logic instead of a contract file.
+- Baking a domain term into framework logic instead of a contract file.
 - Collapsing a legacy export back into one enormous main contract.
 - A node schema with no `verification`/`completionRules` — schema-match alone can accept confident nonsense.
 - Drawing dependencies from tree nesting instead of actual data needs.

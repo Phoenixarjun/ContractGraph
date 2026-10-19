@@ -57,7 +57,8 @@ an individual is officially representing the project in public spaces.
 ## Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behaviour may be
-reported to the maintainers at **nareshba.dev@gmail.com**. All complaints will
+reported to the maintainers through GitHub's private advisory form at
+**https://github.com/Phoenixarjun/ContractGraph/security/advisories/new**. All complaints will
 be reviewed and investigated promptly and fairly.
 
 Maintainers are obligated to respect the privacy and security of the reporter

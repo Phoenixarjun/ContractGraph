@@ -7,8 +7,8 @@ params, drop trailing slash) so the same real-world source always mints the
 same SRC_<hash> id regardless of which node first cites it or what local
 label it used. Full source metadata (title, url, publisher, sourceType,
 publicationDate, accessDate, confidence) is stored ONCE in the registry --
-the fix for the "462 duplicate source objects across 17 sections, same URL
-under different per-node ids" waste measured in a real company-research run.
+the fix for the "duplicate source objects across sections, same URL
+under different per-node ids" waste measured in benchmark runs.
 
 A caller (a node producer at generation time, or a migration step) passes the
 sources it wants to cite; this script returns the canonical id for each (new

@@ -3,8 +3,8 @@
 or the final artifact: evidenceRefs resolve to a source registry, contextRefs
 resolve to the context manifest, and roleIds resolve to configured roles.
 
-Two evidence shapes are recognized: the legacy embedded `sourceRegistry` /
-`sources[].sourceRef` (final artifact, company-research), and the newer
+Two evidence shapes are recognized: embedded `sourceRegistry` /
+`sources[].sourceRef` (final artifact), and the newer
 `evidence: [{ref, claims}]` array against an EXTERNAL run-level registry file
 (--evidence-registry; study-plan's dedup-by-registry design) -- a pre-merge
 section no longer embeds full source metadata, so its refs are checked
@@ -86,7 +86,7 @@ def run(doc_path: Path, bundle_dir: Path, ctx_manifest_path: Path, evidence_regi
     unresolved_ctx = sorted(r for r in referenced_ctx if ctx_paths and r not in ctx_paths)
 
     # role ids. targetRoles may be a list of strings (runtime input) or of
-    # objects (e.g. company-intelligence data.targetRoles); object entries carry
+    # objects; object entries carry
     # their own roleId which _collect(doc, "roleId") already captures, so filter
     # to hashable strings before set-ifying to avoid "unhashable type: dict".
     referenced_roles = {

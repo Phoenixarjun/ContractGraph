@@ -1,6 +1,6 @@
 ---
 name: evidence-backed-web-research
-description: Use when a subagent must research factual claims (company facts, role expectations, interview patterns, technical material, market data, etc.) from the live web and every claim in its output must trace to a reachable, credible source. Triggered by any research node (company-intelligence, role-intelligence, dsa, hld, lld, behavioral, and similar) during /contractgraph:run. Not for scoring or tiering sources already collected (source-quality-assessment) and not for checking whether a claim's source is stale (freshness-verification).
+description: Use when a subagent must research factual claims (technology facts, role expectations, interview patterns, technical material, market data, etc.) from the live web and every claim in its output must trace to a reachable, credible source. Triggered by any research node (python, fastapi, databases, distributed-systems, and similar) during /contractgraph:run. Not for scoring or tiering sources already collected (source-quality-assessment) and not for checking whether a claim's source is stale (freshness-verification).
 ---
 
 # Evidence-Backed Web Research

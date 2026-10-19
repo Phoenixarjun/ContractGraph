@@ -26,7 +26,7 @@ A capability is a domain-neutral reusable ability (e.g. `evidence-backed-web-res
 
 `capability-manifest.json` entries:
 ```json
-{ "capabilityId": "evidence-backed-web-research", "description": "...", "requiredByNodes": ["company-intelligence"], "requiredTools": ["WebSearch", "WebFetch"], "inputs": ["..."], "outputs": ["..."] }
+{ "capabilityId": "evidence-backed-web-research", "description": "...", "requiredByNodes": ["baseline-assessment"], "requiredTools": ["WebSearch", "WebFetch"], "inputs": ["..."], "outputs": ["..."] }
 ```
 
 ## Procedure

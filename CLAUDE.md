@@ -22,7 +22,7 @@ ContractGraph is not a Python agent framework, web application, API service, or 
 - Do not use external model APIs.
 - Do not require API keys.
 - Do not introduce FastAPI, Flask, Django, Node servers, databases, queues, or background services.
-- Do not hard-code company research, study planning, resume analysis, or any other domain workflow into the framework core.
+- Do not hard-code study planning, code analysis, research planning, or any other domain workflow into the framework core.
 - Do not require the user to manually design the workflow graph.
 - Do not place private user information inside generated skills or agent definitions.
 - Use small local scripts only for deterministic operations.
@@ -159,20 +159,13 @@ A main contract may contain multiple subcontracts.
 Example:
 
 ```text
-Company Research Contract
-├── Company Intelligence
-├── Public Projects and Initiatives
-├── DSA
-├── HLD
-├── LLD
-├── Behavioral
-├── Profile Alignment
-└── Resume Analysis
-    ├── AI Engineer
-    ├── Forward Deployed Engineer
-    ├── Backend Engineer
-    ├── SDE-1 or SDE-2
-    └── ML Engineer
+Study Plan Contract
+├── Baseline Assessment
+├── Python Track
+├── FastAPI Track
+├── Databases Track
+├── Distributed Systems Track
+└── Evaluation Plan
 ```
 
 Rules:
@@ -469,6 +462,6 @@ A workflow is ready only when:
 
 The public reference bundle is `contracts/study-plan`, backed by synthetic learner context under `context/synthetic/study-plan/`. It is what every command and script defaults to, and the one bundle guaranteed present in a clone.
 
-Any private validation workflow (company research plus role-specific resume analysis, for example) lives alongside it as a git-ignored bundle under `contracts/<workflow>/` with its ground truth in `context/canonical/`.
+Any private validation workflow lives alongside it as a git-ignored bundle under `contracts/<workflow>/` with its ground truth in `context/canonical/`.
 
 A workflow is a test case, never the framework architecture. Design every core mechanism so that every workflow — public or private — uses the same initialization, graph compilation, skill generation, execution, validation, aggregation, and finalization process, with zero core-code differences between them.

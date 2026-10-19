@@ -45,4 +45,4 @@ A skill created for one bundle's need starts in `.claude/skills/generated/`. On 
 
 ## Privacy at Generation Time
 
-Every generated skill's content is scanned for company-, person-, or run-specific facts before acceptance (dimension 7 in [skill-lifecycle.md](skill-lifecycle.md)) — a skill authored while working the company-research bundle must read identically to one authored first against the study-plan fixture. See [privacy.md](privacy.md) for the full enforcement model.
+Every generated skill's content is scanned for company-, person-, or run-specific facts before acceptance (dimension 7 in [skill-lifecycle.md](skill-lifecycle.md)) — a skill authored while working a private workflow bundle must read identically to one authored first against the study-plan fixture. See [privacy.md](privacy.md) for the full enforcement model.

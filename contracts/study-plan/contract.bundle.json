@@ -27,7 +27,7 @@
       {
         "topic": "DSA",
         "reason": "Data-structures-and-algorithms interview preparation is a distinct, high-volume skill track deliberately excluded from this bundle so it stays small and reproducible for the runtime benchmark. It is not represented by any node here and must not be silently absorbed into another node's scope.",
-        "companionWorkflow": "contracts/company-research (dsa node) or a dedicated DSA study-plan bundle"
+        "companionWorkflow": "a dedicated DSA study-plan bundle"
       }
     ]
   },
